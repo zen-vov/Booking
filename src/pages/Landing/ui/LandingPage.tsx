@@ -1,9 +1,13 @@
 import React from "react";
+import styles from "./styles.module.scss";
 
 export default function LandingPage() {
   return (
     <div>
-      <p>Landing page</p>
+      <div className={styles.imgbg}>
+        <p>Landing page</p>
+      </div>
     </div>
+    
   );
 }
