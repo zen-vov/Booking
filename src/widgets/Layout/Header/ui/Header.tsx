@@ -13,7 +13,6 @@ export default function Header() {
             className="focus:border-none active:border-none placeholder-border-black"
             placeholder="Поиск квартиры"
           />
-          <p className="text-red">dafs</p>
           <div className="flex gap-[40px]">
             <Button className="text-md font-[500]" label="Квартиры " />
             <Button className="text-md font-[500]" label="Подселение" />
