@@ -31,7 +31,11 @@ export default function Header({ isProfile }: HeaderProps) {
   };
 
   return (
+<<<<<<< HEAD
     <header className={cn("py-[30px]", { "border-b-black": isProfile })}>
+=======
+    <header className="py-[30px] px-[80px]">
+>>>>>>> tuirbo
       <div className="container">
         <nav className="flex justify-between items-center">
           <Logo />
