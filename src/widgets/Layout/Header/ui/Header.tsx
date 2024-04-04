@@ -5,7 +5,7 @@ import Button from "@/shared/ui/Button/Button";
 
 export default function Header() {
   return (
-    <header className="py-[30px]">
+    <header className="py-[30px] px-[80px]">
       <div className="container">
         <nav className="flex justify-between">
           <Logo />
