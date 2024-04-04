@@ -5,9 +5,10 @@ export default function LandingPage() {
   return (
     <div>
       <div className={styles.imgbg}>
-        <p>Landing page</p>
+        <div className="py-[128px] pl-[131px] w-[600px] text-2xl text-center font-semibold text-primary">
+          <p>Найди свое идеальное жилье</p>
+        </div>
       </div>
-    </div>
-    
+    </div>    
   );
 }
