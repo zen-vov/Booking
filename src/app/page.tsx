@@ -3,7 +3,7 @@ import Layout from "@/widgets/Layout/Layout";
 
 export default function Home() {
   return (
-    <Layout type="login">
+    <Layout type="profile">
       <main className="container">
         <MainPage />
       </main>

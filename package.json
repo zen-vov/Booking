@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fontsource/montserrat": "^5.0.17",
+    "axios": "^1.6.8",
     "classnames": "^2.5.1",
     "next": "14.1.4",
     "react": "^18",

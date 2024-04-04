@@ -12,14 +12,14 @@ export default function Layout({ children, type }: LayoutProps) {
     <main className="main">
       {type === "login" && (
         <>
-          <Header />
+          <Header isProfile={true} />
           {children}
           <Footer />
         </>
       )}
       {type === "profile" && (
         <>
-          <Header />
+          <Header isProfile={false} />
           {children}
           <Footer />
         </>
