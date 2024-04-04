@@ -10,7 +10,7 @@ export default function LandingPage() {
           <p>Найди свое идеальное жилье</p>
         </div>
       </div>
-      <div className="flex gap-[125px] pl-[115px] pt-[125px]">
+      <div className="flex gap-[125px] pl-[125px] pt-[125px]">
         <Card
           image="/Landing/house.png"
           name="Заполните запросы и найдите квартиру"
