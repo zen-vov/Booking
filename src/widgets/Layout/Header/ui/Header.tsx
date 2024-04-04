@@ -10,7 +10,10 @@ export default function Header() {
         <nav className="flex justify-between">
           <Logo />
           <Input
-            className="focus:border-none active:border-none placeholder-border-black"
+            className="border-none focus:outline-none cursor-pointer"
+            style={{
+              borderBottom: "2px solid #2C2B2B",
+            }}
             placeholder="Поиск квартиры"
           />
           <div className="flex gap-[40px]">
