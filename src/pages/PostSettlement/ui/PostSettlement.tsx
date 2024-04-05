@@ -12,6 +12,7 @@ import Washing from "@/shared/ui/Icons/Washing/Washing";
 import NoImg from "@/shared/ui/Icons/NoImg/NoImg";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import Image from "next/image";
+import ProductList from "@/widgets/productList/ui/productLIst";
 
 interface Counter {
   name: string;
@@ -77,14 +78,22 @@ export default function PostSettlementPage() {
         <p className="text-[12px] font-[500] mb-[10px]">
           Где расположено ваше жилье?
         </p>
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2908.034149153324!2d76.6670930764335!3d43.20877307112663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x388345a35db0962d%3A0xd9437541092dd062!2sSDU!5e0!3m2!1sen!2skz!4v1712296819450!5m2!1sen!2skz"
+          width="668"
+          height="202"
+          style={{ border: "0", borderRadius: "5px" }}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        ></iframe>
         <div className="flex gap-[15px] mb-[27px] items-center">
           <Input
-            className="w-full w-[300px] h-[50px] py-[10px] px-[20px] border-none bg-[#F7F7F7] rounded-[12px] focus:outline-none"
+            className="w-full w-[30px] h-[50px] py-[10px] px-[20px] border-none bg-[#F7F7F7] rounded-[12px] focus:outline-none"
             placeholder="Введите адрес"
           />
-          <p className="text-[14px] font-[500] text-blue cursor-pointer">
+          {/* <p className="text-[14px] font-[500] text-blue cursor-pointer">
             указать на карте
-          </p>
+          </p> */}
         </div>
         <p className="text-[16px] font-[500] mb-[15px]">
           Основная информация о жилье

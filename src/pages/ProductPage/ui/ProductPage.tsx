@@ -94,7 +94,7 @@ export default function ProductPage() {
             <div className="">
               <div className="flex items-center gap-2.5">
                 <Image
-                  src={"/Checkmart.png"}
+                  src={"/Checkmark.png"}
                   width={27}
                   height={27}
                   alt="checkmark"
