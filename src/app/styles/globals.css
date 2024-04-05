@@ -9,3 +9,7 @@
   padding-left: 40px;
   padding-right: 40px;
 }
+
+.search-input {
+  border-bottom: 1px solid #000;
+}
