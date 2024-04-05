@@ -7,9 +7,14 @@ import Plus from "@/shared/ui/Icons/Plus/Plus";
 import Minus from "@/shared/ui/Icons/Minus/Minus";
 import Wifi from "@/shared/ui/Icons/Wifi/Wifi";
 import TV from "@/shared/ui/Icons/TV/TV";
+import Parking from "@/shared/ui/Icons/Parking/Parking";
 import Conditioner from "@/shared/ui/Icons/Conditioner/Conditioner";
 import Washing from "@/shared/ui/Icons/Washing/Washing";
 import NoImg from "@/shared/ui/Icons/NoImg/NoImg";
+import Shop from "@/shared/ui/Icons/Shop/Shop";
+import School from "@/shared/ui/Icons/School/School";
+import Hospital from "@/shared/ui/Icons/Hospital/Hospital";
+import Dumbell from "@/shared/ui/Icons/Dumbell/Dumbell";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import Image from "next/image";
 import ProductList from "@/widgets/productList/ui/productLIst";
@@ -27,8 +32,16 @@ interface IconButton {
 const icons: IconButton[] = [
   { icon: <Wifi />, label: "Wifi" },
   { icon: <TV />, label: "TV" },
-  { icon: <Conditioner />, label: "Conditioner" },
   { icon: <Washing />, label: "Washing" },
+  { icon: <Parking />, label: "Parking" },
+  { icon: <Conditioner />, label: "Conditioner" },
+];
+
+const iconsNear: IconButton[] = [
+  { icon: <Shop />, label: "Shop" },
+  { icon: <Hospital />, label: "Hospital" },
+  { icon: <School />, label: "School" },
+  { icon: <Dumbell />, label: "Dumbell" },
 ];
 
 const NearButton = ["Торговый центр", "Больница", "Школа", "Тренажорный зал"];
@@ -75,7 +88,7 @@ export default function PostSettlementPage() {
         </h1>
       </div>
       <div className="flex flex-col h-fit w-full h-[400px] py-[60px] px-[65px] bg-white rounded-lg">
-        <p className="text-[12px] font-[500] mb-[10px]">
+        <p className="text-[16px] font-[500] mb-[15px]">
           Где расположено ваше жилье?
         </p>
         <iframe
@@ -134,10 +147,10 @@ export default function PostSettlementPage() {
             Преимущества вашего жилья
           </p>
           <div className="flex items-center gap-[13px]">
-            {icons.map((icon, index) => (
+            {iconsNear.map((icon, index) => (
               <button
                 key={index}
-                className="bg-blue rounded-[5px] w-[60px] h-[40px] py-[12px] px-[23px] text-[22px] font-500"
+                className="bg-blue cursor-pointer rounded-[5px] w-[60px] h-[40px] py-[12px] px-[23px] text-[22px] font-500"
               >
                 {icon.icon}
               </button>
@@ -166,7 +179,9 @@ export default function PostSettlementPage() {
               <NoImg />
             </div>
           </div>
-          <p>Загрузить еще</p>
+          <p className="text-[12px] font-[400] cursor-pointer mt-[6px]">
+            Загрузить еще
+          </p>
         </div>
         <div className="mb-[16px]">
           <p className="text-[16px] text-black font-[500]">
@@ -195,7 +210,7 @@ export default function PostSettlementPage() {
           <div className="flex items-center">
             <Dropdown
               buttonStyle="text-[14px] font-[400]"
-              listStyle="bg-white text-base py-[2px] px-[4px] left-[8x`px] flex flex-col border-white rounded-[6px] gap-[13px] w-fit h-fit"
+              listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
               options={options}
               label="в месяц"
             />

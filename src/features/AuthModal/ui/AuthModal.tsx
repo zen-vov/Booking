@@ -28,7 +28,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       let response;
       if (isRegistering) {
         response = await axios.post(
-          "http://195.49.212.131:8000/api/v1/auth/user/",
+          "http://195.49.212.131:8000/api/v1/jwt/create/",
           {
             email: username,
             login: username,
@@ -38,7 +38,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         );
       } else {
         response = await axios.post(
-          "http://195.49.212.131:8000/api/v1/auth/user/",
+          "http://195.49.212.131:8000/api/v1/jwt/create/",
           {
             login: username,
             password: password,
