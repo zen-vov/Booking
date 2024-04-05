@@ -18,7 +18,9 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     email: "",
     password: "",
   });
-
+  {
+    /*asd*/
+  }
   const [regData, setRefData] = useState({
     role: 0,
     login: "string",
