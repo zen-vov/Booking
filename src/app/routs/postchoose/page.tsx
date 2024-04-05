@@ -1,11 +1,11 @@
-import SettingsPage from "@/pages/Settings/ui/Settings";
+import PostChoosePage from "@/pages/PostChoose/ui/PostChoosePage";
 import Layout from "@/widgets/Layout/Layout";
 
 export default function Home() {
   return (
     <Layout type="login" isHouse={true} showFooter={false}>
       <main className="container">
-        <SettingsPage />
+        <PostChoosePage />
       </main>
     </Layout>
   );
