@@ -6,6 +6,7 @@ import Button from "@/shared/ui/Button/Button";
 import AuthModal from "@/features/AuthModal/ui/AuthModal";
 import cn from "classnames";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
+import Link from "next/link";
 
 interface HeaderProps {
   isProfile: boolean;
@@ -36,12 +37,19 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
       <div className="container">
         {isHouse && (
           <nav className="flex justify-between items-center">
-            <Logo />
+            <Link href={"/"}>
+              <span className="cursor-pointer">
+                <Logo />
+              </span>
+            </Link>
+
             <div className="flex gap-[40px]">
-              <Button
-                className="text-md font-[500]"
-                label="Разместить жилье на StudHouse.kz "
-              />
+              <Link href={"/"}>
+                <Button
+                  className="text-md font-[500]"
+                  label="Разместить жилье на StudHouse.kz "
+                />
+              </Link>
 
               <Dropdown
                 buttonStyle="text-[20px] font-[500]"

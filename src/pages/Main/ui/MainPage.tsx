@@ -3,6 +3,7 @@ import Input from "@/shared/ui/Input/Input";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const mainData = [
   {
@@ -13,7 +14,7 @@ const mainData = [
     photo: "/Image1.png",
   },
   {
-    id: 2,  
+    id: 2,
     address: "г. Алматы, Бостандыкский район",
     price: "320 000",
     dataAT: "11.03.2024",
@@ -66,7 +67,7 @@ const mainData = [
 export default function LandLord() {
   const [data, setData] = useState([]);
   const [current, setCurrent] = useState(1);
-  const [active, setActive] = useState(false)
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
     const pageNumber = new URLSearchParams(window.location.search).get("page");
@@ -84,7 +85,7 @@ export default function LandLord() {
   const changeCurrentPage = (page: number) => {
     setCurrent(page);
     setActive(true);
-    window.history.pushState({}, '', `/?page=${page}`);
+    window.history.pushState({}, "", `/?page=${page}`);
   };
 
   useEffect(() => {
@@ -108,7 +109,10 @@ export default function LandLord() {
       <div className="flex items-center  gap-[100px] mb-[60px]">
         <div className="flex items-center gap-2">
           <Image src={"/Search.png"} width={29} height={29} alt="search" />
-          <Input placeholder="Выбор" className="search-input pb-[5px] text-black text-md" />
+          <Input
+            placeholder="Выбор"
+            className="search-input pb-[5px] text-black text-md"
+          />
         </div>
         <div className="flex gap-[30px] items-center">
           <div className="flex gap-[5px] items-center">
@@ -127,10 +131,13 @@ export default function LandLord() {
       <div className="grid grid-cols-2 gap-[92px] mb-12">
         {records.map(({ id, address, price, dataAT, photo }) => (
           <div key={id} className="bg-white rounded-[12px] pb-[30px]">
-            <div
-              style={{ backgroundImage: `url(${photo})` }}
-              className="w-full bg-no-repeat h-[463px]"
-            />
+            <Link href="/routs/product">
+              <div
+                style={{ backgroundImage: `url(${photo})` }}
+                className="w-full bg-no-repeat h-[463px]"
+              />
+            </Link>
+
             <div className="flex justify-between px-7 pt-6">
               <div className="flex flex-col">
                 <h1 className="text-md font-medium mb-[14px]">{address}</h1>
@@ -173,7 +180,15 @@ export default function LandLord() {
       </div>
       <div className="flex gap-4 items-center justify-center">
         {numbers.map((n, i) => (
-          <div className={`py-2 px-4 cursor-pointer text-md rounded-[6px] ${current === n ? "bg-blue text-white" : "bg-white text-black"}`} key={i} onClick={() => changeCurrentPage(n)}>{n}</div>
+          <div
+            className={`py-2 px-4 cursor-pointer text-md rounded-[6px] ${
+              current === n ? "bg-blue text-white" : "bg-white text-black"
+            }`}
+            key={i}
+            onClick={() => changeCurrentPage(n)}
+          >
+            {n}
+          </div>
         ))}
       </div>
     </section>
