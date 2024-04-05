@@ -1,5 +1,67 @@
+import LandLord from "@/pages/Main/ui/MainPage";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
+import ProductList from "@/widgets/productList/ui/productLIst";
+import Image from "next/image";
+
+const mainData = [
+  {
+    id: 1,
+    address: "г. Алматы, Бостандыкский район",
+    price: "320 000",
+    dataAT: "11.03.2024",
+    photo: "/Image1.png",
+  },
+  {
+    id: 2,
+    address: "г. Алматы, Бостандыкский район",
+    price: "320 000",
+    dataAT: "11.03.2024",
+    photo: "/Image1.png",
+  },
+  {
+    id: 3,
+    address: "г. Алматы, Бостандыкский район",
+    price: "320 000",
+    dataAT: "11.03.2024",
+    photo: "/Image1.png",
+  },
+  {
+    id: 4,
+    address: "г. Алматы, Бостандыкский район",
+    price: "320 000",
+    dataAT: "11.03.2024",
+    photo: "/Image1.png",
+  },
+  {
+    id: 5,
+    address: "г. Алматы, Бостандыкский район",
+    price: "320 000",
+    dataAT: "11.03.2024",
+    photo: "/Image1.png",
+  },
+  {
+    id: 6,
+    address: "г. Алматы, Бостандыкский район",
+    price: "320 000",
+    dataAT: "11.03.2024",
+    photo: "/Image1.png",
+  },
+  {
+    id: 7,
+    address: "г. Алматы, Бостандыкский район",
+    price: "320 000",
+    dataAT: "11.03.2024",
+    photo: "/Image1.png",
+  },
+  {
+    id: 8,
+    address: "г. Алматы, Бостандыкский район",
+    price: "320 000",
+    dataAT: "11.03.2024",
+    photo: "/Image1.png",
+  },
+];
 
 export default function ProductPage() {
   return (
@@ -17,9 +79,12 @@ export default function ProductPage() {
             style={{ backgroundImage: `url(${"/Image1.png"})` }}
             className="w-full h-[376px] mb-[90px]"
           />
-          <div className="bg-white p-10">
+          <div className="bg-white p-10 rounded-[12px]">
             <div className="flex justify-between items-center p-2.5 mb-3">
-              <h1 className="text-[16px]">Мурат С.</h1>
+              <div className="flex gap-2">
+                <Image src="/user.png" width={27} height={27} alt="user" />
+                <h1 className="text-[16px]">Мурат С.</h1>
+              </div>
               <span className="text-[12p]">Хозяин квартиры</span>
             </div>
             <div className="flex justify-between items-center">
@@ -28,6 +93,12 @@ export default function ProductPage() {
             </div>
             <div className="">
               <div className="flex items-center gap-2.5">
+                <Image
+                  src={"/Checkmart.png"}
+                  width={27}
+                  height={27}
+                  alt="checkmark"
+                />
                 <h1 className="text-[16px]">Собственность подтверждена</h1>
               </div>
               <p className="p-2.5 text-[12px]">
@@ -46,6 +117,19 @@ export default function ProductPage() {
                 />
               </div>
             </div>
+          </div>
+          <div className="mt-[50px]">
+            <div className="flex gap-5 mb-2">
+              <div className="bg-green text-white rounded-[9px] py-[5px] px-[13px] ">
+                4.0
+              </div>
+              <h3 className="text-md font-semibold">Отлично!</h3>
+            </div>
+            <h2 className="text-[15px] mb-2">Клиентам понравилось:</h2>
+            <p className="text-[12px] mb-[17px]">
+              Чистота, комфортное местоположение, приемлимая сумма за квартиру
+            </p>
+            <p className="text-blue text-[12px]">Посмотреть все отзывы</p>
           </div>
         </div>
         <div>
@@ -88,7 +172,6 @@ export default function ProductPage() {
                         fill="black"
                       />
                     </svg>
-
                   </div>
                   <span className="text-[16px]">Улица Тургут Озала 184</span>
                   <span className="text-[16px]">2015 год</span>
@@ -143,8 +226,30 @@ export default function ProductPage() {
                 </ul>
               </div>
             </div>
+            <span className="text-blue text-[14px] mt-[5px]">Еще</span>
+          </div>
+          <div className="flex flex-col mt-10">
+            <h1 className="text-md">О Подселении</h1>
+            <p className="text-[14px] mt-3">
+              Учусь в 4 курсе. В университете SDU University. Ищем 2 девушек на
+              подселение. Без вредных привычек, чистоплотная, ответственная.
+            </p>
+          </div>
+          <div className="mt-10">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2908.034149153324!2d76.6670930764335!3d43.20877307112663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x388345a35db0962d%3A0xd9437541092dd062!2sSDU!5e0!3m2!1sen!2skz!4v1712296819450!5m2!1sen!2skz"
+              width="668"
+              height="202"
+              style={{ border: "0", borderRadius: "5px" }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </div>
+      </div>
+      <h1 className="text-md font-medium mt-[111px] mb-6">Похожие запросы</h1>
+      <div className="grid grid-cols-2 gap-10">
+        <ProductList product={mainData} />
       </div>
     </section>
   );

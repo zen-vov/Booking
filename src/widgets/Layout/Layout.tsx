@@ -9,7 +9,7 @@ interface LayoutProps {
 
 export default function Layout({ children, type }: LayoutProps) {
   return (
-    <main className="main">
+    <>
       {type === "login" && (
         <>
           <Header isProfile={true} />
@@ -24,6 +24,6 @@ export default function Layout({ children, type }: LayoutProps) {
           <Footer />
         </>
       )}
-    </main>
+    </>
   );
 }
