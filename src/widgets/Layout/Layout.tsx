@@ -16,7 +16,7 @@ export default function Layout({
   showFooter,
 }: LayoutProps) {
   return (
-    <main className="main">
+    <>
       {type === "login" && (
         <>
           <Header isProfile={true} isHouse={isHouse} />
@@ -31,6 +31,6 @@ export default function Layout({
           <Footer isShow={showFooter} />
         </>
       )}
-    </main>
+    </>
   );
 }
