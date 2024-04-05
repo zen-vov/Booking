@@ -1,0 +1,24 @@
+export default function NoImg() {
+  return (
+    <svg
+      width="70"
+      height="49"
+      viewBox="0 0 70 49"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        opacity="0.22"
+        x="0.2"
+        y="0.2"
+        width="69.6"
+        height="48.6"
+        rx="4.8"
+        fill="#B6B6B6"
+        stroke="black"
+        stroke-width="0.4"
+        stroke-dasharray="0.4 0.4"
+      />
+    </svg>
+  );
+}

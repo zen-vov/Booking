@@ -1,8 +1,14 @@
+"use client"
 import React, { useState } from "react";
 import cn from "classnames";
 import axios from "axios";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
+import { useUser } from "@/features/UserContext/ui/UserProvider"; 
+
+interface UserProps {
+  username: string
+}
 
 const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [username, setUsername] = useState("");
@@ -11,36 +17,59 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const { setUser } = useUser();
   const modalRef = React.useRef<HTMLDivElement>(null);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "username") setUsername(value);
+    if (name === "password") setPassword(value);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     try {
+      let response;
       if (isRegistering) {
-        const response = await axios.post(
-          "http://195.49.212.131:8000/api/v1/jwt/create/",
+        response = await axios.post(
+          "http://195.49.212.131:8000/api/v1/auth/user/",
           {
-            email: username,
+            login: username,
             password: password,
-            role: selectedRole,
+            role: 1,
           }
         );
       } else {
-        const response = await axios.post(
-          "http://195.49.212.131:8000/api/v1/auth/user/",
+        response = await axios.post(
+          "http://195.49.212.131:8000/api/v1/jwt/create/",
           {
-            email: username,
+            login: username,
             password: password,
           }
         );
       }
-      onClose();
+
+      const token = response.data.jwt || response.data.access;
+      if (token) {
+        localStorage.setItem("accessToken", token);
+        setUser(response.data.user);
+        console.log(
+          isRegistering ? "Registration successful:" : "Login successful:",
+          response.data.user
+        );
+        onClose();
+      }
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
         setErrorMessage(error.response.data.message);
       } else {
         setErrorMessage("Произошла ошибка");
       }
+      console.error(
+        isRegistering ? "Registration failed:" : "Login failed:",
+        error
+      );
     }
   };
 
@@ -62,9 +91,9 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed z-[1000] inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div
-        className="bg-white p-8 border border-[1px] rounded-[15px] w-[580px] h-[540px]"
+        className="bg-white p-8 border border-[1px] rounded-[15px] w-[580px] h-fit"
         ref={modalRef}
       >
         <div className="flex flex-col justify-between py-[20px]">
@@ -93,32 +122,30 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <p className="text-[18px] font-[500]">Почта</p>
               <Input
                 className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
-                style={{
-                  color: "#A8A2A2",
-                }}
-                placeholder={"Введите электронную почту"}
-                type="email"
+                style={{ color: "#A8A2A2" }}
+                name="username"
+                placeholder="Введите электронную почту"
+                type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={handleChange}
                 required
               />
             </label>
-            <label className={cn({ "mb-[145px]": !isRegistering })}>
+            <label className="mb-[145px]">
               <p className="text-[18px] font-[500]">Пароль</p>
               <Input
                 className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
-                style={{
-                  color: "#A8A2A2",
-                }}
-                placeholder={"Введите пароль"}
+                style={{ color: "#A8A2A2" }}
+                name="password"
+                placeholder="Введите пароль"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleChange}
                 required
               />
             </label>
             {isRegistering && (
-              <label className={cn({ "mt-[20px] mb-[100px]": isRegistering })}>
+              <label className="mt-[20px] mb-[100px]">
                 <select value={selectedRole} onChange={handleRoleChange}>
                   <option value="">Выберите роль</option>
                   <option value="student">Студент</option>
@@ -140,3 +167,57 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 };
 
 export default AuthModal;
+
+// const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+//   event.preventDefault();
+//   try {
+//     if (isRegistering) {
+//       const response = await axios.post(
+//         "http://195.49.212.131:8000/api/v1/auth/user/",
+//         {
+//           email: username,
+//           login: username,
+//           password: password,
+//           role: 1,
+//         }
+//       );
+//       localStorage.setItem("accessToken", response.data.jwt);
+//       await fetch("http://195.49.212.131:8000/api/v1/jwt/create/", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//           login: username,
+//           password: password,
+//         }),
+//       })
+//         .then((response) => {
+//           return response.json();
+//         })
+//         .then(async (data) => {
+//           if (data.access) {
+//             localStorage.setItem("accessToken", data.access);
+//             const userData = { username: "exampleUser", role: "admin" };
+//             setUser(userData);
+//             console.log(userData);
+//           }
+//         });
+//     } else {
+//       const response = await axios.post(
+//         "http://195.49.212.131:8000/api/v1/jwt/create/",
+//         {
+//           login: username,
+//           password: password,
+//         }
+//       );
+//     }
+//     onClose();
+//   } catch (error: any) {
+//     if (axios.isAxiosError(error) && error.response) {
+//       setErrorMessage(error.response.data.message);
+//     } else {
+//       setErrorMessage("Произошла ошибка");
+//     }
+//   }
+// };

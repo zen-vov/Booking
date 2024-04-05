@@ -5,25 +5,32 @@ import Footer from "./Footer/ui/Footer";
 interface LayoutProps {
   children: React.ReactNode;
   type?: "login" | "profile";
+  isHouse?: boolean;
+  showFooter?: boolean;
 }
 
-export default function Layout({ children, type }: LayoutProps) {
+export default function Layout({
+  children,
+  type,
+  isHouse,
+  showFooter,
+}: LayoutProps) {
   return (
-    <main className="main">
+    <>
       {type === "login" && (
         <>
-          <Header isProfile={true} />
+          <Header isProfile={true} isHouse={isHouse} />
           {children}
-          <Footer />
+          <Footer isShow={showFooter} />
         </>
       )}
       {type === "profile" && (
         <>
-          <Header isProfile={false} />
+          <Header isProfile={false} isHouse={isHouse} />
           {children}
-          <Footer />
+          <Footer isShow={showFooter} />
         </>
       )}
-    </main>
+    </>
   );
 }

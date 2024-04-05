@@ -1,14 +1,16 @@
-"use client";
+"use client"
 import React from "react";
-import Logo from "@/shared/ui/Icons/Logo/Logo";
-import Input from "@/shared/ui/Input/Input";
+import cn from "classnames";
 import Button from "@/shared/ui/Button/Button";
 import AuthModal from "@/features/AuthModal/ui/AuthModal";
-import cn from "classnames";
+import { useUser } from "@/features/UserContext/ui/UserProvider";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
+import Link from "next/link";
+import Logo from "@/shared/ui/Icons/Logo/Logo";
 
 interface HeaderProps {
   isProfile: boolean;
+  isHouse?: boolean;
 }
 
 const options = [
@@ -19,11 +21,18 @@ const options = [
   "Выйти",
 ];
 
-export default function Header({ isProfile }: HeaderProps) {
+export default function Header({ isProfile, isHouse }: HeaderProps) {
+  const { user, setUser } = useUser();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const handleLoginClick = () => {
+    if (!user) {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null); 
   };
 
   const closeModal = () => {
@@ -34,44 +43,59 @@ export default function Header({ isProfile }: HeaderProps) {
     <header className={cn("py-[30px]", { "border-b-black": isProfile })}>
       <div className="container">
         <nav className="flex justify-between items-center">
-          <Logo />
-          <Input
-            className="border-none bg-background focus:outline-none cursor-pointer"
-            style={{
-              borderBottom: "2px solid #2C2B2B",
-            }}
-            placeholder="Поиск квартиры"
-          />
-          {isProfile && (
+          <Link href={"/"}>
+            <Logo />
+          </Link>
+          {!user && (
             <div className="flex gap-[40px]">
-              <Button className="text-md font-[500]" label="Квартиры " />
-              <Button className="text-md font-[500]" label="Подселение" />
+              {!isProfile && (
+                <Button
+                  className="text-md font-[500]"
+                  label="Сообщения "
+                  onClick={handleLoginClick}
+                />
+              )}
+              {!isProfile && (
+                <Link href={"/routs/posthouse"}>
+                  <Button
+                    className="text-md font-[500] border border-[1px] border-black py-[3px] px-[6px]"
+                    label="Разместить объявление"
+                  />
+                </Link>
+              )}
               <Button
-                onClick={openModal}
                 className="text-md font-[500]"
                 label="Войти"
+                onClick={handleLoginClick}
               />
-              {isModalOpen && <AuthModal onClose={closeModal} />}
             </div>
           )}
-          {!isProfile && (
+          {user && (
             <div className="flex gap-[40px]">
-              <Button className="text-md font-[500]" label="Сообщения " />
-              <Button
-                className="text-md font-[500] border border-[1px] border-black py-[3px] px-[6px]"
-                label="Разместить объявление"
-              />
+              {!isProfile && (
+                <Button className="text-md font-[500]" label="Сообщения " />
+              )}
+              {!isProfile && (
+                <Link href={"/routs/posthouse"}>
+                  <Button
+                    className="text-md font-[500] border-[1px] border-black py-[3px] px-[6px]"
+                    label="Разместить объявление"
+                  />
+                </Link>
+              )}
               <Dropdown
-                buttonStyle="text-[20px] font-[500]"
+                buttonStyle="text-md font-[500]"
                 listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
                 options={options}
-                label="Zhandos"
+                label={user.username}
+                onClick={handleLogout}
               />
-              {isModalOpen && <AuthModal onClose={closeModal} />}
             </div>
           )}
         </nav>
       </div>
+      {isModalOpen && <AuthModal onClose={closeModal} />}
     </header>
   );
 }
+
