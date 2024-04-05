@@ -38,9 +38,7 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
         {isHouse && (
           <nav className="flex justify-between items-center">
             <Link href={"/"}>
-              <span className="cursor-pointer">
-                <Logo />
-              </span>
+              <Logo />
             </Link>
 
             <div className="flex gap-[40px]">
@@ -63,7 +61,9 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
         )}
         {!isHouse && (
           <nav className="flex justify-between items-center">
-            <Logo />
+            <Link href={"/"}>
+              <Logo />
+            </Link>
             <Input
               className="border-none bg-background focus:outline-none cursor-pointer"
               style={{
@@ -86,10 +86,13 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
             {!isProfile && (
               <div className="flex gap-[40px]">
                 <Button className="text-md font-[500]" label="Сообщения " />
-                <Button
-                  className="text-md font-[500] border border-[1px] border-black py-[3px] px-[6px]"
-                  label="Разместить объявление"
-                />
+                <Link href={"/routs/posthouse"}>
+                  <Button
+                    className="text-md font-[500] border border-[1px] border-black py-[3px] px-[6px]"
+                    label="Разместить объявление"
+                  />
+                </Link>
+
                 <Dropdown
                   buttonStyle="text-[20px] font-[500]"
                   listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"

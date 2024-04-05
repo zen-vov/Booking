@@ -1,14 +1,21 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Link from "next/link";
 import Button from "@/shared/ui/Button/Button";
 
 export default function PostChoosePage() {
+  const [selectedOption, setSelectedOption] = useState<string>("");
+
+  const handleSelectOption = (option: string) => {
+    setSelectedOption(option);
+  };
+
   return (
     <div>
       <div>
         <div>
           <Link href={"/"}>
-            <p className="text-[16px] font-[500]">Вернутся на главное меню</p>
+            <p className="text-[16px] font-[500]">Вернуться на главное меню</p>
           </Link>
           <h1 className="text-[24px] mt-[20px] mb-[55px] font-[500]">
             Информация о жилье
@@ -20,20 +27,34 @@ export default function PostChoosePage() {
           </p>
           <div className="flex gap-[90px] mb-[76px]">
             <Button
-              className="bg-[#F3F3F3] rounded-[5px] py-[10px] px-[100px] text-white text-[22px] font-500"
-              labelStyle="text-black text-[16px] font-[500]"
+              className={`rounded-[5px] py-[10px] px-[100px] text-white text-[22px] font-500 ${
+                selectedOption === "Квартира"
+                  ? "bg-blue hover:bg-blue-600"
+                  : "bg-[#F3F3F3] "
+              }`}
+              labelStyle={`text-${
+                selectedOption === "Квартира" ? "white" : "black"
+              } text-[16px] font-[500]`}
               label="Квартира"
+              onClick={() => handleSelectOption("Квартира")}
             />
             <Button
-              className="bg-[#F3F3F3] rounded-[5px] py-[10px] px-[100px] text-white text-[22px] font-500"
-              labelStyle="text-black text-[16px] font-[500]"
+              className={`rounded-[5px] py-[10px] px-[100px] text-white text-[22px] font-500 ${
+                selectedOption === "Подселение"
+                  ? "bg-blue hover:bg-blue-600"
+                  : "bg-[#F3F3F3]"
+              }`}
+              labelStyle={`text-${
+                selectedOption === "Подселение" ? "white" : "black"
+              } text-[16px] font-[500]`}
               label="Подселение"
+              onClick={() => handleSelectOption("Подселение")}
             />
           </div>
           <Link href={"/routs/postsettlement"}>
             <Button
               className="bg-blue rounded-[5px] py-[10px] px-[20px] text-white text-[22px] font-500"
-              label="Далее "
+              label="Далее"
             />
           </Link>
         </div>

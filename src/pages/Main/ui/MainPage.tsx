@@ -4,6 +4,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 
 const mainData = [
   {
@@ -117,13 +118,17 @@ export default function LandLord() {
         <div className="flex gap-[30px] items-center">
           <div className="flex gap-[5px] items-center">
             <span className="text-md text-black font-medium">Макс. оплата</span>
-            <Image src={"/arrow.png"} width={16} height={16} alt="arrow" />
+            <span className="-rotate-90">
+              <Arrow />
+            </span>
           </div>
-          <div className="flex gap-[5px]">
+          <div className="flex gap-[15px]">
             <span className="text-md text-black font-medium items-center">
               Кол. комнат
             </span>
-            <Image src={"/arrow.png"} width={16} height={16} alt="arrow" />
+            <span className="-rotate-90">
+              <Arrow />
+            </span>
           </div>
           <h3 className="text-md font-medium text-black">Фильтр</h3>
         </div>
