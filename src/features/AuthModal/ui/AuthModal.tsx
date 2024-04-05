@@ -1,9 +1,14 @@
+"use client"
 import React, { useState } from "react";
 import cn from "classnames";
 import axios from "axios";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
-import { useUser } from "@/features/UserContext/ui/UserProvider";
+import { useUser } from "@/features/UserContext/ui/UserProvider"; 
+
+interface UserProps {
+  username: string
+}
 
 const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [username, setUsername] = useState("");
@@ -30,7 +35,6 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         response = await axios.post(
           "http://195.49.212.131:8000/api/v1/jwt/create/",
           {
-            email: username,
             login: username,
             password: password,
             role: 1,
@@ -121,7 +125,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 style={{ color: "#A8A2A2" }}
                 name="username"
                 placeholder="Введите электронную почту"
-                type="email"
+                type="text"
                 value={username}
                 onChange={handleChange}
                 required

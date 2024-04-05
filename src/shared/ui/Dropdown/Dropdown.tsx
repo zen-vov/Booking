@@ -4,6 +4,7 @@ interface DropdownProps {
   buttonStyle?: string;
   listStyle?: string;
   options: string[];
+  onClick?: () => void;
   label: string;
 }
 
@@ -11,6 +12,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   buttonStyle = "",
   listStyle = "",
   options,
+  onClick,
   label,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
