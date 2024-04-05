@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import cn from "classnames";
 import axios from "axios";
@@ -8,74 +7,65 @@ import { useUser } from "@/features/UserContext/ui/UserProvider";
 
 const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [authData, setAuthData] = useState({
-    email: "",
-    password: "",
-  });
-  {
-    /*asd*/
-  }
-  const [regData, setRefData] = useState({
-    role: 0,
-    login: "string",
-    full_name: "string",
-    password: "string",
-    is_active: true,
-    is_staff: true,
-    is_superuser: true,
-  });
-
   const { setUser } = useUser();
   const modalRef = React.useRef<HTMLDivElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (isRegistering) {
-      const { name, value } = e.target;
-      setRefData({ ...regData, [name]: value });
-    }
-    if (!isRegistering) {
-      const { name, value } = e.target;
-      setAuthData({ ...authData, [name]: value });
-    }
+    const { name, value } = e.target;
+    if (name === "username") setUsername(value);
+    if (name === "password") setPassword(value);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isRegistering) {
-      try {
-        const response = await axios.post(
-          "http://195.49.212.131:8000/api/v1/jwt/create/",
-          authData
-        );
-        const { token } = response.data;
-        localStorage.setItem("token", token);
-        console.log("Registration successful:", response.data);
-      } catch (error) {
-        console.error("Registration failed:", error);
-      }
-    }
-
-    if (!isRegistering) {
-      try {
-        const response = await axios.post(
+    try {
+      let response;
+      if (isRegistering) {
+        response = await axios.post(
           "http://195.49.212.131:8000/api/v1/auth/user/",
-          authData
+          {
+            email: username,
+            login: username,
+            password: password,
+            role: 1,
+          }
         );
-        const { token } = response.data;
-        localStorage.setItem("token", token);
-        console.log("Login successful:", response.data);
-        setUser(response.data);
-        // Дополнительные действия после успешной авторизации
-      } catch (error) {
-        console.error("Login failed:", error);
+      } else {
+        response = await axios.post(
+          "http://195.49.212.131:8000/api/v1/auth/user/",
+          {
+            login: username,
+            password: password,
+          }
+        );
       }
+
+      const token = response.data.jwt || response.data.access;
+      if (token) {
+        localStorage.setItem("accessToken", token);
+        setUser(response.data.user);
+        console.log(
+          isRegistering ? "Registration successful:" : "Login successful:",
+          response.data.user
+        );
+        onClose();
+      }
+    } catch (error: any) {
+      if (axios.isAxiosError(error) && error.response) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Произошла ошибка");
+      }
+      console.error(
+        isRegistering ? "Registration failed:" : "Login failed:",
+        error
+      );
     }
   };
 
@@ -128,32 +118,30 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <p className="text-[18px] font-[500]">Почта</p>
               <Input
                 className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
-                style={{
-                  color: "#A8A2A2",
-                }}
-                placeholder={"Введите электронную почту"}
+                style={{ color: "#A8A2A2" }}
+                name="username"
+                placeholder="Введите электронную почту"
                 type="email"
-                value={regData.full_name}
+                value={username}
                 onChange={handleChange}
                 required
               />
             </label>
-            <label className={cn({ "mb-[145px]": !isRegistering })}>
+            <label className="mb-[145px]">
               <p className="text-[18px] font-[500]">Пароль</p>
               <Input
                 className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
-                style={{
-                  color: "#A8A2A2",
-                }}
-                placeholder={"Введите пароль"}
+                style={{ color: "#A8A2A2" }}
+                name="password"
+                placeholder="Введите пароль"
                 type="password"
-                value={regData.password}
+                value={password}
                 onChange={handleChange}
                 required
               />
             </label>
             {isRegistering && (
-              <label className={cn({ "mt-[20px] mb-[100px]": isRegistering })}>
+              <label className="mt-[20px] mb-[100px]">
                 <select value={selectedRole} onChange={handleRoleChange}>
                   <option value="">Выберите роль</option>
                   <option value="student">Студент</option>
