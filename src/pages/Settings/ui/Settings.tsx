@@ -12,12 +12,12 @@ interface Fields {
 
 const Profile = () => {
   const [fields, setFields] = useState<Fields>({
-    fullName: "Жандос Сагалов Талгатулы",
-    phoneNumber: "8-777-***-**-18",
-    email: "s***3@gmail.com",
-    birthDate: "11.05.2003",
-    identification: "нет данных",
-    emergencyContact: "нет данных",
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    birthDate: "",
+    identification: "",
+    emergencyContact: "",
   });
 
   const [editingFields, setEditingFields] = useState<
@@ -30,6 +30,37 @@ const Profile = () => {
     identification: false,
     emergencyContact: false,
   });
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(
+          "http://195.49.212.131:8000/api/v1/auth/user_info/"
+        );
+        const userInfo = await response.json();
+        const userResponse = await fetch(
+          `http://195.49.212.131:8000/api/v1/auth/user/${userInfo.id}/`
+        );
+        const user = await userResponse.json();
+
+        setFields({
+          ...fields,
+          fullName: user.fullname,
+          phoneNumber: user.user_info.contacts,
+          email: user.user_info.email,
+          birthDate: user.user_info.birthDate,
+          identification: user.user_info.frontIDCard,
+          emergencyContact: user.additional_user,
+        });
+
+        console.log(user.fullname);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных: ", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleEditClick = (field: keyof Fields) => {
     setEditingFields({ ...editingFields, [field]: true });
