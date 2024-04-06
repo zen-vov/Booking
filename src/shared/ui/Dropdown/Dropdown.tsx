@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 
 interface DropdownProps {
   buttonStyle?: string;
@@ -30,9 +31,11 @@ const Dropdown: React.FC<DropdownProps> = ({
         <div className="relative">
           <div className={`absolute left-[-50px] top-[10px] ${listStyle}`}>
             {options.map((option, index) => (
-              <div className={"cursor-pointer"} key={index}>
-                {option}
-              </div>
+              <Link href={"/routs/settings/"}>
+                <div className={"cursor-pointer"} key={index}>
+                  {option}
+                </div>
+              </Link>
             ))}
           </div>
         </div>

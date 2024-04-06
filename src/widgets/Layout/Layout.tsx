@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Header from "./Header/ui/Header";
 import Footer from "./Footer/ui/Footer";
@@ -15,18 +16,25 @@ export default function Layout({
   isHouse,
   showFooter,
 }: LayoutProps) {
+  let target = "profile";
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+    target = "profile";
+  }
+
+  console.log(target);
   return (
     <>
-      {type === "login" && (
+      {target === "login" && (
         <>
-          <Header isProfile={true} isHouse={isHouse} />
+          <Header isProfile={false} isHouse={isHouse} />
           {children}
           <Footer isShow={showFooter} />
         </>
       )}
-      {type === "profile" && (
+      {target === "profile" && (
         <>
-          <Header isProfile={false} isHouse={isHouse} />
+          <Header isProfile={true} isHouse={isHouse} />
           {children}
           <Footer isShow={showFooter} />
         </>

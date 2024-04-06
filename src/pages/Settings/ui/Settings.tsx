@@ -32,20 +32,20 @@ const Profile = () => {
   });
 
   React.useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
+    const decodedToken = jwt.decode(accessToken);
+    const userId = decodedToken.user_id;
     const fetchUser = async () => {
       try {
-        const response = await fetch(
-          "http://195.49.212.131:8000/api/v1/auth/user_info/"
-        );
-        const userInfo = await response.json();
         const userResponse = await fetch(
-          `http://195.49.212.131:8000/api/v1/auth/user/${userInfo.id}/`
+          `http://195.49.212.131:8000/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
 
         setFields({
           ...fields,
-          fullName: user.fullname,
+          fullName: user.full_name,
           phoneNumber: user.user_info.contacts,
           email: user.user_info.email,
           birthDate: user.user_info.birthDate,
