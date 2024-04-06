@@ -16,7 +16,7 @@ export default function Layout({
   isHouse,
   showFooter,
 }: LayoutProps) {
-  let target = "profile";
+  let target = "login";
   const accessToken = localStorage.getItem("accessToken");
   if (accessToken) {
     target = "profile";
