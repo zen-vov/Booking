@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import Link from "next/link";
 
@@ -31,11 +32,13 @@ const Dropdown: React.FC<DropdownProps> = ({
         <div className="relative">
           <div className={`absolute left-[-50px] top-[10px] ${listStyle}`}>
             {options.map((option, index) => (
-              <Link href={"/routs/settings/"}>
-                <div className={"cursor-pointer"} key={index}>
-                  {option}
-                </div>
-              </Link>
+              <>
+                <Link href={"/routs/settings/"}>
+                  <div className={"cursor-pointer"} key={index}>
+                    {option}
+                  </div>
+                </Link>
+              </>
             ))}
           </div>
         </div>
@@ -45,3 +48,5 @@ const Dropdown: React.FC<DropdownProps> = ({
 };
 
 export default Dropdown;
+
+// 

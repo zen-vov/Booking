@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import jwt from "jsonwebtoken";
 
 interface Fields {
   fullName: string;

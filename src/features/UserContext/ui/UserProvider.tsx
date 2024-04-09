@@ -8,6 +8,7 @@ import React, {
 } from "react";
 
 interface User {
+  login: string;
   username: string;
   role: string;
 }

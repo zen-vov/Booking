@@ -67,7 +67,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [onClose]);
+  }, []);
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedRole(event.target.value);

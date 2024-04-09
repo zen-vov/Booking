@@ -31,6 +31,7 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
     const decodedToken = jwt.decode(accessToken);
+    console.log(decodedToken);
     const userId = decodedToken?.user_id;
 
     const fetchName = async () => {
