@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import cn from "classnames";
 import Button from "@/shared/ui/Button/Button";
@@ -25,6 +25,32 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
   const { user, setUser } = useUser();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
+  const [name, setName] = React.useState("");
+
+  React.useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
+    const decodedToken = jwt.decode(accessToken);
+    console.log(decodedToken);
+    const userId = decodedToken?.user_id;
+
+    const fetchName = async () => {
+      try {
+        const userResponse = await fetch(
+          `http://195.49.212.131:8000/api/v1/auth/user/${userId}/`
+        );
+        const user = await userResponse.json();
+
+        setName(user.full_name);
+        console.log(name);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных: ", error);
+      }
+    };
+
+    fetchName();
+  }, []);
+
   const handleLoginClick = () => {
     if (!user) {
       setIsModalOpen(true);
@@ -32,7 +58,7 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
   };
 
   const handleLogout = () => {
-    setUser(null); 
+    setUser(null);
   };
 
   const closeModal = () => {
@@ -46,7 +72,7 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
           <Link href={"/"}>
             <Logo />
           </Link>
-          {!user && (
+          {!isProfile && (
             <div className="flex gap-[40px]">
               {!isProfile && (
                 <Button
@@ -70,29 +96,20 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
               />
             </div>
           )}
-          {user && (
+          {isProfile && (
             <div className="flex gap-[40px]">
-              {!isProfile && (
-                <Button className="text-md font-[500]" label="Сообщения " />
-              )}
-              {!isProfile && (
-                <>
-                  <Link href={"/routs/posthouse"}>
-                    <Button
-                      className="text-md font-[500] border-[1px] border-black py-[3px] px-[6px]"
-                      label="Разместить объявление"
-                    />
-                  </Link>
-                  <Button
-                  label={user.login}
-                  />
-                </>
-              )}
+              <Button className="text-md font-[500]" label="Сообщения " />
+              <Link href={"/routs/posthouse"}>
+                <Button
+                  className="text-md font-[500] border-[1px] border-black py-[3px] px-[6px]"
+                  label="Разместить объявление"
+                />
+              </Link>
               <Dropdown
                 buttonStyle="text-md font-[500]"
                 listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
                 options={options}
-                label={user.login}
+                label={name}
                 onClick={handleLogout}
               />
             </div>
@@ -103,4 +120,3 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
     </header>
   );
 }
-
