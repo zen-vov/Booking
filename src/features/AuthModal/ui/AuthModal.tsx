@@ -4,11 +4,6 @@ import cn from "classnames";
 import axios from "axios";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
-import { useUser } from "@/features/UserContext/ui/UserProvider";
-
-interface UserProps {
-  username: string;
-}
 
 const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [username, setUsername] = useState("");
@@ -17,7 +12,6 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { setUser } = useUser();
   const modalRef = React.useRef<HTMLDivElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,10 +19,10 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     if (name === "username") setUsername(value);
     if (name === "password") setPassword(value);
   };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
+      let accessToken;
       if (isRegistering) {
         const response = await axios.post(
           "http://195.49.212.131:8000/api/v1/auth/user/",
@@ -39,26 +33,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             role: 1,
           }
         );
-        const userInfo = response.data;
-        localStorage.setItem("accessToken", response.data.jwt);
-        localStorage.setItem("user id", userInfo.id); // Здесь сохраняем user id
-        const jwtResponse = await fetch(
-          "http://195.49.212.131:8000/api/v1/jwt/create/",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              login: username,
-              password: password,
-            }),
-          }
-        );
-        const jwtData = await jwtResponse.json();
-        if (jwtData.access) {
-          localStorage.setItem("accessToken", jwtData.access);
-        }
+        accessToken = response.data.jwt;
       } else {
         const response = await axios.post(
           "http://195.49.212.131:8000/api/v1/jwt/create/",
@@ -67,7 +42,10 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             password: password,
           }
         );
+        accessToken = response.data.access;
       }
+      localStorage.setItem("accessToken", accessToken);
+      window.location.reload();
       onClose();
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
@@ -172,57 +150,3 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 };
 
 export default AuthModal;
-
-// const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-//   event.preventDefault();
-//   try {
-//     if (isRegistering) {
-//       const response = await axios.post(
-//         "http://195.49.212.131:8000/api/v1/auth/user/",
-//         {
-//           email: username,
-//           login: username,
-//           password: password,
-//           role: 1,
-//         }
-//       );
-//       localStorage.setItem("accessToken", response.data.jwt);
-//       await fetch("http://195.49.212.131:8000/api/v1/jwt/create/", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           login: username,
-//           password: password,
-//         }),
-//       })
-//         .then((response) => {
-//           return response.json();
-//         })
-//         .then(async (data) => {
-//           if (data.access) {
-//             localStorage.setItem("accessToken", data.access);
-//             const userData = { username: "exampleUser", role: "admin" };
-//             setUser(userData);
-//             console.log(userData);
-//           }
-//         });
-//     } else {
-//       const response = await axios.post(
-//         "http://195.49.212.131:8000/api/v1/jwt/create/",
-//         {
-//           login: username,
-//           password: password,
-//         }
-//       );
-//     }
-//     onClose();
-//   } catch (error: any) {
-//     if (axios.isAxiosError(error) && error.response) {
-//       setErrorMessage(error.response.data.message);
-//     } else {
-//       setErrorMessage("Произошла ошибка");
-//     }
-//   }
-// };

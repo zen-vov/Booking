@@ -35,7 +35,7 @@ const Profile = () => {
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
     const decodedToken = jwt.decode(accessToken);
-    const userId = decodedToken.user_id;
+    const userId = decodedToken?.user_id;
     const fetchUser = async () => {
       try {
         const userResponse = await fetch(
@@ -52,8 +52,6 @@ const Profile = () => {
           identification: user.user_info.frontIDCard,
           emergencyContact: user.additional_user,
         });
-
-        console.log(user.fullname);
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
       }

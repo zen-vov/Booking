@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import cn from "classnames";
 import Button from "@/shared/ui/Button/Button";
 import AuthModal from "@/features/AuthModal/ui/AuthModal";
@@ -31,8 +31,7 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
     const decodedToken = jwt.decode(accessToken);
-    console.log(decodedToken);
-    const userId = decodedToken.user_id;
+    const userId = decodedToken?.user_id;
 
     const fetchName = async () => {
       try {
