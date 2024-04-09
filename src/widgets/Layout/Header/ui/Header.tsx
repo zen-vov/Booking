@@ -76,18 +76,23 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
                 <Button className="text-md font-[500]" label="Сообщения " />
               )}
               {!isProfile && (
-                <Link href={"/routs/posthouse"}>
+                <>
+                  <Link href={"/routs/posthouse"}>
+                    <Button
+                      className="text-md font-[500] border-[1px] border-black py-[3px] px-[6px]"
+                      label="Разместить объявление"
+                    />
+                  </Link>
                   <Button
-                    className="text-md font-[500] border-[1px] border-black py-[3px] px-[6px]"
-                    label="Разместить объявление"
+                  label={user.login}
                   />
-                </Link>
+                </>
               )}
               <Dropdown
                 buttonStyle="text-md font-[500]"
                 listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
                 options={options}
-                label={user.username}
+                label={user.login}
                 onClick={handleLogout}
               />
             </div>
