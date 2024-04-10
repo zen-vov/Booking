@@ -1,6 +1,10 @@
 "use client";
 import React from "react";
 import Header from "./Header/ui/Header";
+import HeaderLandlord from "./Header/ui/HeaderLandord";
+import HeaderStudent from "./Header/ui/HeaderStudent";
+import HeaderPostLandlord from "./Header/ui/HeaderPostLandlord";
+import HeaderPostStudent from "./Header/ui/HeaderPostStudent";
 import Footer from "./Footer/ui/Footer";
 
 interface LayoutProps {
