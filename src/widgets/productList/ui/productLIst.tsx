@@ -3,6 +3,7 @@ import ProductCard, {
   ProductProps,
 } from "@/entities/ProductCard/ui/ProductCard";
 import axios from "axios";
+import { BASE_URL } from '@/shared/api/BASE'
 import { useEffect, useState } from "react";
 
 export const mainData = [
