@@ -1,12 +1,13 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import cn from "classnames";
-import axios from "axios";
-import Button from "@/shared/ui/Button/Button";
-import Input from "@/shared/ui/Input/Input";
+
+interface ModalProps {
+    isSplit: boolean;
+    
+}
 
 const Modal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const [isRegistering, setIsRegistering] = useState(false);
+  const [isRegistering, setIsRegistering] = React.useState(false);
   const modalRef = React.useRef<HTMLDivElement>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
