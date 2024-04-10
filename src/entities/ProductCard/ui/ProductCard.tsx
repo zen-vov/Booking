@@ -1,4 +1,5 @@
 "use client"
+import { useState } from "react";
 import Like from "@/shared/ui/Icons/Like/Like";
 import Share from "@/shared/ui/Icons/Share/Share";
 import { Carousel } from "flowbite-react";
@@ -10,11 +11,17 @@ export type ProductProps = {
   address: string;
   price: string;
   dataAT: string;
-  photo: string;
+  photo: any;
 }
 
 export default function ProductCard(props: ProductProps) {
   const { id, address, price, dataAT, photo } = props;
+
+  // const [currentSlide, setCurrentSlide] = useState(0);
+
+  // const handleSlideChange = (newSlide: number) => {
+  //   setCurrentSlide(newSlide);
+  // };
 
   return (
     <Link key={id} href={"/routs/product"}>
