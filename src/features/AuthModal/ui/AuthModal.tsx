@@ -98,7 +98,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <div className="fixed z-[1000] inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div
-        className="bg-white p-8 border border-[1px] rounded-[15px] w-[580px] h-fit"
+        className="bg-white p-8 border-[1px] rounded-[15px] w-[580px] h-fit"
         ref={modalRef}
       >
         <div className="flex flex-col justify-between py-[20px]">
