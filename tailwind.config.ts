@@ -28,6 +28,7 @@ const config: Config = {
         blue: "#416FF2",
         green: "#5AB352",
         gray: "#767272",
+        lightGray: "#F1F1F1",
         link: "#00258F",
       },
       backgroundImage: {

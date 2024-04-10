@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import cn from "classnames";
 import Button from "@/shared/ui/Button/Button";
 import AuthModal from "@/features/AuthModal/ui/AuthModal";

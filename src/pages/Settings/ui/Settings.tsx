@@ -53,8 +53,6 @@ const Profile = () => {
           identification: user.user_info.frontIDCard,
           emergencyContact: user.additional_user,
         });
-
-        console.log(user.fullname);
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
       }
