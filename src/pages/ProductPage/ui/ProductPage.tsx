@@ -87,8 +87,8 @@ export default function ProductPage() {
             </div>
           </div>
           <div className="flex flex-col gap-7">
-            <Button label="Добавить людей" className="w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"/>
-            <Button label="Удалить объявление" className="w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium" />
+            <Button label="Добавить людей" className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"/>
+            <Button label="Удалить объявление" className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium" />
           </div>
         </div>
         <div>

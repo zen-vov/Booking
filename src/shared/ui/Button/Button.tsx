@@ -4,7 +4,7 @@ import cn from "classnames";
 
 interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
-  label: string;
+  label: React.ReactNode | string;
   labelStyle?: string;
 }
 

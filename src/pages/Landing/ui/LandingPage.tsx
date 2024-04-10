@@ -124,8 +124,8 @@ export default function LandingPage() {
           </h2>
           <Slider {...settings}>
             {sliderParams.map((item, index) => (
-              <div className="w-[50%] h-[fit] py-6 px-4  bg-F1F1F1" key={index}>
-                <p className="text-[16px] font-[400] mb-[40px]">{item.title}</p>
+              <div className="w-[50%] h-[auto] py-6 px-4 bg-transparent" key={index}>
+                <p className="text-[16px] mb-[40px]">{item.title}</p>
                 <div className="flex items-center gap-[3px] mb-[10px]">
                   <Star />
                   <Star />
