@@ -66,7 +66,7 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
   };
 
   return (
-    <header className={cn("py-[30px]", { "border-b-black": isProfile })}>
+    <header className={cn("border-b-[1px] border-[#534949] py-[30px]", { "border-b-black": isProfile })}>
       <div className="container">
         <nav className="flex justify-between items-center">
           <Link href={"/"}>
@@ -84,7 +84,7 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
               {!isProfile && (
                 <Link href={"/routs/posthouse"}>
                   <Button
-                    className="text-md font-[500] border border-[1px] border-black py-[3px] px-[6px]"
+                    className="text-md font-[500] border-[1px] border-black py-[3px] px-[6px]"
                     label="Разместить объявление"
                   />
                 </Link>

@@ -1,4 +1,3 @@
-import LandLord from "@/pages/Main/ui/MainPage";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
 import ProductList from "@/widgets/productList/ui/productLIst";
@@ -75,61 +74,21 @@ export default function ProductPage() {
       <p className="text-[16px] mb-8">Опубликовано в 11.03.2024</p>
       <div className="flex gap-[60px]">
         <div className="w-[110%] h-[376px]">
-          <div
-            style={{ backgroundImage: `url(${"/Image1.png"})` }}
-            className="w-full h-[376px] mb-[90px]"
-          />
-          <div className="bg-white p-10 rounded-[12px]">
-            <div className="flex justify-between items-center p-2.5 mb-3">
-              <div className="flex gap-2">
-                <Image src="/user.png" width={27} height={27} alt="user" />
-                <h1 className="text-[16px]">Мурат С.</h1>
-              </div>
-              <span className="text-[12p]">Хозяин квартиры</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <h1 className="text-[16px]">8-777-***-**-17</h1>
-              <span className="text-blue text-[16px]">Показать номер</span>
-            </div>
-            <div className="">
-              <div className="flex items-center gap-2.5">
-                <Image
-                  src={"/Checkmark.png"}
-                  width={27}
-                  height={27}
-                  alt="checkmark"
-                />
-                <h1 className="text-[16px]">Собственность подтверждена</h1>
-              </div>
-              <p className="p-2.5 text-[12px]">
-                Арендодатель предоставил документы собственности на жильё
-              </p>
-              <div className="flex rounded-[6px]">
-                <div className="py-3 pl-5 bg-[#F1F1F1] ">
-                  <Input
-                    className="text-[#A8A2A2] text-[14px] font-medium"
-                    placeholder="Отправить сообщение..."
-                  />
-                </div>
-                <Button
-                  label="Отправить"
-                  className="bg-blue text-white text-[14px] font-medium p-2.5 rounded-[6px]"
-                />
-              </div>
+          <div className="flex flex-col gap-[22px] mb-12">
+            <div
+              style={{ backgroundImage: `url(${"/Image1.png"})` }}
+              className="w-[558px] h-[376px] rounded-[12px]"
+            />
+            <div className="flex gap-4">
+              <div 
+                style={{ backgroundImage: `url(${"/Image1.png"})` }}
+                className="rounded-[6px] w-[30%] h-[93px] object-cover"
+              />
             </div>
           </div>
-          <div className="mt-[50px]">
-            <div className="flex gap-5 mb-2">
-              <div className="bg-green text-white rounded-[9px] py-[5px] px-[13px] ">
-                4.0
-              </div>
-              <h3 className="text-md font-semibold">Отлично!</h3>
-            </div>
-            <h2 className="text-[15px] mb-2">Клиентам понравилось:</h2>
-            <p className="text-[12px] mb-[17px]">
-              Чистота, комфортное местоположение, приемлимая сумма за квартиру
-            </p>
-            <p className="text-blue text-[12px]">Посмотреть все отзывы</p>
+          <div className="flex flex-col gap-7">
+            <Button label="Добавить людей" className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"/>
+            <Button label="Удалить объявление" className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium" />
           </div>
         </div>
         <div>

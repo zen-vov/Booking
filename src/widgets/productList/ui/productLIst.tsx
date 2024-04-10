@@ -1,16 +1,36 @@
+"use client"
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 type Product = {
   id: number;
   address: string;
   price: string;
   dataAT: string;
   photo: string;
-}
+};
 
 interface ProductProps {
   product: Product[];
 }
 
 export default function ProductList({ product }: ProductProps) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data: res } = await axios.get(`${BASE_URL}/advertisement`);
+        console.log(res);
+        setData(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       {product.map(({ id, address, price, dataAT, photo }) => (

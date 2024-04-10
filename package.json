@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ebay/nice-modal-react": "^1.2.13",
     "@fontsource/montserrat": "^5.0.17",
     "axios": "^1.6.8",
     "classnames": "^2.5.1",
