@@ -17,9 +17,11 @@ export default function Layout({
   showFooter,
 }: LayoutProps) {
   let target = "login";
-  const accessToken = localStorage.getItem("accessToken");
-  if (accessToken) {
-    target = "profile";
+  if (typeof window !== "undefined") {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      target = "profile";
+    }
   }
 
   console.log(target);
