@@ -5,13 +5,28 @@ import axios from "axios";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
 
-const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+interface ModalI {
+  onClose: () => void;
+  active?: boolean;
+}
+
+interface UserData {
+  role: number;
+  login: string;
+  full_name: string;
+  password: string;
+  is_active: boolean;
+  is_staff: boolean;
+  is_superuser: boolean;
+}
+
+const AuthModal = ({ onClose, active }: ModalI) => {
   const [username, setUsername] = useState("");
+  const [mail, setMain] = React.useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const modalRef = React.useRef<HTMLDivElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,44 +38,59 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      let accessToken;
       if (isRegistering) {
-        const fakeUser = {
-          id: 2,
-          login: username,
-          full_name: "John Doe",
-          is_active: true,
-          is_deleted: false,
-          role: {
-            id: 1,
-            role_name: selectedRole === "student" ? "Student" : "Landlord",
-          },
-          user_info: {
-            user: 1,
-            photo_avatar: "avatar.jpg",
-            contacts: "123456789",
-            email: username,
-            birthDate: "1990-01-01",
-            address: "123 Main Street",
-            imagePaths: "images/",
-            frontIDCard: "front.jpg",
-            backIDCard: "back.jpg",
-          },
-          additional_user: {
-            full_name: "Jane Doe",
-            who_is: selectedRole === "student" ? "Student" : "Landlord",
-            contacts: "987654321",
-          },
-        };
-        accessToken = "fake-access-token";
-      } else {
-        accessToken = "fake-access-token";
+        const registerResponse = await fetch(
+          "http://studhouse.kz/api/v1/auth/user/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              role: 1,
+              login: username,
+              full_name: username,
+              password: password,
+              is_active: true,
+              is_staff: true,
+              is_superuser: true,
+            }),
+          }
+        );
+
+        if (!registerResponse.ok) {
+          throw new Error("Registration failed");
+        }
+
+        const registerData = await registerResponse.json();
+
+        localStorage.setItem("accessToken", registerData.jwt);
       }
-      localStorage.setItem("accessToken", accessToken);
-      window.location.reload();
+
+      const loginResponse = await fetch(
+        "http://studhouse.kz/api/v1/jwt/create/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            login: username,
+            password: password,
+          }),
+        }
+      );
+
+      if (!loginResponse.ok) {
+        throw new Error("Login failed");
+      }
+
+      const loginData = await loginResponse.json();
+      localStorage.setItem("accessToken", loginData.access);
+
       onClose();
     } catch (error: any) {
-      setErrorMessage("Произошла ошибка");
+      setErrorMessage(error.message || "Произошла ошибка");
     }
   };
 
