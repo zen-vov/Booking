@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import cn from "classnames";
 import Button from "@/shared/ui/Button/Button";

@@ -3,7 +3,7 @@ import ProductCard, {
   ProductProps,
 } from "@/entities/ProductCard/ui/ProductCard";
 import axios from "axios";
-import { BASE_URL } from '@/shared/api/BASE'
+import { BASE_URL } from "@/shared/api/BASE";
 import { useEffect, useState } from "react";
 
 export const mainData = [
@@ -12,11 +12,7 @@ export const mainData = [
     address: "г. Алматы, Бостандыкский район",
     price: "320 000",
     dataAT: "11.03.2024",
-    photo: [
-      "/Image1.png",
-      "/Image1.png",
-      "/Image1.png",
-    ]
+    photo: ["/Image1.png", "/Image1.png", "/Image1.png"],
   },
   {
     id: 2,
