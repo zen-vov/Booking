@@ -20,25 +20,21 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       let accessToken;
       if (isRegistering) {
         const response = await axios.post(
-          "http://studhouse.kz/api/v1/auth/user",
+          "http://studhouse.kz/api/v1/auth/user/",
           {
-            id: Date.now(),
             email: username,
             password: password,
-            full_name: "Pepsi",
-            role: selectedRole === "student" ? "Student" : "Landlord",
-            is_active: true,
-            is_staff: true,
-            is_superuser: true,
           }
         );
         accessToken = response.data.accessToken;
       } else {
         const response = await axios.post(
-          "http://studhouse.kz/api/v1/jwt/create",
+          "http://studhouse.kz/api/v1/jwt/create/",
           {
             email: username,
+            login: username,
             password: password,
+            role: 1,
           }
         );
         accessToken = response.data.accessToken;
@@ -224,4 +220,3 @@ export default AuthModal;
 // };
 
 // export default EditAdvertisementPage;
-

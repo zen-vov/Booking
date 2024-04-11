@@ -1,11 +1,11 @@
-import ProductPage from "@/pages/ProductPage/ui/ProductPage";
+import MainPage from "@/pages/Main/ui/MainPage";
 import Layout from "@/widgets/Layout/Layout";
 
-export default function Product() {
+export default function Home() {
   return (
     <Layout>
-      <main className="container">
-        <ProductPage />
+      <main>
+        <MainPage />
       </main>
     </Layout>
   );

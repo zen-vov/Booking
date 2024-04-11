@@ -1,11 +1,11 @@
-import MainPage from "@/pages/Main/ui/MainPage";
+import LandingPage from "@/pages/Landing/ui/LandingPage";
 import Layout from "@/widgets/Layout/Layout";
 
 export default function Home() {
   return (
     <Layout>
       <main>
-        <MainPage />
+        <LandingPage />
       </main>
     </Layout>
   );

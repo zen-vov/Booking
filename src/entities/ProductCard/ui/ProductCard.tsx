@@ -1,11 +1,18 @@
+"use client"
+import { useState } from "react";
 import { Carousel } from "flowbite-react";
 import Like from "@/shared/ui/Icons/Like/Like";
 import Share from "@/shared/ui/Icons/Share/Share";
 import Image from "next/image";
 import Link from "next/link";
+import './styles.scss';
 
 export type ProductProps = {
   id: number;
+  title?: string;
+  description?: string;
+  location?: string;
+  advertisement_images?: string[];
   address: string;
   price: string;
   dataAT: string;
@@ -14,6 +21,7 @@ export type ProductProps = {
 
 export default function ProductCard(props: ProductProps) {
   const { id, address, price, dataAT, photo } = props;
+  const [like, setLike] = useState<boolean>(false);
 
   // const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -59,7 +67,9 @@ export default function ProductCard(props: ProductProps) {
           <button onClick={copyLinkToClipboard}>
             <Share />
           </button>
-          <Like />
+          <button onClick={() => setLike(!like)}>
+            <Like className={like ? 'like' : ''} />
+          </button>
         </div>
       </div>
     </div>
