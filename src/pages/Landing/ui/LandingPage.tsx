@@ -9,7 +9,8 @@ import Image from "next/image";
 import { Modal } from "@/shared/ui/Modal/Modal";
 
 export default function LandingPage() {
-  const [modal, setModal] = React.useState(false)
+  const [modal, setModal] = React.useState(false);
+  const [modalActive, setModalActive] = React.useState(false);
 
   const sliderParams = [
     {
@@ -92,8 +93,8 @@ export default function LandingPage() {
               </p>
               <p className="mb-[27px] w-[520px]">
                 Простые в использовании инструменты нашего сайта позволяют
-                разместить вашу недвижимость там, где ее каждый месяц ищут тысячу
-                арендаторов. Кроме того, в нашу платформу для листинга
+                разместить вашу недвижимость там, где ее каждый месяц ищут
+                тысячу арендаторов. Кроме того, в нашу платформу для листинга
                 интегрированы функции обмена сообщениями и проверки арендаторов,
                 которые помогут вам быстро находить и проверять кандидатов.
               </p>
@@ -119,12 +120,18 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="mt-[64px]">
-          <h2 onClick={() => setModal(true)} className="font-[600] text-center mb-[40px] text-[32px]">
+          <h2
+            onClick={() => setModal(true)}
+            className="font-[600] text-center mb-[40px] text-[32px]"
+          >
             Отзывы про нас
           </h2>
           <Slider {...settings}>
             {sliderParams.map((item, index) => (
-              <div className="w-[50%] h-[auto] py-6 px-4 bg-transparent" key={index}>
+              <div
+                className="w-[50%] h-[auto] py-6 px-4 bg-transparent"
+                key={index}
+              >
                 <p className="text-[16px] mb-[40px]">{item.title}</p>
                 <div className="flex items-center gap-[3px] mb-[10px]">
                   <Star />
@@ -139,9 +146,6 @@ export default function LandingPage() {
           </Slider>
         </div>
       </div>
-        <Modal active={modal} setActive={setModal}>
-          <h1>Hello world</h1>
-        </Modal>
     </>
   );
 }

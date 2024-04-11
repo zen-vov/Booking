@@ -3,10 +3,10 @@ import Layout from "@/widgets/Layout/Layout";
 
 export default function Product() {
   return (
-    <Layout type="login">
+    <Layout>
       <main className="container">
         <ProductPage />
       </main>
     </Layout>
-  )
+  );
 }

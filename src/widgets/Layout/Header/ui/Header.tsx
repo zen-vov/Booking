@@ -10,10 +10,10 @@ import Link from "next/link";
 import Logo from "@/shared/ui/Icons/Logo/Logo";
 import Search from "@/shared/ui/Icons/Search/Search";
 
-interface HeaderProps {
-  isProfile: boolean;
-  isHouse?: boolean;
-}
+// interface HeaderProps {
+//   isProfile: boolean;
+//   isHouse?: boolean;
+// }
 
 const options = [
   "Личные данные",
@@ -23,7 +23,7 @@ const options = [
   "Выйти",
 ];
 
-export default function Header({ isProfile, isHouse }: HeaderProps) {
+export default function Header() {
   const { user, setUser } = useUser();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
@@ -35,6 +35,9 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
     const decodedToken = jwt.decode(accessToken);
     console.log(decodedToken);
     const userId = decodedToken?.user_id;
+    if (userId) {
+      localStorage.setItem("userId", userId);
+    }
 
     const fetchName = async () => {
       try {
@@ -68,11 +71,7 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
   };
 
   return (
-    <header
-      className={cn("border-b-[1px] border-[#534949] py-[30px]", {
-        "border-b-black": isProfile,
-      })}
-    >
+    <header className={cn("border-b-[1px] border-[#534949] py-[30px]")}>
       <div className="container">
         <nav className="flex justify-between items-center">
           <Link href={"/"}>
@@ -86,41 +85,21 @@ export default function Header({ isProfile, isHouse }: HeaderProps) {
             />
           </div>
 
-          {!isProfile && (
-            <div className="flex gap-[40px]">
-              <Button
-                className="text-md font-[500]"
-                label="Квартиры"
-                onClick={handleLoginClick}
-              />
-              <Link href={"/routs/posthouse"}>
-                <Button className="text-md font-[500]" label="Подселение" />
-              </Link>
-              <Button
-                className="text-md font-[500]"
-                label="Войти"
-                onClick={handleLoginClick}
-              />
-            </div>
-          )}
-          {isProfile && (
-            <div className="flex gap-[40px]">
-              <Button className="text-md font-[500]" label="Сообщения " />
-              <Link href={"/routs/posthouse"}>
-                <Button
-                  className="text-md font-[500] border-[1px] border-black py-[3px] px-[6px]"
-                  label="Разместить объявление"
-                />
-              </Link>
-              <Dropdown
-                buttonStyle="text-md font-[500]"
-                listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
-                options={options}
-                label={name}
-                onClick={handleLogout}
-              />
-            </div>
-          )}
+          <div className="flex gap-[40px]">
+            <Button
+              className="text-md font-[500]"
+              label="Квартиры"
+              onClick={handleLoginClick}
+            />
+            <Link href={"/routs/posthouse"}>
+              <Button className="text-md font-[500]" label="Подселение" />
+            </Link>
+            <Button
+              className="text-md font-[500]"
+              label="Войти"
+              onClick={handleLoginClick}
+            />
+          </div>
         </nav>
       </div>
       {isModalOpen && <AuthModal onClose={closeModal} />}
