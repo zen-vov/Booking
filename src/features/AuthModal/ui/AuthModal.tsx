@@ -24,35 +24,42 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     try {
       let accessToken;
       if (isRegistering) {
-        const response = await axios.post(
-          "http://195.49.212.131:8000/api/v1/auth/user/",
-          {
+        const fakeUser = {
+          id: 1,
+          login: username,
+          full_name: "John Doe",
+          is_active: true,
+          is_deleted: false,
+          role: {
+            id: 1,
+            role_name: selectedRole === "student" ? "Student" : "Landlord",
+          },
+          user_info: {
+            user: 1,
+            photo_avatar: "avatar.jpg",
+            contacts: "123456789",
             email: username,
-            login: username,
-            password: password,
-            role: 1,
-          }
-        );
-        accessToken = response.data.jwt;
+            birthDate: "1990-01-01",
+            address: "123 Main Street",
+            imagePaths: "images/",
+            frontIDCard: "front.jpg",
+            backIDCard: "back.jpg",
+          },
+          additional_user: {
+            full_name: "Jane Doe",
+            who_is: selectedRole === "student" ? "Student" : "Landlord",
+            contacts: "987654321",
+          },
+        };
+        accessToken = "fake-access-token";
       } else {
-        const response = await axios.post(
-          "http://195.49.212.131:8000/api/v1/jwt/create/",
-          {
-            login: username,
-            password: password,
-          }
-        );
-        accessToken = response.data.access;
+        accessToken = "fake-access-token";
       }
       localStorage.setItem("accessToken", accessToken);
       window.location.reload();
       onClose();
     } catch (error: any) {
-      if (axios.isAxiosError(error) && error.response) {
-        setErrorMessage(error.response.data.message);
-      } else {
-        setErrorMessage("Произошла ошибка");
-      }
+      setErrorMessage("Произошла ошибка");
     }
   };
 
