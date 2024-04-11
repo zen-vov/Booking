@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Button from "@/shared/ui/Button/Button";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
+import "./styles.scss";
 
 export default function PostChoosePage() {
   const [selectedOption, setSelectedOption] = useState<string>("");

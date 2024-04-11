@@ -6,7 +6,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input: React.FC<InputProps> = ({ className, ...rest }) => {
-  return <input className={cn(className, "bg-transparent")} {...rest} />;
+  return <input className={cn(className, "bg-transparent outline-none")} {...rest} />;
 };
 
 export default Input;

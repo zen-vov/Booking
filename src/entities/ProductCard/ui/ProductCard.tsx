@@ -1,8 +1,6 @@
-"use client"
-import { useState } from "react";
+import { Carousel } from "flowbite-react";
 import Like from "@/shared/ui/Icons/Like/Like";
 import Share from "@/shared/ui/Icons/Share/Share";
-import { Carousel } from "flowbite-react";
 import Image from "next/image";
 import Link from "next/link";
 

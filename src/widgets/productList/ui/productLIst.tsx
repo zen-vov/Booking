@@ -92,6 +92,7 @@ export default function ProductList({ records }: ProductListI) {
         <>
           <ProductCard
             id={id}
+            key={id}
             address={address}
             price={price}
             dataAT={dataAT}
