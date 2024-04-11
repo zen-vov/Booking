@@ -88,7 +88,7 @@ export default function ProductList({ records }: ProductListI) {
 
   return (
     <>
-      {records.map(({ id, address, price, dataAT, photo }) => (
+      {records?.map(({ id, address, price, dataAT, photo }) => (
         <>
           <ProductCard
             id={id}

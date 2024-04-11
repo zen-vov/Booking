@@ -3,7 +3,7 @@ import Layout from "@/widgets/Layout/Layout";
 
 export default function Home() {
   return (
-    <Layout type="profile">
+    <Layout>
       <main className="container">
         <ChatPage />
       </main>

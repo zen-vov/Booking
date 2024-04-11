@@ -5,11 +5,15 @@ import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
+import styles from "./styles.module.scss";
+import Button from "@/shared/ui/Button/Button";
+import AuthModal from "@/features/AuthModal/ui/AuthModal";
 
 export default function LandLord() {
   const [data, setData] = useState([]);
   const [current, setCurrent] = useState(1);
   const [active, setActive] = useState(false);
+  const [activeModal, setActiveModal] = useState<boolean>(false);
 
   useEffect(() => {
     const pageNumber = new URLSearchParams(window.location.search).get("page");
@@ -47,8 +51,26 @@ export default function LandLord() {
   }, []);
 
   return (
-    <section className="py-[45px]">
-      <div className="flex items-center  gap-[100px] mb-[60px]">
+    <section className="pb-[45px]">
+      <div className={`${styles.imgbg} flex`}>
+        <div className="container py-[128px] flex flex-col items-start w-full">
+          <div className="flex flex-col">
+            <span className="text-2xl text-center mb-[1rem] font-semibold text-primary">
+              Создай себе идеальное <br /> окружение
+            </span>
+            <Button
+              onClick={() => setActiveModal(true)}
+              className="border-[1px] flex items-center justify-center border-black rounded-[10px] text-center bg-white text-[20px]"
+              label="Добавить объявление"
+            >
+              <span className="text-[45px] mr-[1rem] font-semibold text-center">
+                +
+              </span>
+            </Button>
+          </div>
+        </div>
+      </div>
+      <div className="container mt-[50px] flex items-center  gap-[100px] mb-[60px]">
         <div className="flex items-center gap-2">
           <Image src={"/Search.png"} width={29} height={29} alt="search" />
           <Input
@@ -74,10 +96,10 @@ export default function LandLord() {
           <h3 className="text-md font-medium text-black">Фильтр</h3>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-[92px] mb-12">
+      <div className="container grid grid-cols-2 gap-[92px] mb-12">
         <ProductList records={records} />
       </div>
-      <div className="flex gap-4 items-center justify-center">
+      <div className="container flex gap-4 items-center justify-center">
         {numbers.map((n, i) => (
           <div
             className={`py-2 px-4 cursor-pointer text-md rounded-[6px] ${
@@ -90,6 +112,10 @@ export default function LandLord() {
           </div>
         ))}
       </div>
+      {/* {activeModal && (
+        <div className="modal-overlay" onClick={() => setActiveModal(false)} />
+      )}
+      <AuthModal onClose={() => setActiveModal(false)} active={activeModal} /> */}
     </section>
   );
 }

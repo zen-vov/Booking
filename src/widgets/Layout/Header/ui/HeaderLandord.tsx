@@ -33,7 +33,7 @@ export default function HeaderLandlord() {
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
     const decodedToken = jwt.decode(accessToken);
-    console.log(decodedToken);
+    console.log("header landlord: ", decodedToken);
     const userId = decodedToken?.user_id;
 
     const fetchName = async () => {

@@ -9,7 +9,8 @@ import Image from "next/image";
 import { Modal } from "@/shared/ui/Modal/Modal";
 
 export default function LandingPage() {
-  const [modal, setModal] = React.useState(false)
+  const [modal, setModal] = React.useState(false);
+  const [modalActive, setModalActive] = React.useState(false);
 
   const sliderParams = [
     {
@@ -51,11 +52,15 @@ export default function LandingPage() {
     <>
       <div>
         <div className={styles.imgbg}>
-          <div className="py-[128px] pl-[131px] w-[600px] text-2xl text-center font-semibold text-primary">
-            <p>Найди свое идеальное жилье</p>
+          <div className="container py-[128px] flex items-start w-full text-2xl text-center font-semibold text-primary">
+            <div>
+              <span>
+                Найди свое <br /> идеальное жилье
+              </span>
+            </div>
           </div>
         </div>
-        <div className="flex gap-[125px] pl-[125px] pt-[125px]">
+        <div className="container flex gap-[125px] pl-[125px] pt-[125px]">
           <Card
             image="/Landing/house.png"
             name="Заполните запросы и найдите квартиру"
@@ -74,15 +79,15 @@ export default function LandingPage() {
             description="Разместите свою недвижимость бесплатно на нашем сайте, чтобы помочь вам найти идеального арендатора."
           />
         </div>
-        <div>
+        <div className="container mt-[168px]">
           <div className="text-center">
             <h2 className="font-[600] text-[24px]">
               Быть арендодателем проще, чем когда-либо
             </h2>
-            <p className="text-[16px] font-[400]">
+            <p className="text-[16px] font-[400] pt-[20px]">
               Экономьте время с помощью наших инструментов управления
-              недвижимостью, которые помогут вам получить то, что вам нужно —
-              подписанные договоры аренды и арендные платежи.
+              недвижимостью, которые помогут вам получить то, что вам <br />
+              нужно — подписанные договоры аренды и арендные платежи.
             </p>
           </div>
           <div className="flex items-top justify-between mt-[80px]">
@@ -92,8 +97,8 @@ export default function LandingPage() {
               </p>
               <p className="mb-[27px] w-[520px]">
                 Простые в использовании инструменты нашего сайта позволяют
-                разместить вашу недвижимость там, где ее каждый месяц ищут тысячу
-                арендаторов. Кроме того, в нашу платформу для листинга
+                разместить вашу недвижимость там, где ее каждый месяц ищут
+                тысячу арендаторов. Кроме того, в нашу платформу для листинга
                 интегрированы функции обмена сообщениями и проверки арендаторов,
                 которые помогут вам быстро находить и проверять кандидатов.
               </p>
@@ -118,13 +123,19 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        <div className="mt-[64px]">
-          <h2 onClick={() => setModal(true)} className="font-[600] text-center mb-[40px] text-[32px]">
+        <div className="container mt-[48px]">
+          <h2
+            onClick={() => setModal(true)}
+            className="font-[600] text-center mb-[40px] text-[32px]"
+          >
             Отзывы про нас
           </h2>
           <Slider {...settings}>
             {sliderParams.map((item, index) => (
-              <div className="w-[50%] h-[auto] py-6 px-4 bg-transparent" key={index}>
+              <div
+                className="w-[50%] h-[auto] py-6 px-4 bg-transparent"
+                key={index}
+              >
                 <p className="text-[16px] mb-[40px]">{item.title}</p>
                 <div className="flex items-center gap-[3px] mb-[10px]">
                   <Star />
@@ -139,9 +150,6 @@ export default function LandingPage() {
           </Slider>
         </div>
       </div>
-        <Modal active={modal} setActive={setModal}>
-          <h1>Hello world</h1>
-        </Modal>
     </>
   );
 }

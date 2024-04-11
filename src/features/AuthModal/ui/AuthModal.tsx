@@ -109,7 +109,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 required
               />
             </label>
-            <label className="mb-[145px]">
+            <label className="mb-[20px]">
               <p className="text-[18px] font-[500]">Пароль</p>
               <Input
                 className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
@@ -123,14 +123,23 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               />
             </label>
             {isRegistering && (
-              <label className="mt-[20px] mb-[100px]">
-                <select value={selectedRole} onChange={handleRoleChange}>
-                  <option value="">Выберите роль</option>
-                  <option value="student">Студент</option>
-                  <option value="landlord">Арендодатель</option>
-                </select>
-              </label>
+              <div className="mb-[100px] flex items-center">
+                <input
+                  type="checkbox"
+                  id="studentRole"
+                  checked={selectedRole === "student"}
+                  onChange={() => {
+                    setSelectedRole(
+                      selectedRole === "student" ? "" : "student"
+                    );
+                  }}
+                />
+                <label htmlFor="studentRole" className="ml-[10px]">
+                  Студент
+                </label>
+              </div>
             )}
+
             <div className="error-message">{errorMessage}</div>
             <Button
               className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
