@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Button from "@/shared/ui/Button/Button";
+import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
+import "./styles.scss";
 
 export default function PostChoosePage() {
   const [selectedOption, setSelectedOption] = useState<string>("");
@@ -11,9 +13,10 @@ export default function PostChoosePage() {
   };
 
   return (
-    <div className="my-[60px]">
+    <section className="pt-[30px] pb-[200px]">
       <div>
-        <Link href={"/"}>
+        <Link href={"/"} className="flex gap-[5px] items-center">
+          <Arrow />
           <p className="text-[16px] font-[500]">Вернуться на главное меню</p>
         </Link>
         <h1 className="text-[24px] mt-[20px] mb-[55px] font-[500]">
@@ -55,6 +58,6 @@ export default function PostChoosePage() {
           />
         </Link>
       </div>
-    </div>
+    </section>
   );
 }
