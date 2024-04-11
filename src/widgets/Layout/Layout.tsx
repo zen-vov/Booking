@@ -26,7 +26,7 @@ export default function Layout({ children }: LayoutProps) {
             console.log(isProfile, " ", userRole);
 
             const response = await fetch(
-              `http://195.49.212.131:8000/api/v1/role/${userId}`
+              `http://studhouse.kz/api/v1/role/${userId}`
             );
             if (response.ok) {
               const data = await response.json();

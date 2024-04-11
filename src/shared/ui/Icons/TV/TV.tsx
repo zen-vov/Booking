@@ -1,7 +1,10 @@
-export default function TV() {
+import { SVGI } from "../Wifi/Wifi";
+
+export default function TV({ className }: SVGI) {
   return (
     <svg
       width="13"
+      className={className}
       height="13"
       viewBox="0 0 13 13"
       fill="none"

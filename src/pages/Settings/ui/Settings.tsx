@@ -51,7 +51,7 @@ const Profile = () => {
     const fetchUser = async () => {
       try {
         const userResponse = await fetch(
-          `http://195.49.212.131:8000/api/v1/auth/user/${userId}/`
+          `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
 

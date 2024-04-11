@@ -52,11 +52,15 @@ export default function LandingPage() {
     <>
       <div>
         <div className={styles.imgbg}>
-          <div className="py-[128px] pl-[131px] w-[600px] text-2xl text-center font-semibold text-primary">
-            <p>Найди свое идеальное жилье</p>
+          <div className="container py-[128px] flex items-start w-full text-2xl text-center font-semibold text-primary">
+            <div>
+              <span>
+                Найди свое <br /> идеальное жилье
+              </span>
+            </div>
           </div>
         </div>
-        <div className="flex gap-[125px] pl-[125px] pt-[125px]">
+        <div className="container flex gap-[125px] pl-[125px] pt-[125px]">
           <Card
             image="/Landing/house.png"
             name="Заполните запросы и найдите квартиру"
@@ -75,15 +79,15 @@ export default function LandingPage() {
             description="Разместите свою недвижимость бесплатно на нашем сайте, чтобы помочь вам найти идеального арендатора."
           />
         </div>
-        <div>
+        <div className="container mt-[168px]">
           <div className="text-center">
             <h2 className="font-[600] text-[24px]">
               Быть арендодателем проще, чем когда-либо
             </h2>
-            <p className="text-[16px] font-[400]">
+            <p className="text-[16px] font-[400] pt-[20px]">
               Экономьте время с помощью наших инструментов управления
-              недвижимостью, которые помогут вам получить то, что вам нужно —
-              подписанные договоры аренды и арендные платежи.
+              недвижимостью, которые помогут вам получить то, что вам <br />
+              нужно — подписанные договоры аренды и арендные платежи.
             </p>
           </div>
           <div className="flex items-top justify-between mt-[80px]">
@@ -119,7 +123,7 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        <div className="mt-[64px]">
+        <div className="container mt-[48px]">
           <h2
             onClick={() => setModal(true)}
             className="font-[600] text-center mb-[40px] text-[32px]"

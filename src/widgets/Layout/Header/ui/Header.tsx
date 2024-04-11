@@ -45,7 +45,7 @@ export default function Header() {
     const fetchName = async () => {
       try {
         const userResponse = await fetch(
-          `http://195.49.212.131:8000/api/v1/auth/user/${userId}/`
+          `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
 
@@ -97,11 +97,10 @@ export default function Header() {
           </div>
 
           <div className="flex gap-[40px]">
-            <Button
-              className="text-md font-[500]"
-              label="Квартиры"
-              onClick={handleLoginClick}
-            />
+            <Link href={"/"}>
+              <Button className="text-md font-[500]" label="Квартиры" />
+            </Link>
+
             <Link href={"/routs/posthouse"}>
               <Button className="text-md font-[500]" label="Подселение" />
             </Link>
@@ -113,16 +112,16 @@ export default function Header() {
           </div>
         </nav>
       </div>
-      <div>
+
+      {/* <div>
         <button onClick={handleButtonClick}>Открыть модальное окно</button>
         {modalOpen && (
           <Modal onClose={handleModalClose}>
             <h2>Заголовок модального окна</h2>
             <p>Содержимое модального окна...</p>
-            {/* Добавьте любые другие элементы здесь */}
           </Modal>
         )}
-      </div>
+      </div> */}
 
       {isModalOpen && <AuthModal onClose={closeModal} />}
     </header>
