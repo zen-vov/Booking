@@ -14,46 +14,34 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const modalRef = React.useRef<HTMLDivElement>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    if (name === "username") setUsername(value);
-    if (name === "password") setPassword(value);
-  };
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
     try {
       let accessToken;
       if (isRegistering) {
-        const fakeUser = {
-          id: 1,
-          login: username,
-          full_name: "John Doe",
-          is_active: true,
-          is_deleted: false,
-          role: {
-            id: 1,
-            role_name: selectedRole === "student" ? "Student" : "Landlord",
-          },
-          user_info: {
-            user: 1,
-            photo_avatar: "avatar.jpg",
-            contacts: "123456789",
+        const response = await axios.post(
+          "http://studhouse.kz/api/v1/auth/user",
+          {
+            id: Date.now(),
             email: username,
-            birthDate: "1990-01-01",
-            address: "123 Main Street",
-            imagePaths: "images/",
-            frontIDCard: "front.jpg",
-            backIDCard: "back.jpg",
-          },
-          additional_user: {
-            full_name: "Jane Doe",
-            who_is: selectedRole === "student" ? "Student" : "Landlord",
-            contacts: "987654321",
-          },
-        };
-        accessToken = "fake-access-token";
+            password: password,
+            full_name: "Pepsi",
+            role: selectedRole === "student" ? "Student" : "Landlord",
+            is_active: true,
+            is_staff: true,
+            is_superuser: true,
+          }
+        );
+        accessToken = response.data.accessToken;
       } else {
-        accessToken = "fake-access-token";
+        const response = await axios.post(
+          "http://studhouse.kz/api/v1/jwt/create",
+          {
+            email: username,
+            password: password,
+          }
+        );
+        accessToken = response.data.accessToken;
       }
       localStorage.setItem("accessToken", accessToken);
       window.location.reload();
@@ -76,7 +64,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     };
   }, []);
 
-  const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleRoleChange = (event: any) => {
     setSelectedRole(event.target.value);
   };
 
@@ -117,7 +105,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 placeholder="Введите электронную почту"
                 type="text"
                 value={username}
-                onChange={handleChange}
+                onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </label>
@@ -130,7 +118,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 placeholder="Введите пароль"
                 type="password"
                 value={password}
-                onChange={handleChange}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </label>
@@ -157,3 +145,74 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 };
 
 export default AuthModal;
+
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+
+// const EditAdvertisementPage = ({ match }) => {
+//   const [advertisement, setAdvertisement] = useState({
+//     title: '',
+//     description: '',
+//     price: '',
+//     location: '',
+//     paymentTime: '',
+//     floor: 0,
+//     typeOfHouse: '',
+//     numberOfRooms: 0,
+//     square: 0,
+//     isSold: false,
+//     isArchived: false,
+//     haveWifi: false,
+//     haveTV: false,
+//     haveWashingMachine: false,
+//     haveParking: false,
+//     haveConditioner: false,
+//     nearbyTradeCenter: false,
+//     nearbyHospital: false,
+//     nearbySchool: false,
+//     nearbyGym: false,
+//     uploaded_images: [],
+//   });
+
+//   useEffect(() => {
+//     const fetchAdvertisement = async () => {
+//       try {
+//         const response = await axios.get(`http://studhouse.kz/api/v1/advertisement/${match.params.id}`);
+//         setAdvertisement(response.data);
+//       } catch (error) {
+//         console.error('Error fetching advertisement:', error);
+//       }
+//     };
+//     fetchAdvertisement();
+//   }, [match.params.id]);
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setAdvertisement((prev) => ({ ...prev, [name]: value }));
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       await axios.put(`http://studhouse.kz/api/v1/advertisement/${match.params.id}`, advertisement);
+//     } catch (error) {
+//       console.error('Error updating advertisement:', error);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <h2>Edit Advertisement</h2>
+//       <form onSubmit={handleSubmit}>
+//         <label>
+//           Title:
+//           <input type="text" name="title" value={advertisement.title} onChange={handleChange} />
+//         </label>
+//         <button type="submit">Save Changes</button>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default EditAdvertisementPage;
+
