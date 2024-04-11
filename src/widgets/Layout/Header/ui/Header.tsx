@@ -115,8 +115,15 @@ export default function Header() {
       </div>
       <div>
         <button onClick={handleButtonClick}>Открыть модальное окно</button>
-        {modalOpen && <Modal onClose={handleModalClose} />}
+        {modalOpen && (
+          <Modal onClose={handleModalClose}>
+            <h2>Заголовок модального окна</h2>
+            <p>Содержимое модального окна...</p>
+            {/* Добавьте любые другие элементы здесь */}
+          </Modal>
+        )}
       </div>
+
       {isModalOpen && <AuthModal onClose={closeModal} />}
     </header>
   );

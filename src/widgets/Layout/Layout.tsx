@@ -14,7 +14,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [target, setTarget] = React.useState("login");
   const [isProfile, setIsProfile] = React.useState(true);
-  const [userRole, setUserRole] = React.useState("landlord");
+  const [userRole, setUserRole] = React.useState(1);
 
   React.useEffect(() => {
     const fetchUserRole = async () => {
@@ -30,7 +30,7 @@ export default function Layout({ children }: LayoutProps) {
             );
             if (response.ok) {
               const data = await response.json();
-              setUserRole(data.role);
+              setUserRole(data.role.id);
               setTarget("profile");
               setIsProfile(true);
             } else {
@@ -56,14 +56,14 @@ export default function Layout({ children }: LayoutProps) {
           <Footer />
         </>
       )}
-      {target === "profile" && userRole == "landlord" && (
+      {target === "profile" && userRole == 1 && (
         <>
           <HeaderLandlord />
           {children}
           <Footer />
         </>
       )}
-      {target === "profile" && userRole == "student" && (
+      {target === "profile" && userRole == 2 && (
         <>
           <HeaderStudent />
           {children}

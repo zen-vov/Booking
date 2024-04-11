@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Modal from "@/shared/ui/Modal/ui/Modal";
 import jwt from "jsonwebtoken";
 
 interface Fields {
@@ -12,6 +13,16 @@ interface Fields {
 }
 
 const Profile = () => {
+  const [modalOpen, setModalOpen] = React.useState(false);
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleButtonClick = () => {
+    setModalOpen(true);
+  };
+
   const [fields, setFields] = useState<Fields>({
     fullName: "",
     phoneNumber: "",
