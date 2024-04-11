@@ -17,33 +17,31 @@ export default function Layout({ children }: LayoutProps) {
   const [userRole, setUserRole] = React.useState(1);
 
   React.useEffect(() => {
-    const fetchUserRole = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-      if (accessToken) {
-        const userId = localStorage.getItem("userId");
-        if (userId) {
-          try {
-            console.log(isProfile, " ", userRole);
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
 
-            const response = await fetch(
-              `http://studhouse.kz/api/v1/role/${userId}`
-            );
-            if (response.ok) {
-              const data = await response.json();
-              setUserRole(data.role.id);
-              setTarget("profile");
-              setIsProfile(true);
-            } else {
-              console.error("Ошибка при запросе роли пользователя");
-            }
-          } catch (error) {
-            console.error("Ошибка при выполнении запроса:", error);
-          }
-        }
+    const decodedToken = jwt.decode(accessToken);
+    console.log("decoded token: ", decodedToken);
+    const userId = decodedToken?.user_id;
+
+    if (userId) {
+      localStorage.setItem("userId", userId);
+    }
+
+    const fetchName = async () => {
+      try {
+        const userResponse = await fetch(
+          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+        );
+        const user = await userResponse.json();
+        console.log("user role: ", user.role.id);
+        setTarget("profile");
+      } catch (error) {
+        console.error("Ошибка при загрузке данных: ", error);
       }
     };
 
-    fetchUserRole();
+    fetchName();
   }, []);
 
   console.log(target);
@@ -58,14 +56,14 @@ export default function Layout({ children }: LayoutProps) {
       )}
       {target === "profile" && userRole == 1 && (
         <>
-          <HeaderLandlord />
+          <HeaderStudent />
           {children}
           <Footer />
         </>
       )}
       {target === "profile" && userRole == 2 && (
         <>
-          <HeaderStudent />
+          <HeaderLandlord />
           {children}
           <Footer />
         </>

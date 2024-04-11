@@ -30,34 +30,30 @@ export default function Header() {
 
   const [modalOpen, setModalOpen] = React.useState(false);
 
-  const [name, setName] = React.useState("");
+  // React.useEffect(() => {
+  //   const accessToken = localStorage.getItem("accessToken");
+  //   const jwt = require("jsonwebtoken");
+  //   const decodedToken = jwt.decode(accessToken);
+  //   console.log("decoded token: ", decodedToken);
+  //   const userId = decodedToken?.user_id;
+  //   if (userId) {
+  //     localStorage.setItem("userId", userId);
+  //   }
 
-  React.useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const jwt = require("jsonwebtoken");
-    const decodedToken = jwt.decode(accessToken);
-    console.log(decodedToken);
-    const userId = decodedToken?.user_id;
-    if (userId) {
-      localStorage.setItem("userId", userId);
-    }
+  //   const fetchName = async () => {
+  //     try {
+  //       const userResponse = await fetch(
+  //         `http://studhouse.kz/api/v1/auth/user/${userId}/`
+  //       );
+  //       const user = await userResponse.json();
+  //       console.log("username: ", user.full_name);
+  //     } catch (error) {
+  //       console.error("Ошибка при загрузке данных: ", error);
+  //     }
+  //   };
 
-    const fetchName = async () => {
-      try {
-        const userResponse = await fetch(
-          `http://studhouse.kz/api/v1/auth/user/${userId}/`
-        );
-        const user = await userResponse.json();
-
-        setName(user.full_name);
-        console.log(name);
-      } catch (error) {
-        console.error("Ошибка при загрузке данных: ", error);
-      }
-    };
-
-    fetchName();
-  }, []);
+  //   fetchName();
+  // }, []);
 
   const handleLoginClick = () => {
     if (!user) {

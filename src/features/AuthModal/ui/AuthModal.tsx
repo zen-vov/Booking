@@ -65,6 +65,8 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         const registerData = await registerResponse.json();
 
         localStorage.setItem("accessToken", registerData.jwt);
+        window.location.reload();
+        onClose();
       }
 
       const loginResponse = await fetch(
