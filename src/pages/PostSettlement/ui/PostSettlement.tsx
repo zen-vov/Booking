@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
@@ -32,17 +32,17 @@ interface IconButton {
 
 const icons: IconButton[] = [
   { icon: <Wifi />, label: "Wifi" },
-  { icon: <TV />, label: "TV" },
-  { icon: <Washing />, label: "Washing" },
-  { icon: <Parking />, label: "Parking" },
-  { icon: <Conditioner />, label: "Conditioner" },
+  { icon: <TV className="bg-[#f1f1f1]" />, label: "TV" },
+  { icon: <Washing className="bg-[#f1f1f1]" />, label: "Washing" },
+  { icon: <Parking className="bg-[#f1f1f1]" />, label: "Parking" },
+  { icon: <Conditioner className="bg-[#f1f1f1]" />, label: "Conditioner" },
 ];
 
 const iconsNear: IconButton[] = [
-  { icon: <Shop />, label: "Shop" },
-  { icon: <Hospital />, label: "Hospital" },
-  { icon: <School />, label: "School" },
-  { icon: <Dumbell />, label: "Dumbell" },
+  { icon: <Shop className="bg-[#f1f1f1]" />, label: "Shop" },
+  { icon: <Hospital className="bg-[#f1f1f1]" />, label: "Hospital" },
+  { icon: <School className="bg-[#f1f1f1]" />, label: "School" },
+  { icon: <Dumbell className="bg-[#f1f1f1]" />, label: "Dumbell" },
 ];
 
 const NearButton = ["Торговый центр", "Больница", "Школа", "Тренажорный зал"];
@@ -50,14 +50,25 @@ const NearButton = ["Торговый центр", "Больница", "Школ
 const options = ["в год", "на день", "полгода"];
 
 export default function PostSettlementPage() {
-  const [counterState, setCounterState] = React.useState<Counter[]>([
+  const [counterState, setCounterState] = useState<Counter[]>([
     { name: "Максимальное количество жителей", count: 0 },
     { name: "Количество комнат", count: 0 },
     { name: "Спальни", count: 0 },
     { name: "Ванные, душ", count: 0 },
   ]);
   const MIN_PRICE = 0;
-  const [price, setPrice] = useState(MIN_PRICE);
+  const MIN_PRICE2 = 0;
+  const [price, setPrice] = useState<number>(MIN_PRICE);
+  const [price2, setPrice2] = useState<number>(MIN_PRICE2);
+  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+  const [active, setActive] = useState<boolean>(false);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [selectedIconIndex, setSelectedIconIndex] = useState<number | null>(
+    null
+  );
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handleIncrement = (index: number) => {
     setCounterState((prevCounters) => {
       const updatedCounters = [...prevCounters];
@@ -69,17 +80,37 @@ export default function PostSettlementPage() {
     });
   };
 
+  const handleButtonClick = (type: string) => {
+    setSelectedType((prevType) => (prevType === type ? null : type));
+  };
+
+  const handleIconClick = (index: number) => {
+    setSelectedIconIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
+
   const increase = () => {
     setPrice((prevprice) => Math.max(MIN_PRICE, prevprice + 5000));
+  };
+  const increase2 = () => {
+    setPrice2((prevprice) => Math.max(MIN_PRICE2, prevprice + 5000));
   };
 
   const decrease = () => {
     setPrice((prevPrice) => Math.max(MIN_PRICE, prevPrice - 5000));
   };
+  const decrease2 = () => {
+    setPrice2((prevprice) => Math.max(MIN_PRICE2, prevprice - 5000));
+  };
 
   const handleInputChange = (e: any) => {
     const inputValue = parseInt(e.target.value);
     setPrice(isNaN(inputValue) ? MIN_PRICE : Math.max(MIN_PRICE, inputValue));
+  };
+  const handleInputChange2 = (e: any) => {
+    const inputValue = parseInt(e.target.value);
+    setPrice2(
+      isNaN(inputValue) ? MIN_PRICE2 : Math.max(MIN_PRICE2, inputValue)
+    );
   };
 
   const handleDecrement = (index: number) => {
@@ -91,6 +122,31 @@ export default function PostSettlementPage() {
       };
       return updatedCounters;
     });
+  };
+
+  const validateForm = (): boolean => {
+    const errors: string[] = [];
+
+    if (uploadedImages.length === 0) {
+      errors.push("Вы должны загрузить хотя бы одно фото");
+    }
+
+    setFormErrors(errors);
+
+    return errors.length === 0;
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const imagesArray: File[] = Array.from(files);
+
+      if (imagesArray.length + uploadedImages.length <= 5) {
+        setUploadedImages((prevImages) => [...prevImages, ...imagesArray]);
+      } else {
+        setFormErrors(["Можно загрузить только 5 фотографий"]);
+      }
+    }
   };
 
   return (
@@ -150,7 +206,10 @@ export default function PostSettlementPage() {
               {icons.map((icon, index) => (
                 <button
                   key={index}
-                  className="bg-blue rounded-[5px] w-[60px] h-[40px] py-[12px] px-[23px] text-[22px] font-500"
+                  className={`bg-[#f1f1f1] rounded-[5px] w-[60px] h-[40px] py-[12px] px-[23px] text-[22px] font-500 ${
+                    selectedIconIndex === index ? "bg-blue text-white" : ""
+                  }`}
+                  onClick={() => handleIconClick(index)}
                 >
                   {icon.icon}
                 </button>
@@ -163,7 +222,7 @@ export default function PostSettlementPage() {
               {iconsNear.map((icon, index) => (
                 <button
                   key={index}
-                  className="bg-blue cursor-pointer rounded-[5px] w-[60px] h-[40px] py-[12px] px-[23px] text-[22px] font-500"
+                  className="bg-[#f1f1f1] cursor-pointer rounded-[5px] w-[60px] h-[40px] py-[12px] px-[23px] text-[22px] font-500"
                 >
                   {icon.icon}
                 </button>
@@ -174,32 +233,41 @@ export default function PostSettlementPage() {
             Загрузите фото жилья
           </p>
           <p className="text-[12px] mb-[6px]">
-            Для начала хватит 5 фотографий. Позже вы сможете добавить другие или
+            Для начала хватит 5 фотографий. Позже вы сможете добавить другие или
             внести изменения.
           </p>
           <div className="flex items-center gap-[13px]">
-            <div>
-              <NoImg />
-            </div>
-            <div>
-              <NoImg />
-            </div>
-            <div>
-              <NoImg />
-            </div>
-            <div>
-              <NoImg />
-            </div>
+            {uploadedImages.map((image, index) => (
+              <div key={index} className="bg-white w-[70px] h-[49px] ">
+                <Image
+                  width={70}
+                  height={49}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  src={URL.createObjectURL(image)}
+                  alt={`Uploaded Image ${index}`}
+                />
+              </div>
+            ))}
           </div>
           <p className="text-[12px] font-[400] cursor-pointer mt-[6px]">
-            Загрузить еще
+            <button onClick={() => fileInputRef.current?.click()}>
+              Загрузить еще
+            </button>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageUpload}
+              style={{ display: "none" }}
+              ref={fileInputRef}
+            />
           </p>
           <div className="mb-[16px] mt-[1rem]">
             <p className="text-[16px] text-black font-[500]">
               Придумайте, как будет называться квартира
             </p>
             <p className="text-[12px] mb-[6px]">
-              Краткое название — то, что нужно. Не беспокойтесь, вы всегда
+              Краткое название — то, что нужно. Не беспокойтесь, вы всегда
               сможете отредактировать его.
             </p>
             <textarea className="w-[380px] h-[50px] py-[10px] px-[20px] border-none bg-[#F1F1F1] rounded-[12px] focus:outline-none" />
@@ -220,12 +288,22 @@ export default function PostSettlementPage() {
             </p>
             <div className="flex items-center gap-[35px]">
               <Button
+                onClick={() => handleButtonClick("Для девушек")}
                 label={"Для девушек"}
-                className="bg-[#f1f1f1] py-2 px-[50px] text-[0.7rem] rounded-[10px]"
+                className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
+                  selectedType === "Для девушек"
+                    ? "bg-blue text-white"
+                    : "bg-[#f1f1f1]"
+                }`}
               />
               <Button
+                onClick={() => handleButtonClick("Для парней")}
                 label={"Для парней"}
-                className="bg-[#f1f1f1] py-2 px-[50px] text-[0.7rem] rounded-[10px]"
+                className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
+                  selectedType === "Для парней"
+                    ? "bg-blue text-white"
+                    : "bg-[#f1f1f1]"
+                }`}
               />
             </div>
             <div className="flex gap-[26px] mt-2.5">
@@ -261,7 +339,7 @@ export default function PostSettlementPage() {
             <div className="flex items-center">
               <div className="mr-5 flex gap-[5px] justify-center items-center">
                 <Dropdown
-                  buttonStyle="text-[14px] font-[400]"
+                  buttonStyle="whitespace-nowrap text-[14px] font-[400]"
                   listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
                   options={options}
                   label="в месяц"
@@ -277,21 +355,29 @@ export default function PostSettlementPage() {
                 >
                   <path
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="m19 9-7 7-7-7"
                   />
                 </svg>
               </div>
               <div className="mr-5 flex gap-2 items-center">
-                <Minus />
-                <span>{0}</span>
-                <Plus />
+                <button onClick={decrease2}>
+                  <Minus />
+                </button>
+                <Input
+                  className="text-[14px] w-[30%]"
+                  onChange={handleInputChange2}
+                  value={price2}
+                />
+                <button onClick={increase2}>
+                  <Plus />
+                </button>
               </div>
               <div className="mr-5 flex gap-[5px] justify-center items-center">
                 <Dropdown
-                  buttonStyle="text-[14px] font-[400]"
+                  buttonStyle="whitespace-nowrap text-[14px] font-[400]"
                   listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
                   options={options}
                   label="в месяц"
@@ -307,9 +393,9 @@ export default function PostSettlementPage() {
                 >
                   <path
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="m19 9-7 7-7-7"
                   />
                 </svg>
@@ -319,7 +405,7 @@ export default function PostSettlementPage() {
                   <Minus />
                 </button>
                 <Input
-                  className="w-[5%] h-[20px] py-[10px] text-[12px] border-b-black text-black focus:outline-none"
+                  className="w-[30%] h-[20px] py-[10px] text-[12px] border-b-black text-black focus:outline-none"
                   placeholder="Депозит"
                   onChange={handleInputChange}
                   value={price}

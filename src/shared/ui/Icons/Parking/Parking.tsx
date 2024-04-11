@@ -1,7 +1,10 @@
-export default function Parking() {
+import { SVGI } from "../Wifi/Wifi";
+
+export default function Parking({ className }: SVGI) {
   return (
     <svg
       width="17"
+      className={className}
       height="17"
       viewBox="0 0 17 17"
       fill="none"

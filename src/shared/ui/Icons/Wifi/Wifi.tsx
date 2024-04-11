@@ -1,7 +1,12 @@
-export default function Wifi() {
+export interface SVGI {
+  className?: string;
+}
+
+export default function Wifi({ className }: SVGI) {
   return (
     <svg
       width="14"
+      className={className}
       height="14"
       viewBox="0 0 14 14"
       fill="none"

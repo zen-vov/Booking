@@ -1,7 +1,10 @@
-export default function Hospital() {
+import { SVGI } from "../Wifi/Wifi";
+
+export default function Hospital({ className }: SVGI) {
   return (
     <svg
       width="13"
+      className={className}
       height="13"
       viewBox="0 0 13 13"
       fill="none"

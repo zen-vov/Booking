@@ -1,7 +1,10 @@
-export default function School() {
+import { SVGI } from "../Wifi/Wifi";
+
+export default function School({ className }: SVGI) {
   return (
     <svg
       width="12"
+      className={className}
       height="12"
       viewBox="0 0 12 12"
       fill="none"

@@ -1,7 +1,10 @@
-export default function Conditioner() {
+import { SVGI } from "../Wifi/Wifi";
+
+export default function Conditioner({ className }: SVGI) {
   return (
     <svg
       width="15"
+      className={className}
       height="15"
       viewBox="0 0 15 15"
       fill="none"
