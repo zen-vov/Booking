@@ -56,13 +56,14 @@ export default function Layout({ children }: LayoutProps) {
           <Footer />
         </>
       )}
-      {target === "profile" && userRole == "landlord" ? (
+      {target === "profile" && userRole == "landlord" && (
         <>
           <HeaderLandlord />
           {children}
           <Footer />
         </>
-      ) : (
+      )}
+      {target === "profile" && userRole == "student" && (
         <>
           <HeaderStudent />
           {children}

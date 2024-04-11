@@ -9,6 +9,8 @@ import Link from "next/link";
 import Logo from "@/shared/ui/Icons/Logo/Logo";
 import Search from "@/shared/ui/Icons/Search/Search";
 
+import Modal from "@/shared/ui/Modal/ui/Modal";
+
 // interface HeaderProps {
 //   isProfile: boolean;
 //   isHouse?: boolean;
@@ -25,6 +27,8 @@ const options = [
 export default function Header() {
   const { user, setUser } = useUser();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const [modalOpen, setModalOpen] = React.useState(false);
 
   const [name, setName] = React.useState("");
 
@@ -69,6 +73,14 @@ export default function Header() {
     setIsModalOpen(false);
   };
 
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleButtonClick = () => {
+    setModalOpen(true);
+  };
+
   return (
     <header className={cn("border-b-[1px] border-[#534949] py-[30px]")}>
       <div className="container">
@@ -100,6 +112,10 @@ export default function Header() {
             />
           </div>
         </nav>
+      </div>
+      <div>
+        <button onClick={handleButtonClick}>Открыть модальное окно</button>
+        {modalOpen && <Modal onClose={handleModalClose} />}
       </div>
       {isModalOpen && <AuthModal onClose={closeModal} />}
     </header>
