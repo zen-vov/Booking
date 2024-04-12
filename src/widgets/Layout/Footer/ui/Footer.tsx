@@ -38,7 +38,8 @@ export default function Footer() {
                   <VK />
                   <Instagram />
                 </div>
-                <p>studhouse@gmail.com 8-777-007-70-07</p>
+                <a href="">student.house.sdu@gmail.com</a>
+                <p>8-777-007-70-07</p>
               </div>
             </div>
           </div>

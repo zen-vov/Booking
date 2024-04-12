@@ -36,6 +36,7 @@ export default function Layout({ children }: LayoutProps) {
         const user = await userResponse.json();
         console.log("user role: ", user.role.id);
         setTarget("profile");
+        console.log("target:", target);
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
       }
