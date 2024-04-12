@@ -15,14 +15,6 @@ interface HeaderProps {
   isHouse?: boolean;
 }
 
-const options = [
-  "Личные данные",
-  "Счет и платежи",
-  "Мои объявление",
-  "Центр помощи",
-  "Выйти",
-];
-
 export default function HeaderStudent() {
   // const { user, setUser } = useUser();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -62,13 +54,23 @@ export default function HeaderStudent() {
   //   }
   // };
 
-  // const handleLogout = () => {
-  //   setUser(null);
-  // };
+  const handleLogout = () => {
+    // setUser(null);
+    localStorage.clear();
+    window.location.reload();
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const options = [
+    { label: "Личные данные", path: "/routs/settings" },
+    { label: "Счет и платежи", path: "/routs/payment" },
+    { label: "Мои объявления", path: "/" },
+    { label: "Центр помощи", path: "/" },
+    { label: "Выйти", onClick: handleLogout },
+  ];
 
   return (
     <header className={cn("border-b-[1px] border-[#534949] py-[30px]")}>

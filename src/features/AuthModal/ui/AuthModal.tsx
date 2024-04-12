@@ -85,6 +85,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
 
       if (!loginResponse.ok) {
         throw new Error("Login failed");
+        alert("login error");
       }
 
       const loginData = await loginResponse.json();
