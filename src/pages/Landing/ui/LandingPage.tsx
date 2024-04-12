@@ -46,7 +46,7 @@ export default function LandingPage() {
     autoplaySpeed: 2000,
     dots: true,
     className: "mb-[63px]",
-    Infinity: true,
+    infinite: true,
   };
   return (
     <>
