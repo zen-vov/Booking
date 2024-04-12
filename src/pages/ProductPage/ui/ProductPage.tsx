@@ -208,7 +208,7 @@ export default function ProductPage() {
       </div>
       <h1 className="text-md font-medium mt-[111px] mb-6">Похожие запросы</h1>
       <div className="grid grid-cols-2 gap-10">
-        <ProductList product={mainData} />
+        <ProductList />
       </div>
     </section>
   );
