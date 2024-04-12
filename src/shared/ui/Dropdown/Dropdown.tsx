@@ -1,12 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import Button from "../Button/Button";
+
+type Option = {
+  label: string;
+  onClick?: () => void;
+  path?: string; // Новое свойство для определения пути перехода
+};
 
 interface DropdownProps {
   buttonStyle?: string;
   listStyle?: string;
-  options: string[];
-  onClick?: () => void;
+  options: Option[];
   label: string;
 }
 
@@ -14,7 +20,6 @@ const Dropdown: React.FC<DropdownProps> = ({
   buttonStyle = "",
   listStyle = "",
   options,
-  onClick,
   label,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,13 +37,15 @@ const Dropdown: React.FC<DropdownProps> = ({
         <div className="relative">
           <div className={`absolute left-[-50px] top-[10px] ${listStyle}`}>
             {options.map((option, index) => (
-              <>
-                <Link href={"/routs/settings/"}>
-                  <div className={"cursor-pointer"} key={index}>
-                    {option}
+              <div key={index}>
+                {option.path ? (
+                  <Link href={option.path}>{option.label}</Link>
+                ) : (
+                  <div className="cursor-pointer" onClick={option.onClick}>
+                    {option.label}
                   </div>
-                </Link>
-              </>
+                )}
+              </div>
             ))}
           </div>
         </div>
@@ -49,4 +56,4 @@ const Dropdown: React.FC<DropdownProps> = ({
 
 export default Dropdown;
 
-// 
+//

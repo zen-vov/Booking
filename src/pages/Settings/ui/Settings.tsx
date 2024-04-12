@@ -4,12 +4,12 @@ import Modal from "@/shared/ui/Modal/ui/Modal";
 import jwt from "jsonwebtoken";
 
 interface Fields {
-  fullName: string;
-  phoneNumber: string;
+  full_name: string;
+  contacts: string;
   email: string;
   birthDate: string;
   identification: string;
-  emergencyContact: string;
+  additional_user: string;
 }
 
 const Profile = () => {
@@ -24,23 +24,23 @@ const Profile = () => {
   };
 
   const [fields, setFields] = useState<Fields>({
-    fullName: "",
-    phoneNumber: "",
+    full_name: "",
+    contacts: "",
     email: "",
     birthDate: "",
     identification: "",
-    emergencyContact: "",
+    additional_user: "",
   });
 
   const [editingFields, setEditingFields] = useState<
     Record<keyof Fields, boolean>
   >({
-    fullName: false,
-    phoneNumber: false,
+    full_name: false,
+    contacts: false,
     email: false,
     birthDate: false,
     identification: false,
-    emergencyContact: false,
+    additional_user: false,
   });
 
   React.useEffect(() => {
@@ -57,12 +57,12 @@ const Profile = () => {
 
         setFields({
           ...fields,
-          fullName: user.full_name,
-          phoneNumber: user.user_info.contacts,
+          full_name: user.full_name,
+          contacts: user.user_info.contacts,
           email: user.user_info.email,
           birthDate: user.user_info.birthDate,
           identification: user.user_info.frontIDCard,
-          emergencyContact: user.additional_user,
+          additional_user: user.additional_user,
         });
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
@@ -76,8 +76,35 @@ const Profile = () => {
     setEditingFields({ ...editingFields, [field]: true });
   };
 
-  const handleSaveClick = (field: keyof Fields) => {
+  const handleSaveClick = async (field: keyof Fields) => {
     setEditingFields({ ...editingFields, [field]: false });
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
+    const decodedToken = jwt.decode(accessToken);
+    const userId = decodedToken?.user_id;
+
+    try {
+      const response = await fetch(
+        `http://studhouse.kz/api/v1/auth/user/${userId}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            [field]: fields[field],
+          }),
+        }
+      );
+      if (response.ok) {
+        window.location.reload();
+        console.log(`Данные успешно обновлены для поля ${field}`);
+      } else {
+        console.error("Ошибка при обновлении данных");
+      }
+    } catch (error) {
+      console.error("Ошибка при отправке запроса: ", error);
+    }
   };
 
   const handleChange = (field: keyof Fields, value: string) => {
@@ -124,8 +151,8 @@ const Profile = () => {
     <div className="mx-10 my-4 py-[60px] px-[65px] bg-white rounded-lg">
       <div className="flex flex-col gap-[16px]">
         <div className="text-16 font-[600] mb-30">Личная информация</div>
-        {renderField("fullName", "Имя по документам")}
-        {renderField("phoneNumber", "Номер телефона")}
+        {renderField("full_name", "Имя по документам")}
+        {renderField("contacts", "Номер телефона")}
         {renderField("email", "Электронная почта")}
         {renderField("birthDate", "Дата рождения")}
         {renderField(
@@ -133,7 +160,7 @@ const Profile = () => {
           "Удостоверение личности государственного образца"
         )}
         {renderField(
-          "emergencyContact",
+          "additional_user",
           "Контактное лицо в чрезвычайной ситуации"
         )}
       </div>

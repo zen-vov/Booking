@@ -22,35 +22,34 @@ export default function ChatPage() {
                   height={55}
                   alt="#"
                 />
-                <p className="text-md">г. Алматы, Бостандыкский район · 3-х комнатная квартира</p>
+                <p className="text-md">
+                  г. Алматы, Бостандыкский район · 3-х комнатная квартира
+                </p>
               </div>
               <Dots />
             </div>
-            <div className="px-6 py-[19px] border-t-[1px] border-[#534949] flex items-center justify-between">
+            <div className="px-6 py-[19px] mt-[451px] border-t-[1px] border-[#534949] flex items-center justify-between">
               <div className="flex items-center justify-between gap-[22px]">
-                <Image 
-                  src={'/Attach.png'}
+                <Image
+                  src={"/Attach.png"}
                   width={28}
                   height={28}
                   alt="attach"
                 />
                 <div className="w-[500px]">
-                  <Input 
+                  <Input
                     className="text-[#837777] text-[16px] w-[80%]"
                     placeholder="Написать сообщения"
                   />
                 </div>
               </div>
-              <Image 
-                src={'/Sent.png'}
-                width={27}
-                height={27}
-                alt="send"
-              />
+              <Image src={"/Sent.png"} width={27} height={27} alt="send" />
             </div>
           </div>
           <div className="flex flex-col gap-[22px]">
-            <h1 className="whitespace-nowrap text-md font-medium mb-0.5">Все сообщение </h1>
+            <h1 className="whitespace-nowrap text-md font-medium mb-0.5">
+              Все сообщение{" "}
+            </h1>
           </div>
         </div>
       </div>

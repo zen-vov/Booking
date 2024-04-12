@@ -123,7 +123,7 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        <div className="container mt-[48px]">
+        <div className="container mt-[48px] mb-[150px]">
           <h2
             onClick={() => setModal(true)}
             className="font-[600] text-center mb-[40px] text-[32px]"
@@ -131,13 +131,13 @@ export default function LandingPage() {
             Отзывы про нас
           </h2>
           <Slider {...settings}>
-            {sliderParams.map((item, index) => (
+            {sliderParams?.map((item, index) => (
               <div
                 className="w-[50%] h-[auto] py-6 px-4 bg-transparent"
                 key={index}
               >
                 <p className="text-[16px] mb-[40px]">{item.title}</p>
-                <div className="flex items-center gap-[3px] mb-[10px]">
+                <div className="flex items-center  gap-[3px] mb-[10px]">
                   <Star />
                   <Star />
                   <Star />

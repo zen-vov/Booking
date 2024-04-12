@@ -19,6 +19,8 @@ import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import Image from "next/image";
 import ProductList from "@/widgets/productList/ui/productLIst";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
+import axios from "axios";
+import { BASE_URL } from "@/shared/api/BASE";
 
 interface Counter {
   name: string;
@@ -68,6 +70,64 @@ export default function PostSettlementPage() {
     null
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [formData, setFormData] = useState({
+    location: "",
+    uploaded_images: [],
+    user_id: 1,
+    title: "",
+    description: "",
+    typeOfHouse: "string",
+    price: "3000",
+    numberOfRooms: 2147483647,
+    paymentTime: "daily",
+    floor: 2147483647,
+    square: 2147483647,
+    haveWifi: true,
+    haveTV: true,
+    haveWashingMachine: true,
+    haveParking: true,
+    haveConditioner: true,
+    nearbyTradeCenter: true,
+    nearbyHospital: true,
+    nearbySchool: true,
+    nearbyGym: true,
+    isSold: true,
+    isArchived: true,
+  });
+
+  const createApartment = async (apartmentData: any) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.post(
+        `${BASE_URL}/advertisement`,
+        apartmentData,
+        {
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Ошибка при создании квартиры:", error);
+    }
+  };
+
+  const saveToLocalStorageAndSend = async () => {
+    try {
+      localStorage.setItem("apartmentData", JSON.stringify(formData));
+      await createApartment(formData);
+      alert("Данные успешно сохранены и отправлены!");
+    } catch (error) {
+      console.error(
+        "Ошибка при сохранении данных и отправке на сервер:",
+        error
+      );
+      alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
+    }
+  };
 
   const handleIncrement = (index: number) => {
     setCounterState((prevCounters) => {
@@ -170,6 +230,11 @@ export default function PostSettlementPage() {
               <Input
                 className="text-[1rem] w-full"
                 placeholder="Введите адрес"
+                name="address"
+                value={formData.location}
+                onChange={(e) =>
+                  setFormData({ ...formData, location: e.target.value })
+                }
               />
             </div>
             <span className="text-blue font-medium text-[0.8rem] cursor-pointer">
@@ -270,7 +335,13 @@ export default function PostSettlementPage() {
               Краткое название — то, что нужно. Не беспокойтесь, вы всегда
               сможете отредактировать его.
             </p>
-            <textarea className="w-[380px] h-[50px] py-[10px] px-[20px] border-none bg-[#F1F1F1] rounded-[12px] focus:outline-none" />
+            <textarea
+              className="w-[380px] h-[50px] py-[10px] px-[20px] border-none bg-[#F1F1F1] rounded-[12px] focus:outline-none"
+              value={formData.title}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+            />
           </div>
           <div className="mb-[16px]">
             <p className="text-[16px] text-black font-[500]">
@@ -279,7 +350,13 @@ export default function PostSettlementPage() {
             <p className="text-[12px] mb-[6px]">
               Расскажите, что делает ваше жилье особенным.
             </p>
-            <textarea className="w-[380px] h-[100px] py-[10px] px-[20px] border-none bg-[#F1F1F1] rounded-[12px] focus:outline-none" />
+            <textarea
+              className="w-[380px] h-[100px] py-[10px] px-[20px] border-none bg-[#F1F1F1] rounded-[12px] focus:outline-none"
+              value={formData.description}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+            />
           </div>
           <div className="">
             <h1 className="text-[1rem] font-medium mb-0.5">О подселении</h1>
@@ -369,7 +446,7 @@ export default function PostSettlementPage() {
                 <Input
                   className="text-[14px] w-[30%]"
                   onChange={handleInputChange2}
-                  value={price2}
+                  value={price}
                 />
                 <button onClick={increase2}>
                   <Plus />
@@ -400,16 +477,37 @@ export default function PostSettlementPage() {
                   />
                 </svg>
               </div>
-              <div className="flex gap-2 items-center">
+              <div className="mr-5 flex gap-2 items-center">
                 <button onClick={decrease}>
                   <Minus />
                 </button>
                 <Input
-                  className="w-[30%] h-[20px] py-[10px] text-[12px] border-b-black text-black focus:outline-none"
-                  placeholder="Депозит"
+                  className="text-[14px] w-[30%]"
+                  value={formData.price}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: e.target.value })
+                  }
+                />
+                <button onClick={increase}>
+                  <Plus />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="mb-[28px]">
+            <p className="text-[16px] text-black font-[500]">Залог</p>
+            <p className="text-[12px] mb-[6px]">
+              Его можно изменить в любое время.
+            </p>
+            <div className="flex items-center">
+              <div className="mr-5 flex gap-2 items-center">
+                <button onClick={decrease}>
+                  <Minus />
+                </button>
+                <Input
+                  className="text-[14px] w-[30%]"
                   onChange={handleInputChange}
                   value={price}
-                  type="text"
                 />
                 <button onClick={increase}>
                   <Plus />
@@ -418,21 +516,21 @@ export default function PostSettlementPage() {
             </div>
           </div>
           <Button
-            className="bg-blue w-[130px] rounded-[5px] py-[10px] text-white text-[12px] font-500"
-            type="submit"
-            label="опубликовать"
+            label="Сохранить и отправить на проверку"
+            className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
+            onClick={saveToLocalStorageAndSend}
           />
         </div>
         <div className="right">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2908.034149153324!2d76.6670930764335!3d43.20877307112663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x388345a35db0962d%3A0xd9437541092dd062!2sSDU!5e0!3m2!1sen!2skz!4v1712296819450!5m2!1sen!2skz"
-            width="600"
-            height="400"
-            style={{ border: "0", borderRadius: "5px" }}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
+          <ProductList />
         </div>
+      </div>
+      <div>
+        {formErrors.map((error, index) => (
+          <p key={index} className="text-red-500">
+            {error}
+          </p>
+        ))}
       </div>
     </section>
   );

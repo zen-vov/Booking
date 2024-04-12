@@ -3,7 +3,7 @@ import React from "react";
 import cn from "classnames";
 import Button from "@/shared/ui/Button/Button";
 import AuthModal from "@/features/AuthModal/ui/AuthModal";
-import { useUser } from "@/features/UserContext/ui/UserProvider";
+// import { useUser } from "@/features/UserContext/ui/UserProvider";
 import Input from "@/shared/ui/Input/Input";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import Link from "next/link";
@@ -15,36 +15,31 @@ interface HeaderProps {
   isHouse?: boolean;
 }
 
-const options = [
-  "Личные данные",
-  "Счет и платежи",
-  "Мои объявление",
-  "Центр помощи",
-  "Выйти",
-];
-
 export default function HeaderStudent() {
-  const { user, setUser } = useUser();
+  // const { user, setUser } = useUser();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-
   const [name, setName] = React.useState("");
 
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
+
     const decodedToken = jwt.decode(accessToken);
-    console.log(decodedToken);
+    console.log("decoded token: ", decodedToken);
     const userId = decodedToken?.user_id;
+
+    if (userId) {
+      localStorage.setItem("userId", userId);
+    }
 
     const fetchName = async () => {
       try {
         const userResponse = await fetch(
-          `http://195.49.212.131:8000/api/v1/auth/user/${userId}/`
+          `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
-
         setName(user.full_name);
-        console.log(user);
+        console.log("user role: ", user.role.id);
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
       }
@@ -53,19 +48,29 @@ export default function HeaderStudent() {
     fetchName();
   }, []);
 
-  const handleLoginClick = () => {
-    if (!user) {
-      setIsModalOpen(true);
-    }
-  };
+  // const handleLoginClick = () => {
+  //   if (!user) {
+  //     setIsModalOpen(true);
+  //   }
+  // };
 
   const handleLogout = () => {
-    setUser(null);
+    // setUser(null);
+    localStorage.clear();
+    window.location.reload();
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const options = [
+    { label: "Личные данные", path: "/routs/settings" },
+    { label: "Счет и платежи", path: "/routs/payment" },
+    { label: "Мои объявления", path: "/" },
+    { label: "Центр помощи", path: "/" },
+    { label: "Выйти", onClick: handleLogout },
+  ];
 
   return (
     <header className={cn("border-b-[1px] border-[#534949] py-[30px]")}>
@@ -83,40 +88,30 @@ export default function HeaderStudent() {
           </div>
 
           <div className="flex gap-[40px]">
-            <Button className="text-md font-[500]" label="Квартиры" />
+            <Link href={"/routs/posthouse"}>
+              <Button className="text-md font-[500]" label="Квартиры" />
+            </Link>
             <Link href={"/routs/posthouse"}>
               <Button className="text-md font-[500]" label="Подселение" />
             </Link>
-            {user && (
-              <>
-                <Link href={"/routs/chat"}>
-                  <Button className="text-md font-[500]" label="Сообщение" />
-                </Link>
-                <Link href={"/routs/chat"}>
-                  <Button className="text-md font-[500]" label="Избранное" />
-                </Link>
-              </>
-            )}
+            <Link href={"/routs/chat"}>
+              <Button className="text-md font-[500]" label="Сообщение" />
+            </Link>
+            <Link href={"/routs/favorite"}>
+              <Button className="text-md font-[500]" label="Избранное" />
+            </Link>
 
-            {user ? (
-              <Dropdown
-                buttonStyle="text-md font-[500]"
-                listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
-                options={options}
-                label={name || "Name"}
-                onClick={handleLogout}
-              />
-            ) : (
-              <Button
-                className="text-md font-[500]"
-                label="Войти"
-                onClick={handleLoginClick}
-              />
-            )}
+            <Dropdown
+              buttonStyle="text-md font-[500]"
+              listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
+              options={options}
+              label={name || "Name"}
+              // onClick={handleLogout}
+            />
           </div>
         </nav>
       </div>
-      {isModalOpen && <AuthModal onClose={closeModal} />}
+      {/* {isModalOpen && <AuthModal onClose={closeModal} />} */}
     </header>
   );
 }

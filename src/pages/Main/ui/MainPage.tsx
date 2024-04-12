@@ -1,6 +1,6 @@
 "use client";
 import Input from "@/shared/ui/Input/Input";
-import ProductList, { mainData } from "@/widgets/productList/ui/productLIst";
+import ProductList from "@/widgets/productList/ui/productLIst";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -21,34 +21,18 @@ export default function LandLord() {
     setCurrent(parsedPage);
   }, []);
 
-  const recordsPerPage = 6;
-  const lastIndex = current * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
-  const records = mainData.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(mainData.length / recordsPerPage);
-  const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
+  // const recordsPerPage = 6;
+  // const lastIndex = current * recordsPerPage;
+  // const firstIndex = lastIndex - recordsPerPage;
+  // const records = .slice(firstIndex, lastIndex);
+  // const npage = Math.ceil(mainData.length / recordsPerPage);
+  // const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
 
   const changeCurrentPage = (page: number) => {
     setCurrent(page);
     setActive(true);
     window.history.pushState({}, "", `/?page=${page}`);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "http://195.49.212.131:8000/api/v1/advertisement/"
-        );
-        console.log(response.data);
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <section className="pb-[45px]">
@@ -97,9 +81,9 @@ export default function LandLord() {
         </div>
       </div>
       <div className="container grid grid-cols-2 gap-[92px] mb-12">
-        <ProductList records={records} />
+        <ProductList />
       </div>
-      <div className="container flex gap-4 items-center justify-center">
+      {/* <div className="container flex gap-4 items-center justify-center">
         {numbers.map((n, i) => (
           <div
             className={`py-2 px-4 cursor-pointer text-md rounded-[6px] ${
@@ -111,7 +95,7 @@ export default function LandLord() {
             {n}
           </div>
         ))}
-      </div>
+      </div> */}
       {/* {activeModal && (
         <div className="modal-overlay" onClick={() => setActiveModal(false)} />
       )}
