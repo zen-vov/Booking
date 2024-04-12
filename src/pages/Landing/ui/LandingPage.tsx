@@ -131,7 +131,7 @@ export default function LandingPage() {
             Отзывы про нас
           </h2>
           <Slider {...settings}>
-            {sliderParams?.map((item, index) => (
+            {sliderParams.map((item, index) => (
               <div
                 className="w-[50%] h-[auto] py-6 px-4 bg-transparent"
                 key={index}

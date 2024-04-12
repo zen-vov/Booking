@@ -8,6 +8,7 @@ import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import styles from "./styles.module.scss";
 import Button from "@/shared/ui/Button/Button";
 import AuthModal from "@/features/AuthModal/ui/AuthModal";
+import Link from "next/link";
 
 export default function LandLord() {
   const [data, setData] = useState([]);
@@ -42,15 +43,17 @@ export default function LandLord() {
             <span className="text-2xl text-center mb-[1rem] font-semibold text-primary">
               Создай себе идеальное <br /> окружение
             </span>
-            <Button
-              onClick={() => setActiveModal(true)}
-              className="border-[1px] flex items-center justify-center border-black rounded-[10px] text-center bg-white text-[20px]"
-              label="Добавить объявление"
-            >
-              <span className="text-[45px] mr-[1rem] font-semibold text-center">
-                +
-              </span>
-            </Button>
+            <Link href={'/routs/posthouse'}>
+              <Button
+                onClick={() => setActiveModal(true)}
+                className="border-[1px] flex items-center justify-center border-black rounded-[10px] text-center bg-white text-[20px]"
+                label="Добавить объявление"
+              >
+                <span className="text-[45px] mr-[1rem] font-semibold text-center">
+                  +
+                </span>
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

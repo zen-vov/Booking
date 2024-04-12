@@ -93,7 +93,7 @@ export default function Header() {
           </div>
 
           <div className="flex gap-[40px]">
-            <Link href={"/roust/posthouse"}>
+            <Link href={"/roust/product"}>
               <Button className="text-md font-[500]" label="Квартиры" />
             </Link>
 

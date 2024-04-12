@@ -88,7 +88,7 @@ export default function HeaderStudent() {
           </div>
 
           <div className="flex gap-[40px]">
-            <Link href={"/routs/posthouse"}>
+            <Link href={"/routs/product"}>
               <Button className="text-md font-[500]" label="Квартиры" />
             </Link>
             <Link href={"/routs/posthouse"}>
