@@ -49,7 +49,11 @@ const iconsNear: IconButton[] = [
 
 const NearButton = ["Торговый центр", "Больница", "Школа", "Тренажорный зал"];
 
-const options = ["в год", "на день", "полгода"];
+const options = [
+  { label: "в год", path: "/year" },
+  { label: "на день", path: "/day" },
+  { label: "полгода", path: "/half-year" },
+];
 
 export default function PostSettlementPage() {
   const [counterState, setCounterState] = useState<Counter[]>([
