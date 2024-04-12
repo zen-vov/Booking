@@ -52,6 +52,7 @@ export default function LandLord() {
                 <span className="text-[45px] mr-[1rem] font-semibold text-center">
                   +
                 </span>
+                {/*  */}
               </Button>
             </Link>
           </div>
