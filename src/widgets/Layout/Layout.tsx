@@ -14,7 +14,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [target, setTarget] = React.useState("login");
   const [isProfile, setIsProfile] = React.useState(true);
-  const [userRole, setUserRole] = React.useState(1);
+  const [userRole, setUserRole] = React.useState("");
 
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -55,14 +55,14 @@ export default function Layout({ children }: LayoutProps) {
           <Footer />
         </>
       )}
-      {target === "profile" && userRole == 1 && (
+      {target === "profile" && userRole == "Student" && (
         <>
           <HeaderStudent />
           {children}
           <Footer />
         </>
       )}
-      {target === "profile" && userRole == 2 && (
+      {target === "profile" && userRole == "Landlord" && (
         <>
           <HeaderLandlord />
           {children}

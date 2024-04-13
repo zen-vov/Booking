@@ -84,7 +84,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
 
       const loginData = await loginResponse.json();
       localStorage.setItem("accessToken", loginData.access);
-
+      window.location.reload();
       onClose();
     } catch (error: any) {
       setErrorMessage(error.message || "Произошла ошибка");
