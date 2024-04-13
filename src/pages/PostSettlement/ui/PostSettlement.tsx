@@ -78,7 +78,7 @@ export default function PostSettlementPage() {
   const [formData, setFormData] = useState({
     location: "",
     uploaded_images: [],
-    user_id: 1,
+    author_id: 1,
     title: "",
     description: "",
     typeOfHouse: "string",

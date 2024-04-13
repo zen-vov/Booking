@@ -9,6 +9,7 @@ import Footer from "./Footer/ui/Footer";
 
 interface LayoutProps {
   children: React.ReactNode;
+  userRole?: 1 | 2;
 }
 
 export default function Layout({ children }: LayoutProps) {
