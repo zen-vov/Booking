@@ -21,6 +21,7 @@ import ProductList from "@/widgets/productList/ui/productLIst";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import axios from "axios";
 import { BASE_URL } from "@/shared/api/BASE";
+// import Map from "@/features/Map/ui/Map";
 
 interface Counter {
   name: string;
@@ -76,7 +77,7 @@ export default function PostSettlementPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
-    location: "",
+    location: "СДУ",
     uploaded_images: [],
     author_id: 1,
     title: "",
@@ -213,6 +214,10 @@ export default function PostSettlementPage() {
     }
   };
 
+  // const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setAddress(e.target.value);
+  // }
+
   return (
     <section className="pt-[30px] pb-[200px]">
       <div>
@@ -244,6 +249,7 @@ export default function PostSettlementPage() {
             <span className="text-blue font-medium text-[0.8rem] cursor-pointer">
               указать на карте
             </span>
+            {/* <Map address={formData.location} /> */}
           </div>
           <p className="text-[16px] font-[500] mb-[15px]">
             Основная информация о жилье

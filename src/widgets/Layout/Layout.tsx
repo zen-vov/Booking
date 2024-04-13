@@ -15,7 +15,8 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [target, setTarget] = React.useState("login");
   const [isProfile, setIsProfile] = React.useState(true);
-  const [userRole, setUserRole] = React.useState("");
+  // const [userRole, setUserRole] = React.useState("");
+  const [role, setRole] = React.useState<"Student" | "Landlord" | null>(null);
 
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -29,21 +30,20 @@ export default function Layout({ children }: LayoutProps) {
       localStorage.setItem("userId", userId);
     }
 
-    const fetchName = async () => {
+    const fetchRole = async () => {
       try {
         const userResponse = await fetch(
           `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
-        console.log("user role: ", user.role.id);
-        setTarget("profile");
-        console.log("target:", target);
+        setRole(user.role.role_name);
+        console.log(role);
       } catch (error) {
-        console.error("Ошибка при загрузке данных: ", error);
+        console.error("Error fetching user role: ", error);
       }
     };
 
-    fetchName();
+    fetchRole();
   }, []);
 
   console.log(target);
@@ -56,14 +56,14 @@ export default function Layout({ children }: LayoutProps) {
           <Footer />
         </>
       )}
-      {target === "profile" && userRole == "Student" && (
+      {target === "profile" && role == "Student" && (
         <>
           <HeaderStudent />
           {children}
           <Footer />
         </>
       )}
-      {target === "profile" && userRole == "Landlord" && (
+      {target === "profile" && role == "Landlord" && (
         <>
           <HeaderLandlord />
           {children}

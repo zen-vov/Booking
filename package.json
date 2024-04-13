@@ -11,6 +11,7 @@
   "dependencies": {
     "@ebay/nice-modal-react": "^1.2.13",
     "@fontsource/montserrat": "^5.0.17",
+    "@types/googlemaps": "^3.43.3",
     "axios": "^1.6.8",
     "classnames": "^2.5.1",
     "faker": "^6.6.6",
