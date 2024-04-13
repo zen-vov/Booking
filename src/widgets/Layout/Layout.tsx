@@ -15,7 +15,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [target, setTarget] = React.useState("login");
   const [isProfile, setIsProfile] = React.useState(true);
-  const [userRole, setUserRole] = React.useState(1);
+  const [role, setRole] = React.useState<"Student" | "Landlord" | null>(null);
 
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -36,6 +36,7 @@ export default function Layout({ children }: LayoutProps) {
         );
         const user = await userResponse.json();
         console.log("user role: ", user.role.id);
+        setRole(user.role.role_name);
         setTarget("profile");
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
@@ -55,14 +56,14 @@ export default function Layout({ children }: LayoutProps) {
           <Footer />
         </>
       )}
-      {target === "profile" && userRole == 1 && (
+      {target === "profile" && role == "Student" && (
         <>
           <HeaderStudent />
           {children}
           <Footer />
         </>
       )}
-      {target === "profile" && userRole == 2 && (
+      {role === "Landlord" && (
         <>
           <HeaderLandlord />
           {children}

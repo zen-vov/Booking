@@ -149,7 +149,7 @@ export default function ProductPage() {
               </div>
               <div className="mb-[1rem] flex items-center justify-between">
                 <h1 className="text-[1rem]">8-777-***-**-17</h1>
-                <span className="text-blue text-[0.8rem]">Показать номер</span>
+                <span className="text-blue text-[0.8rem] cursor-pointer">Показать номер</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Image

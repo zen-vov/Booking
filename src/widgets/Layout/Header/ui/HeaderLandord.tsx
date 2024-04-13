@@ -15,14 +15,6 @@ interface HeaderProps {
   isHouse?: boolean;
 }
 
-const options = [
-  "Личные данные",
-  "Счет и платежи",
-  "Мои объявление",
-  "Центр помощи",
-  "Выйти",
-];
-
 export default function HeaderLandlord() {
   const { user, setUser } = useUser();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -39,7 +31,7 @@ export default function HeaderLandlord() {
     const fetchName = async () => {
       try {
         const userResponse = await fetch(
-          `http://195.49.212.131:8000/api/v1/auth/user/${userId}/`
+          `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
 
@@ -60,12 +52,21 @@ export default function HeaderLandlord() {
   };
 
   const handleLogout = () => {
-    setUser(null);
+    localStorage.clear();
+    window.location.reload();
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const options = [
+    { label: "Личные данные", path: "/routs/settings" },
+    { label: "Счет и платежи", path: "/routs/payment" },
+    { label: "Мои объявления", path: "/" },
+    { label: "Центр помощи", path: "/" },
+    { label: "Выйти", onClick: handleLogout },
+  ];
 
   return (
     <header className={cn("border-b-[1px] border-[#534949] py-[30px]")}>
