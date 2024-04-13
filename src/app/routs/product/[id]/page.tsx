@@ -1,9 +1,13 @@
 import ProductPage from "@/pages/ProductPage/ui/ProductPage";
 import Layout from "@/widgets/Layout/Layout";
 
-export default function Product() {
+export interface PageI {
+  role: 1 | 2;
+}
+
+export default function Product({ role }: PageI) {
   return (
-    <Layout>
+    <Layout userRole={role}>
       <main className="container">
         <ProductPage />
       </main>

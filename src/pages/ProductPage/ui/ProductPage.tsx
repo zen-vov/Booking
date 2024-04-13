@@ -1,7 +1,12 @@
+"use client";
+import { useEffect, useState } from "react";
+import { BASE_URL } from "@/shared/api/BASE";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
 import ProductList from "@/widgets/productList/ui/productLIst";
+import axios from "axios";
 import Image from "next/image";
+import Edit from "@/shared/ui/Icons/Edit/Edit";
 
 const mainData = [
   {
@@ -63,6 +68,34 @@ const mainData = [
 ];
 
 export default function ProductPage() {
+  const [role, setRole] = useState<"Student" | "Landlord" | null>(null);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
+
+    const decodedToken = jwt.decode(accessToken);
+    const userId = decodedToken?.user_id;
+
+    if (userId) {
+      localStorage.setItem("userId", userId);
+    }
+
+    const fetchRole = async () => {
+      try {
+        const userResponse = await fetch(
+          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+        );
+        const user = await userResponse.json();
+        setRole(user.role.role_name);
+      } catch (error) {
+        console.error("Error fetching user role: ", error);
+      }
+    };
+
+    fetchRole();
+  }, []);
+
   return (
     <section className="py-[75px]">
       <div className="flex justify-between items-center mb-6">
@@ -77,24 +110,77 @@ export default function ProductPage() {
           <div className="flex flex-col gap-[22px] mb-12">
             <div
               style={{ backgroundImage: `url(${"/Image1.png"})` }}
-              className="w-[558px] h-[376px] rounded-[12px]"
+              className="w-[558px] h-[376px] bg-cover rounded-[12px]"
             />
             <div className="flex gap-4">
-              <div 
+              <div
                 style={{ backgroundImage: `url(${"/Image1.png"})` }}
-                className="rounded-[6px] w-[30%] h-[93px] object-cover"
+                className="rounded-[6px] bg-cover w-[30%] h-[93px] object-cover"
               />
             </div>
           </div>
-          <div className="flex flex-col gap-7">
-            <Button label="Добавить людей" className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"/>
-            <Button label="Удалить объявление" className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium" />
-          </div>
+          {role == "Landlord" ? (
+            <div className="flex flex-col gap-7">
+              <Button
+                label="Добавить людей"
+                className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
+              />
+              <Button
+                label="Удалить объявление"
+                className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
+              />
+            </div>
+          ) : (
+            ""
+          )}
+          {role == "Student" ? (
+            <div className="bg-white rounded-xl py-6 px-11">
+              <div className="mb-[1rem] flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={"/male_user.png"}
+                    width={27}
+                    height={27}
+                    alt="user"
+                  />
+                  <span className="text-[1rem]">Мурат С.</span>
+                </div>
+                <h3 className="text-[0.8rem]">Хозяин квартиры</h3>
+              </div>
+              <div className="mb-[1rem] flex items-center justify-between">
+                <h1 className="text-[1rem]">8-777-***-**-17</h1>
+                <span className="text-blue text-[0.8rem]">Показать номер</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Image
+                  src={"/Checkmark.png"}
+                  width={27}
+                  height={27}
+                  alt="checkmark"
+                />
+                <h1 className="text-[1rem]">Собственность подтверждена</h1>
+              </div>
+              <p className="text-[0.8rem] mt-[0.5rem]">
+                Арендодатель предоставил документы собственности на жильё
+              </p>
+              <div className="bg-[#f1f1f1] w-full rounded-[6px] flex justify-between relative mt-6 ">
+                <Input
+                  placeholder="Отправить сообщение..."
+                  className="text-[0.9rem] font-medium w-full text-[#A8A2A2] py-[11px] px-5"
+                />
+                <Button className="bg-blue text-white rounded-[6px] text-[0.9rem] font-medium text-center p-2.5">
+                  Отправить
+                </Button>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <div>
           <div className="flex gap-[362px] mb-10">
             <div className="">
-              <h1 className="text-lg mb-3">О квартире</h1>
+              <h1 className="text-lg mb-[0.5rem]">О квартире</h1>
               <div className="flex flex-col gap-2">
                 <span className="text-[16px]">Адрес</span>
                 <span className="text-[16px]">Год постройки</span>
@@ -106,7 +192,7 @@ export default function ProductPage() {
             <div className="">
               <div className="flex  gap-[10px]">
                 <div className="flex flex-col gap-2">
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 justify-end">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -119,18 +205,22 @@ export default function ProductPage() {
                         fill="black"
                       />
                     </svg>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                    >
-                      <path
-                        d="M10.0002 3.66405L9.1039 2.68139C7.00008 0.37473 3.14246 1.17073 1.74992 4.07072C1.09615 5.43471 0.948648 7.40404 2.14243 9.91737C3.29247 12.3374 5.68504 15.236 10.0002 18.3933C14.3153 15.236 16.7066 12.3374 17.8579 9.91737C19.0517 7.40271 18.9054 5.43471 18.2504 4.07072C16.8579 1.17073 13.0003 0.373397 10.8965 2.68006L10.0002 3.66405ZM10.0002 20C-9.16666 6.49071 4.09874 -4.05326 9.78017 1.52406C9.85517 1.59784 9.9285 1.67384 10.0002 1.75206C10.0706 1.67334 10.144 1.59773 10.2202 1.52539C15.9004 -4.05592 29.167 6.48938 10.0002 20Z"
-                        fill="black"
-                      />
-                    </svg>
+                    {role == "Student" ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                      >
+                        <path
+                          d="M10.0002 3.66405L9.1039 2.68139C7.00008 0.37473 3.14246 1.17073 1.74992 4.07072C1.09615 5.43471 0.948648 7.40404 2.14243 9.91737C3.29247 12.3374 5.68504 15.236 10.0002 18.3933C14.3153 15.236 16.7066 12.3374 17.8579 9.91737C19.0517 7.40271 18.9054 5.43471 18.2504 4.07072C16.8579 1.17073 13.0003 0.373397 10.8965 2.68006L10.0002 3.66405ZM10.0002 20C-9.16666 6.49071 4.09874 -4.05326 9.78017 1.52406C9.85517 1.59784 9.9285 1.67384 10.0002 1.75206C10.0706 1.67334 10.144 1.59773 10.2202 1.52539C15.9004 -4.05592 29.167 6.48938 10.0002 20Z"
+                          fill="black"
+                        />
+                      </svg>
+                    ) : (
+                      <Edit />
+                    )}
                   </div>
                   <span className="text-[16px]">Улица Тургут Озала 184</span>
                   <span className="text-[16px]">2015 год</span>
