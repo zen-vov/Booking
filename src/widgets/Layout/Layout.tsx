@@ -37,6 +37,7 @@ export default function Layout({ children }: LayoutProps) {
         );
         const user = await userResponse.json();
         setRole(user.role.role_name);
+        setTarget("profile");
         console.log(role);
       } catch (error) {
         console.error("Error fetching user role: ", error);
