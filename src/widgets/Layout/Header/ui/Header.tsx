@@ -30,31 +30,6 @@ export default function Header() {
 
   const [modalOpen, setModalOpen] = React.useState(false);
 
-  // React.useEffect(() => {
-  //   const accessToken = localStorage.getItem("accessToken");
-  //   const jwt = require("jsonwebtoken");
-  //   const decodedToken = jwt.decode(accessToken);
-  //   console.log("decoded token: ", decodedToken);
-  //   const userId = decodedToken?.user_id;
-  //   if (userId) {
-  //     localStorage.setItem("userId", userId);
-  //   }
-
-  //   const fetchName = async () => {
-  //     try {
-  //       const userResponse = await fetch(
-  //         `http://studhouse.kz/api/v1/auth/user/${userId}/`
-  //       );
-  //       const user = await userResponse.json();
-  //       console.log("username: ", user.full_name);
-  //     } catch (error) {
-  //       console.error("Ошибка при загрузке данных: ", error);
-  //     }
-  //   };
-
-  //   fetchName();
-  // }, []);
-
   const handleLoginClick = () => {
     if (!user) {
       setIsModalOpen(true);
@@ -108,16 +83,6 @@ export default function Header() {
           </div>
         </nav>
       </div>
-
-      {/* <div>
-        <button onClick={handleButtonClick}>Открыть модальное окно</button>
-        {modalOpen && (
-          <Modal onClose={handleModalClose}>
-            <h2>Заголовок модального окна</h2>
-            <p>Содержимое модального окна...</p>
-          </Modal>
-        )}
-      </div> */}
 
       {isModalOpen && <AuthModal onClose={closeModal} />}
     </header>

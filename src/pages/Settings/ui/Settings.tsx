@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Modal from "@/shared/ui/Modal/ui/Modal";
 import jwt from "jsonwebtoken";
+import Pen from "@/shared/ui/Icons/Pen/Pen";
 
 interface Fields {
   full_name: string;
@@ -129,7 +130,7 @@ const Profile = () => {
               className="cursor-pointer text-blue-500"
               onClick={() => handleEditClick(field)}
             >
-              Редактировать
+              <Pen />
             </button>
           )}
         </div>

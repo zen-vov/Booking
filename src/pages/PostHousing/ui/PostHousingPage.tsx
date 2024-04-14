@@ -60,7 +60,7 @@ export default function PostHousePage() {
               документами.
             </label>
           </div>
-          <Link href={"/routs/postchoose"} className="flex justify-end">
+          <Link href={"/routs/postsettlement"} className="flex justify-end">
             <Button
               label="Продолжить"
               className="rounded-[5px] text-center text-white bg-blue text-[12px] font-medium mt-[33px] p-[1rem]"

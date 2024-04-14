@@ -84,19 +84,17 @@ export default function HeaderLandlord() {
           </div>
 
           <div className="flex gap-[40px]">
-            {!user && (
-              <div className="flex gap-[40px] items-center">
-                <Link href={"/routs/chat"}>
-                  <Button className="text-md font-[500]" label="Сообщение" />
-                </Link>
-                <Link href={"/routs/posthouse"}>
-                  <Button
-                    className="text-md font-[500] border-[1px] border-black py-[3px] px-[6px]"
-                    label="Разместить объявление"
-                  />
-                </Link>
-              </div>
-            )}
+            <div className="flex gap-[40px] items-center">
+              <Link href={"/routs/chat"}>
+                <Button className="text-md font-[500]" label="Сообщение" />
+              </Link>
+              <Link href={"/routs/posthouse"}>
+                <Button
+                  className="text-md font-[500] border-[1px] border-black py-[3px] px-[6px]"
+                  label="Разместить объявление"
+                />
+              </Link>
+            </div>
 
             {user ? (
               <Dropdown
@@ -104,7 +102,6 @@ export default function HeaderLandlord() {
                 listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
                 options={options}
                 label={name || "Name"}
-                onClick={handleLogout}
               />
             ) : (
               <Button
