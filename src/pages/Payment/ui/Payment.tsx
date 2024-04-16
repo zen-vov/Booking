@@ -3,10 +3,12 @@ import Link from "next/link";
 
 export default function PaymentPage() {
   return (
-    <div>
+    <div className="mb-[100px]">
       <div>
         <Link href={"/"}>
-          <p className="text-[16px] font-[500]">Вернуться на главное меню</p>
+          <p className="mt-[20px] text-[16px] font-[500]">
+            Вернуться на главное меню
+          </p>
         </Link>
         <h1 className="text-[24px] mt-[20px] mb-[55px] font-[500]">
           Платежи и выплаты
