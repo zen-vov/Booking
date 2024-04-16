@@ -9,6 +9,7 @@ import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import Link from "next/link";
 import Logo from "@/shared/ui/Icons/Logo/Logo";
 import Search from "@/shared/ui/Icons/Search/Search";
+import Avatar from "@/shared/ui/Icons/Avatar/avatar";
 
 interface HeaderProps {
   isProfile: boolean;
@@ -87,7 +88,7 @@ export default function HeaderStudent() {
             />
           </div>
 
-          <div className="flex gap-[40px]">
+          <div className="flex items-center gap-[40px]">
             <Link href={"/routs/product"}>
               <Button className="text-md font-[500]" label="Квартиры" />
             </Link>
@@ -103,9 +104,9 @@ export default function HeaderStudent() {
 
             <Dropdown
               buttonStyle="text-md font-[500]"
-              listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
+              listStyle="flex items-center bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
               options={options}
-              label={name || "Name"}
+              label={<Avatar /> || "Name"}
               // onClick={handleLogout}
             />
           </div>

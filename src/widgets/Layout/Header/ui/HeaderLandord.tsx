@@ -9,6 +9,7 @@ import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import Link from "next/link";
 import Logo from "@/shared/ui/Icons/Logo/Logo";
 import Search from "@/shared/ui/Icons/Search/Search";
+import Avatar from "@/shared/ui/Icons/Avatar/avatar";
 
 interface HeaderProps {
   isProfile: boolean;
@@ -100,7 +101,7 @@ export default function HeaderLandlord() {
               buttonStyle="text-md font-[500]"
               listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
               options={options}
-              label={name || "Name"}
+              label={<Avatar /> || "Name"}
             />
           </div>
         </nav>
