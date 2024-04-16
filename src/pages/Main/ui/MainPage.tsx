@@ -140,7 +140,7 @@ export default function LandLord() {
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <div className="flex justify-center gap-[90px]">
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-[0.8rem]">
               {dataFilter.map(({ text, className }, index) => (
                 <h1
                   className={className}
@@ -152,7 +152,7 @@ export default function LandLord() {
               ))}
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-2.5 mb-11">
+              <div className="flex items-center gap-2.5 mb-[38px]">
                 <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
                   Неважно
                 </Button>
