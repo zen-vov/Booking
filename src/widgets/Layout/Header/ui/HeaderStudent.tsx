@@ -98,7 +98,7 @@ export default function HeaderStudent() {
             <Link href={"/routs/chat"}>
               <Button className="text-md font-[500]" label="Сообщение" />
             </Link>
-            <Link href={"/routs/favorite"}>
+            <Link href={"/routs/favourite"}>
               <Button className="text-md font-[500]" label="Избранное" />
             </Link>
 
