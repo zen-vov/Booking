@@ -9,6 +9,7 @@ import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import Link from "next/link";
 import Logo from "@/shared/ui/Icons/Logo/Logo";
 import Search from "@/shared/ui/Icons/Search/Search";
+import { BASE_URL } from "@/shared/api/BASE";
 
 interface HeaderProps {
   isProfile: boolean;
@@ -38,9 +39,7 @@ export default function HeaderPostStudent() {
 
     const fetchName = async () => {
       try {
-        const userResponse = await fetch(
-          `http://195.49.212.131:8000/api/v1/auth/user/${userId}/`
-        );
+        const userResponse = await fetch(`${BASE_URL}/auth/user/${userId}/`);
         const user = await userResponse.json();
 
         setName(user.full_name);

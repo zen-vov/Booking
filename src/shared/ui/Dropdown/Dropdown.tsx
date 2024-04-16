@@ -13,7 +13,7 @@ interface DropdownProps {
   buttonStyle?: string;
   listStyle?: string;
   options: Option[];
-  label: string;
+  label: any;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -35,9 +35,9 @@ const Dropdown: React.FC<DropdownProps> = ({
       </button>
       {isOpen && (
         <div className="relative">
-          <div className={`absolute left-[-50px] top-[10px] ${listStyle}`}>
+          <div className={`absolute flet flex-col items-center left-[-50px] top-[10px] ${listStyle}`}>
             {options.map((option, index) => (
-              <div key={index}>
+              <div key={index} className="whitespace-nowrap">
                 {option.path ? (
                   <Link href={option.path}>{option.label}</Link>
                 ) : (
