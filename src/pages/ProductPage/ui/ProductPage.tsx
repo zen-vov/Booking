@@ -274,8 +274,8 @@ export default function ProductPage() {
               </div>
             </div>
             <div className="">
-              <div className="flex  gap-[10px]">
-                <div className="flex flex-col gap-2">
+              <div className="flex gap-[10px]">
+                <div className="flex flex-col gap-[0.7rem]">
                   <div className="flex gap-2 justify-end">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
