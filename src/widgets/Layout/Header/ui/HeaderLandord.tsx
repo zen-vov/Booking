@@ -96,20 +96,12 @@ export default function HeaderLandlord() {
               </Link>
             </div>
 
-            {user ? (
-              <Dropdown
-                buttonStyle="text-md font-[500]"
-                listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
-                options={options}
-                label={name || "Name"}
-              />
-            ) : (
-              <Button
-                className="text-md font-[500]"
-                label="Войти"
-                onClick={handleLoginClick}
-              />
-            )}
+            <Dropdown
+              buttonStyle="text-md font-[500]"
+              listStyle="bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
+              options={options}
+              label={name || "Name"}
+            />
           </div>
         </nav>
       </div>

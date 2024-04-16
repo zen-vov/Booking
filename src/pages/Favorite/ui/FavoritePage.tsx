@@ -8,6 +8,8 @@ import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import styles from "./styles.module.scss";
 import Button from "@/shared/ui/Button/Button";
 import AuthModal from "@/features/AuthModal/ui/AuthModal";
+import { BASE_URL } from "@/shared/api/BASE";
+import Link from "next/link";
 
 export default function FavoritePage() {
   const [data, setData] = useState([]);
@@ -34,20 +36,39 @@ export default function FavoritePage() {
     window.history.pushState({}, "", `/?page=${page}`);
   };
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "http://195.49.212.131:8000/api/v1/advertisement/"
+  //       );
+  //       console.log(response.data);
+  //       setData(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching data: ", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchFavourite = async () => {
       try {
-        const response = await axios.get(
-          "http://195.49.212.131:8000/api/v1/advertisement/"
+        const accessToken = localStorage.getItem("access_token");
+        const res = await axios.get(
+          `${BASE_URL}/advertisement/get_favorite_advertisements/`,
+          {
+            headers: {
+              Authorization: `JWT ${accessToken}`,
+            },
+          }
         );
-        console.log(response.data);
-        setData(response.data);
+        setData(res.data);
       } catch (error) {
-        console.error("Error fetching data: ", error);
+        console.log("err", error);
       }
     };
-
-    fetchData();
   }, []);
 
   return (
@@ -83,9 +104,20 @@ export default function FavoritePage() {
         </div>
         <h1 className="text-xl font-[500] ">Мои объявление</h1>
       </div>
-      <div className="container grid grid-cols-2 gap-[92px] mb-12">
-        <ProductList />
-      </div>
+      {data.length === 0 ? (
+        <div className="container pb-20 flex flex-col justify-center items-center mt-8 text-lg">
+          <h1 className="text-xl font-medium">У вас нет объявление вашей квартиры</h1>
+          <Link href={'/routs/posthouse'} className="mt-[45px]">
+            <Button className="text-md font-medium rounded-[5px] border-[1px] border-solid border-black py-[13px] px-[22px]">
+            Разместить объявление
+            </Button>
+          </Link>
+        </div>
+      ) : (
+        <div className="container grid grid-cols-2 gap-[92px] mb-12">
+          <ProductList />
+        </div>
+      )}
       {/* <div className="container flex gap-4 items-center justify-center">
         {numbers.map((n, i) => (
           <div

@@ -7,6 +7,7 @@ import ProductList from "@/widgets/productList/ui/productLIst";
 import axios from "axios";
 import Image from "next/image";
 import Edit from "@/shared/ui/Icons/Edit/Edit";
+import { useRouter } from "next/navigation";
 
 const mainData = [
   {
@@ -69,6 +70,7 @@ const mainData = [
 
 export default function ProductPage() {
   const [role, setRole] = useState<"Student" | "Landlord" | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -95,6 +97,25 @@ export default function ProductPage() {
 
     fetchRole();
   }, []);
+
+  const handleDeleteAdvertisement = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.error("Access token not found.");
+        return;
+      }
+      const res = await axios.delete(`${BASE_URL}/advertisement/id`, {
+        headers: {
+          Authorization: `JWT ${accessToken}`,
+        },
+      });
+      console.log("Advertisement deleted successfully:", res.data);
+      router.push("/");
+    } catch (error) {
+      console.error("Error deleting advertisement:", error);
+    }
+  };
 
   return (
     <section className="py-[75px]">
@@ -127,6 +148,7 @@ export default function ProductPage() {
               />
               <Button
                 label="Удалить объявление"
+                onClick={handleDeleteAdvertisement}
                 className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
               />
             </div>
@@ -149,7 +171,9 @@ export default function ProductPage() {
               </div>
               <div className="mb-[1rem] flex items-center justify-between">
                 <h1 className="text-[1rem]">8-777-***-**-17</h1>
-                <span className="text-blue text-[0.8rem] cursor-pointer">Показать номер</span>
+                <span className="text-blue text-[0.8rem] cursor-pointer">
+                  Показать номер
+                </span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Image

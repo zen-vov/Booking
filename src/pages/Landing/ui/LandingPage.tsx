@@ -6,6 +6,7 @@ import Slider from "react-slick";
 import Star from "@/shared/ui/Icons/Star/Star";
 import Button from "@/shared/ui/Button/Button";
 import Image from "next/image";
+import Link from "next/link";
 import { Modal } from "@/shared/ui/Modal/Modal";
 
 export default function LandingPage() {
@@ -102,11 +103,14 @@ export default function LandingPage() {
                 интегрированы функции обмена сообщениями и проверки арендаторов,
                 которые помогут вам быстро находить и проверять кандидатов.
               </p>
-              <Button
-                className="bg-blue w-[130px] rounded-[5px] py-[10px] text-white text-[20px] font-[500]"
-                type="submit"
-                label="Начать"
-              />
+              <Link href={"/routs/posthouse"}>
+                <Button
+                  className="bg-blue w-[130px] rounded-[5px] py-[10px] text-white text-[20px] font-[500]"
+                  type="submit"
+                  label="Начать"
+                />
+              </Link>
+
               <Button
                 className=" w-[130px] rounded-[5px] py-[10px] text-black  text-[20px] font-[500]"
                 type="submit"

@@ -14,8 +14,6 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [target, setTarget] = React.useState("login");
-  const [isProfile, setIsProfile] = React.useState(true);
-  // const [userRole, setUserRole] = React.useState("");
   const [role, setRole] = React.useState<"Student" | "Landlord" | null>(null);
 
   React.useEffect(() => {
@@ -36,9 +34,9 @@ export default function Layout({ children }: LayoutProps) {
           `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
+        console.log("user role: ", user.role.id);
         setRole(user.role.role_name);
         setTarget("profile");
-        console.log(role);
       } catch (error) {
         console.error("Error fetching user role: ", error);
       }
@@ -57,7 +55,7 @@ export default function Layout({ children }: LayoutProps) {
           <Footer />
         </>
       )}
-      {target === "profile" && role == "Student" && (
+      {role == "Student" && (
         <>
           <HeaderStudent />
           {children}
