@@ -70,6 +70,7 @@ const mainData = [
 
 export default function ProductPage() {
   const [role, setRole] = useState<"Student" | "Landlord" | null>(null);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -117,6 +118,63 @@ export default function ProductPage() {
     }
   };
 
+  const addToFavorites = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.error("Access token not found.");
+        return;
+      }
+      const res = await axios.post(
+        `${BASE_URL}/advertisement/add_to_favorite/`,
+        {},
+        {
+          headers: {
+            Authorization: `JWT ${accessToken}`,
+          },
+        }
+      );
+      console.log("Added to favorites:", res.data);
+      setIsFavorite(true);
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
+    }
+  };
+
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) {
+          console.error("Access token not found.");
+          return;
+        }
+
+        // const currentAdId = currentAdId();
+
+        const res = await axios.get(
+          `${BASE_URL}/advertisement/get_favorite_advertisements`,
+          {
+            headers: {
+              Authorization: `JWT ${accessToken}`,
+            },
+          }
+        );
+
+        const favoriteAdvertisements = res.data;
+
+        // const isCurrentAdFavorite = favoriteAdvertisements.some(
+        //   (ad: any) => ad.id === currentAdId
+        // );
+        // setIsFavorite(isCurrentAdFavorite);
+      } catch (error) {
+        console.error("Error checking favorite status:", error);
+      }
+    };
+
+    checkFavoriteStatus();
+  }, []);
+
   return (
     <section className="py-[75px]">
       <div className="flex justify-between items-center mb-6">
@@ -135,7 +193,9 @@ export default function ProductPage() {
             />
             <div className="flex gap-4">
               <div
-                style={{ backgroundImage: `url(${"/Image1.png"})` }}
+                style={{
+                  backgroundImage: `url(${"/Image1.png"})`,
+                }}
                 className="rounded-[6px] bg-cover w-[30%] h-[93px] object-cover"
               />
             </div>
@@ -219,6 +279,7 @@ export default function ProductPage() {
                   <div className="flex gap-2 justify-end">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
+                      className="cursor-pointer"
                       width="20"
                       height="20"
                       viewBox="0 0 20 20"
@@ -231,6 +292,8 @@ export default function ProductPage() {
                     </svg>
                     {role == "Student" ? (
                       <svg
+                        className="cursor-pointer"
+                        onClick={addToFavorites}
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
                         height="20"
@@ -239,7 +302,7 @@ export default function ProductPage() {
                       >
                         <path
                           d="M10.0002 3.66405L9.1039 2.68139C7.00008 0.37473 3.14246 1.17073 1.74992 4.07072C1.09615 5.43471 0.948648 7.40404 2.14243 9.91737C3.29247 12.3374 5.68504 15.236 10.0002 18.3933C14.3153 15.236 16.7066 12.3374 17.8579 9.91737C19.0517 7.40271 18.9054 5.43471 18.2504 4.07072C16.8579 1.17073 13.0003 0.373397 10.8965 2.68006L10.0002 3.66405ZM10.0002 20C-9.16666 6.49071 4.09874 -4.05326 9.78017 1.52406C9.85517 1.59784 9.9285 1.67384 10.0002 1.75206C10.0706 1.67334 10.144 1.59773 10.2202 1.52539C15.9004 -4.05592 29.167 6.48938 10.0002 20Z"
-                          fill="black"
+                          fill={`${isFavorite ? "red" : "black"}`}
                         />
                       </svg>
                     ) : (
@@ -276,7 +339,7 @@ export default function ProductPage() {
             </p>
           </div>
           <div className="">
-            <h1 className="text-lg mt-10 mb-[18px]  ">Удобство</h1>
+            <h1 className="text-lg mt-10 mb-[18px]">Удобство</h1>
             <div className="flex gap-[489px]">
               <div>
                 <ul className="flex flex-col gap-2.5">
