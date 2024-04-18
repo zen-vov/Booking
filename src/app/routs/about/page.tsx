@@ -1,11 +1,11 @@
-import AboutUs from "@/widgets/AboutUs/ui/aboutus";
+import AboutPage from "@/pages/About/ui/AboutPage";
 import Layout from "@/widgets/Layout/Layout";
 
 export default function About() {
   return (
     <Layout>
-      <main className="container">
-        <AboutUs />
+      <main className="pt-9 pb-[144px] container">
+        <AboutPage />
       </main>
     </Layout>
   );
