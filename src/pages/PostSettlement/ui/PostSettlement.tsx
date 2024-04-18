@@ -33,6 +33,30 @@ interface IconButton {
   label: string;
 }
 
+interface FormData {
+  location: string;
+  uploaded_images: string[]; // Массив файлов изображений
+  title: string;
+  description: string;
+  typeOfHouse: string; // Тип дома: например, "апартаменты", "дом", "квартира" и т. д.
+  price: string; // Цена за жилье (может быть строкой, если нужно учитывать валюту и т. д.)
+  numberOfRooms: number; // Количество комнат
+  paymentTime: "daily" | "year" | "half-year"; // Время оплаты: ежедневно, ежегодно, раз в полгода
+  floor: number; // Этаж
+  square: number; // Площадь квартиры
+  haveWifi: boolean; // Наличие Wi-Fi
+  haveTV: boolean; // Наличие телевизора
+  haveWashingMachine: boolean; // Наличие стиральной машины
+  haveParking: boolean; // Наличие парковки
+  haveConditioner: boolean; // Наличие кондиционера
+  nearbyTradeCenter: boolean; // Рядом есть торговый центр
+  nearbyHospital: boolean; // Рядом есть больница
+  nearbySchool: boolean; // Рядом есть школа
+  nearbyGym: boolean; // Рядом есть тренажерный зал
+  isSold: boolean; // Жилье продано
+  isArchived: boolean; // Жилье в архиве
+}
+
 const icons: IconButton[] = [
   { icon: <Wifi />, label: "Wifi" },
   { icon: <TV className="bg-[#f1f1f1]" />, label: "TV" },
@@ -76,36 +100,70 @@ export default function PostSettlementPage() {
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     location: "СДУ",
     uploaded_images: [],
-    author_id: 1,
     title: "",
     description: "",
-    typeOfHouse: "string",
+    typeOfHouse: "", // Изменено на пустую строку, так как тип дома не указан
     price: "3000",
-    numberOfRooms: 2147483647,
+    numberOfRooms: 0, // Изменено на 0, так как количество комнат может быть любым
     paymentTime: "daily",
-    floor: 2147483647,
-    square: 2147483647,
-    haveWifi: true,
-    haveTV: true,
-    haveWashingMachine: true,
-    haveParking: true,
-    haveConditioner: true,
-    nearbyTradeCenter: true,
-    nearbyHospital: true,
-    nearbySchool: true,
-    nearbyGym: true,
-    isSold: true,
-    isArchived: true,
+    floor: 5, // Изменено на 0, так как этаж может быть любым
+    square: 5, // Изменено на 0, так как площадь квартиры может быть любой
+    haveWifi: false, // Изменено на false, так как значение по умолчанию false
+    haveTV: false, // Изменено на false, так как значение по умолчанию false
+    haveWashingMachine: false, // Изменено на false, так как значение по умолчанию false
+    haveParking: false, // Изменено на false, так как значение по умолчанию false
+    haveConditioner: false, // Изменено на false, так как значение по умолчанию false
+    nearbyTradeCenter: false, // Изменено на false, так как значение по умолчанию false
+    nearbyHospital: false, // Изменено на false, так как значение по умолчанию false
+    nearbySchool: false, // Изменено на false, так как значение по умолчанию false
+    nearbyGym: false, // Изменено на false, так как значение по умолчанию false
+    isSold: false, // Изменено на false, так как значение по умолчанию false
+    isArchived: false, // Изменено на false, так как значение по умолчанию false
   });
+
+  const [selectedIcons, setSelectedIcons] = useState<boolean[]>(
+    icons.map(() => false)
+  );
+
+  const handleIconClick = (index: number) => {
+    setSelectedIcons((prevSelectedIcons) => {
+      const newSelectedIcons = [...prevSelectedIcons];
+      newSelectedIcons[index] = !newSelectedIcons[index];
+      setFormData((prevFormData) => {
+        let updatedFormData = { ...prevFormData };
+        switch (index) {
+          case 0:
+            updatedFormData.haveWifi = newSelectedIcons[index];
+            break;
+          case 1:
+            updatedFormData.haveTV = newSelectedIcons[index];
+            break;
+          case 2:
+            updatedFormData.haveWashingMachine = newSelectedIcons[index];
+            break;
+          case 3:
+            updatedFormData.haveParking = newSelectedIcons[index];
+            break;
+          case 4:
+            updatedFormData.haveConditioner = newSelectedIcons[index];
+            break;
+          default:
+            break;
+        }
+        return updatedFormData;
+      });
+      return newSelectedIcons;
+    });
+  };
 
   const createApartment = async (apartmentData: any) => {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.post(
-        `${BASE_URL}/advertisement`,
+        `http://studhouse.kz/api/v1/advertisement/`,
         apartmentData,
         {
           headers: {
@@ -147,10 +205,6 @@ export default function PostSettlementPage() {
 
   const handleButtonClick = (type: string) => {
     setSelectedType((prevType) => (prevType === type ? null : type));
-  };
-
-  const handleIconClick = (index: number) => {
-    setSelectedIconIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
   const increase = () => {
@@ -282,7 +336,7 @@ export default function PostSettlementPage() {
                 <button
                   key={index}
                   className={`bg-[#f1f1f1] rounded-[5px] w-[60px] h-[40px] py-[12px] px-[23px] text-[22px] font-500 ${
-                    selectedIconIndex === index ? "bg-blue text-white" : ""
+                    selectedIcons[index] ? "bg-blue text-white" : ""
                   }`}
                   onClick={() => handleIconClick(index)}
                 >
