@@ -14,10 +14,13 @@ interface Fields {
   birthDate: string;
   identification: string;
   additional_user: string;
+  // university_data?: string;
+  // student_hobbies?: string;
 }
 
 const Profile = () => {
   const [modalOpen, setModalOpen] = React.useState(false);
+  // const [userRole, setUserRole] = React.useState("");
 
   const handleModalClose = () => {
     setModalOpen(false);
@@ -45,6 +48,8 @@ const Profile = () => {
     birthDate: false,
     identification: false,
     additional_user: false,
+    // university_data: false,
+    // student_hobbies: false,
   });
 
   React.useEffect(() => {
@@ -52,12 +57,16 @@ const Profile = () => {
     const jwt = require("jsonwebtoken");
     const decodedToken = jwt.decode(accessToken);
     const userId = decodedToken?.user_id;
+    // let initialUserRole = null;
+    // setUserRole(userRole);
     const fetchUser = async () => {
       try {
         const userResponse = await fetch(
           `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
+        // const userRole = user?.role?.role_name;
+        // setUserRole(userRole);
 
         setFields({
           ...fields,
@@ -67,6 +76,8 @@ const Profile = () => {
           birthDate: user.user_info.birthDate,
           identification: user.user_info.frontIDCard,
           additional_user: user.additional_user,
+          // university_data: user.university_data,
+          // student_hobbies: user.student_hobbies,
         });
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
@@ -112,34 +123,35 @@ const Profile = () => {
   };
 
   const handleChange = (field: keyof Fields, value: string) => {
-    setFields({ ...fields, [field]: value });
+    setFields((prevFields) => ({
+      ...prevFields,
+      [field]: value,
+    }));
   };
 
   const renderField = (field: keyof Fields, label: string) => {
     const isEditing = editingFields[field];
+    const fieldValue = fields[field] || "";
     return (
       <div>
         <div>
           <div>
-            <span>Имя по документам: </span>
             <span>
-              {isEditing ? (
+              {isEditing && (
                 <ModalInput
-                  initialValue="Значение по умолчанию"
-                  onSave={(newValue: string) => handleSaveClick(field)}
+                  initialValue={fieldValue}
+                  onSave={(newValue: string) => handleChange(field, newValue)}
                   onClose={() =>
                     setEditingFields({ ...editingFields, [field]: false })
                   }
                   fieldName={label}
-                />
-              ) : (
-                <button onClick={() => handleEditClick(field)}>
-                  <Pen />
-                </button>
+                  buttonField="Сохранить"
+                >
+                  <h2>{label}</h2>
+                </ModalInput>
               )}
             </span>
           </div>
-          {/* Аналогично для других полей */}
         </div>
 
         <div className="flex justify-between items-center mb-2">
@@ -165,7 +177,6 @@ const Profile = () => {
             className="w-full p-2 border rounded"
             value={fields[field]}
             onChange={(e) => handleChange(field, e.target.value)}
-            autoFocus
           />
         ) : (
           <span className="text-16 font-400 text-gray">{fields[field]}</span>
@@ -173,6 +184,18 @@ const Profile = () => {
       </div>
     );
   };
+
+  // const renderStudentFields = () => {
+  // if (userRole && userRole.toLowerCase() === "student") {
+  //   return (
+  //     <>
+  //       {renderField("university_data", "Данные об университете")}
+  //       {renderField("student_hobbies", "Увлечения студента")}
+  //     </>
+  //   );
+  // }
+  //   return null;
+  // };
 
   return (
     <div>
@@ -196,6 +219,7 @@ const Profile = () => {
             "additional_user",
             "Контактное лицо в чрезвычайной ситуации"
           )}
+          {/* {renderStudentFields()} */}
         </div>
         <div className="mt-[84px]">
           <p className="text-[18px] font-[400]">Хотите онулировать аккаунт?</p>

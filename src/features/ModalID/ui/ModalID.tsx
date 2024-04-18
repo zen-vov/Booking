@@ -33,22 +33,10 @@ const ModalInputField: React.FC<ModalInputFieldProps> = ({
     onClose();
   };
 
-  const handleKeyDowm = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key == "Enter") {
-      handleSave();
-    }
-  };
-
   return (
     <Modal onClose={onClose}>
       <div>{children}</div>
-      <input
-        autoFocus
-        onKeyDown={handleKeyDowm}
-        type="text"
-        value={value}
-        onChange={handleChange}
-      />
+      <input type="text" value={value} onChange={handleChange} />
       <Button
         className="bg-blue w-[424px] h-[50px] mt-[60px] text-white text-[22px] rounded-[5px]"
         label={buttonField}
