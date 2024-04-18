@@ -67,9 +67,7 @@ export default function HeaderStudent() {
 
   const options = [
     { label: "Личные данные", path: "/routs/settings" },
-    { label: "Счет и платежи", path: "/routs/payment" },
     { label: "Мои объявления", path: "/" },
-    { label: "Центр помощи", path: "/" },
     { label: "Выйти", onClick: handleLogout },
   ];
 

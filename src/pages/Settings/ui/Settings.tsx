@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import Modal from "@/shared/ui/Modal/ui/Modal";
 import jwt from "jsonwebtoken";
 import Pen from "@/shared/ui/Icons/Pen/Pen";
+import Link from "next/link";
+import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
+import ModalInput from "@/features/ModalInput/ui/ModalInput";
 
 interface Fields {
   full_name: string;
@@ -116,6 +119,29 @@ const Profile = () => {
     const isEditing = editingFields[field];
     return (
       <div>
+        <div>
+          <div>
+            <span>Имя по документам: </span>
+            <span>
+              {isEditing ? (
+                <ModalInput
+                  initialValue="Значение по умолчанию"
+                  onSave={(newValue: string) => handleSaveClick(field)}
+                  onClose={() =>
+                    setEditingFields({ ...editingFields, [field]: false })
+                  }
+                  fieldName={label}
+                />
+              ) : (
+                <button onClick={() => handleEditClick(field)}>
+                  <Pen />
+                </button>
+              )}
+            </span>
+          </div>
+          {/* Аналогично для других полей */}
+        </div>
+
         <div className="flex justify-between items-center mb-2">
           <span className="text-16 text-black font-[500]">{label}</span>
           {isEditing ? (
@@ -149,27 +175,34 @@ const Profile = () => {
   };
 
   return (
-    <div className="mx-10 my-4 py-[60px] px-[65px] bg-white rounded-lg">
-      <div className="flex flex-col gap-[16px]">
-        <div className="text-16 font-[600] mb-30">Личная информация</div>
-        {renderField("full_name", "Имя по документам")}
-        {renderField("contacts", "Номер телефона")}
-        {renderField("email", "Электронная почта")}
-        {renderField("birthDate", "Дата рождения")}
-        {renderField(
-          "identification",
-          "Удостоверение личности государственного образца"
-        )}
-        {renderField(
-          "additional_user",
-          "Контактное лицо в чрезвычайной ситуации"
-        )}
-      </div>
-      <div className="mt-[84px]">
-        <p className="text-[18px] font-[400]">Хотите онулировать аккаунт?</p>
-        <p className="decoration-solid text-[16px] cursor-pointer font-[500]">
-          Приступить
-        </p>
+    <div>
+      <Link href={"/"} className="flex gap-1 items-center mt-[25px] mb-[16px]">
+        <Arrow />
+        <p className="text-lg font-[400]">Вернуться на Главную страницу</p>
+      </Link>
+      <h2 className="ml-[40px] text-lg font-[500]">Личные данные</h2>
+      <div className="mx-10 mt-[35px] mb-[100px] py-[60px] px-[65px] bg-white rounded-lg">
+        <div className="flex flex-col gap-[16px]">
+          <div className="text-16 font-[600] mb-30">Личная информация</div>
+          {renderField("full_name", "Имя по документам")}
+          {renderField("contacts", "Номер телефона")}
+          {renderField("email", "Электронная почта")}
+          {renderField("birthDate", "Дата рождения")}
+          {renderField(
+            "identification",
+            "Удостоверение личности государственного образца"
+          )}
+          {renderField(
+            "additional_user",
+            "Контактное лицо в чрезвычайной ситуации"
+          )}
+        </div>
+        <div className="mt-[84px]">
+          <p className="text-[18px] font-[400]">Хотите онулировать аккаунт?</p>
+          <p className="decoration-solid text-[16px] cursor-pointer font-[500]">
+            Приступить
+          </p>
+        </div>
       </div>
     </div>
   );

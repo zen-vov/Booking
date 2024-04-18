@@ -16,13 +16,7 @@ interface HeaderProps {
   isHouse?: boolean;
 }
 
-const options = [
-  "Личные данные",
-  "Счет и платежи",
-  "Мои объявление",
-  "Центр помощи",
-  "Выйти",
-];
+const options = ["Личные данные", "Мои объявление", "Выйти"];
 
 export default function HeaderPostStudent() {
   const { user, setUser } = useUser();

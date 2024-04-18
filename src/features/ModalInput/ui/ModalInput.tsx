@@ -1,28 +1,39 @@
-// import React from "react";
-// import Modal from "@/shared/ui/Modal/ui/Modal";
+// ModalInputField.tsx
 
-// interface ModalInputProps {
-//     initialValue: string;
-//     onSave: (newValue: string) = void;
-//     onClose: () => void;
-//     fieldName: string;
-// }
+import React, { useState } from "react";
+import Modal from "@/shared/ui/Modal/ui/Modal";
 
-// const ModalInput: React.FC<ModalInputProps> = ({initialValue, onSave, onClose, fieldName}) => {
+interface ModalInputFieldProps {
+  initialValue: string;
+  onSave: (newValue: string) => void;
+  onClose: () => void;
+  fieldName: string;
+}
 
-//     const [value, setValue] = React.useState("");
+const ModalInputField: React.FC<ModalInputFieldProps> = ({
+  initialValue,
+  onSave,
+  onClose,
+  fieldName,
+}) => {
+  const [value, setValue] = useState(initialValue);
 
-//     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//         setValue(e.target.value);
-//     }
-//     const handleSave = () => {
-//         onSave(value);
-//         onClose();
-//     }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
 
-//     return (
-//         <Modal onClose={onClose}>
-//             <h2>Редактирование поля "{</h2>
-//         </Modal>
-//     )
-// }
+  const handleSave = () => {
+    onSave(value);
+    onClose();
+  };
+
+  return (
+    <Modal onClose={onClose}>
+      <h2>Редактирование поля "{fieldName}"</h2>
+      <input type="text" value={value} onChange={handleChange} />
+      <button onClick={handleSave}>Сохранить</button>
+    </Modal>
+  );
+};
+
+export default ModalInputField;
