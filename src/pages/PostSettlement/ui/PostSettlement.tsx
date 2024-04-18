@@ -35,7 +35,7 @@ interface IconButton {
 
 interface FormData {
   location: string;
-  uploaded_images: File[]; // Массив файлов изображений
+  uploaded_images: string[]; // Массив файлов изображений
   title: string;
   description: string;
   typeOfHouse: string; // Тип дома: например, "апартаменты", "дом", "квартира" и т. д.
@@ -128,33 +128,67 @@ export default function PostSettlementPage() {
     icons.map(() => false)
   );
 
+  // const [selectedIcons, setSelectedIcons] = useState<boolean[]>(
+  //   Array.from({ length: icons.length + iconsNear.length }, () => false)
+  // );
+
   const handleIconClick = (index: number) => {
     setSelectedIcons((prevSelectedIcons) => {
       const newSelectedIcons = [...prevSelectedIcons];
       newSelectedIcons[index] = !newSelectedIcons[index];
-      setFormData((prevFormData) => {
-        let updatedFormData = { ...prevFormData };
+
+      // Обработка выбора иконок в соответствии с индексом
+      if (index < icons.length) {
         switch (index) {
           case 0:
-            updatedFormData.haveWifi = newSelectedIcons[index];
+            setFormData({ ...formData, haveWifi: newSelectedIcons[index] });
             break;
           case 1:
-            updatedFormData.haveTV = newSelectedIcons[index];
+            setFormData({ ...formData, haveTV: newSelectedIcons[index] });
             break;
           case 2:
-            updatedFormData.haveWashingMachine = newSelectedIcons[index];
+            setFormData({
+              ...formData,
+              haveWashingMachine: newSelectedIcons[index],
+            });
             break;
           case 3:
-            updatedFormData.haveParking = newSelectedIcons[index];
+            setFormData({ ...formData, haveParking: newSelectedIcons[index] });
             break;
           case 4:
-            updatedFormData.haveConditioner = newSelectedIcons[index];
+            setFormData({
+              ...formData,
+              haveConditioner: newSelectedIcons[index],
+            });
             break;
           default:
             break;
         }
-        return updatedFormData;
-      });
+      } else {
+        switch (index - icons.length) {
+          case 0:
+            setFormData({
+              ...formData,
+              nearbyTradeCenter: newSelectedIcons[index],
+            });
+            break;
+          case 1:
+            setFormData({
+              ...formData,
+              nearbyHospital: newSelectedIcons[index],
+            });
+            break;
+          case 2:
+            setFormData({ ...formData, nearbySchool: newSelectedIcons[index] });
+            break;
+          case 3:
+            setFormData({ ...formData, nearbyGym: newSelectedIcons[index] });
+            break;
+          default:
+            break;
+        }
+      }
+
       return newSelectedIcons;
     });
   };
@@ -258,19 +292,20 @@ export default function PostSettlementPage() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      const imagesArray: File[] = Array.from(files);
+      const imagesArray: string[] = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      );
 
-      if (imagesArray.length + uploadedImages.length <= 5) {
-        setUploadedImages((prevImages) => [...prevImages, ...imagesArray]);
+      if (imagesArray.length + formData.uploaded_images.length <= 5) {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          uploaded_images: [...prevFormData.uploaded_images, ...imagesArray],
+        }));
       } else {
         setFormErrors(["Можно загрузить только 5 фотографий"]);
       }
     }
   };
-
-  // const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setAddress(e.target.value);
-  // }
 
   return (
     <section className="pt-[30px] pb-[200px]">
@@ -351,7 +386,12 @@ export default function PostSettlementPage() {
               {iconsNear.map((icon, index) => (
                 <button
                   key={index}
-                  className="bg-[#f1f1f1] cursor-pointer rounded-[5px] w-[60px] h-[40px] py-[12px] px-[23px] text-[22px] font-500"
+                  className={`bg-[#f1f1f1] cursor-pointer rounded-[5px] w-[60px] h-[40px] py-[12px] px-[23px] text-[22px] font-500 ${
+                    selectedIcons[index + icons.length]
+                      ? "bg-blue text-white"
+                      : ""
+                  }`}
+                  onClick={() => handleIconClick(index + icons.length)}
                 >
                   {icon.icon}
                 </button>
@@ -366,13 +406,13 @@ export default function PostSettlementPage() {
             внести изменения.
           </p>
           <div className="flex items-center gap-[13px]">
-            {uploadedImages.map((image, index) => (
+            {formData.uploaded_images.map((imageUrl, index) => (
               <div key={index} className="bg-white w-[70px] h-[49px] ">
                 <Image
                   width={70}
                   height={49}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  src={URL.createObjectURL(image)}
+                  src={imageUrl}
                   alt={`Uploaded Image ${index}`}
                 />
               </div>

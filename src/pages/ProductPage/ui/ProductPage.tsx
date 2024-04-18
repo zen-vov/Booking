@@ -14,7 +14,7 @@ interface Advertisement {
   title: string;
   description: string;
   location: string;
-  advertisement_images: string[];
+  advertisement_images: File[];
   price: string;
   creationDate: string;
   floor: number;
@@ -204,12 +204,12 @@ export default function ProductPage() {
                 <div className="flex flex-col gap-7">
                   <Button
                     label="Добавить людей"
-                    className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
+                    className="w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
                   />
                   <Button
                     label="Удалить объявление"
                     onClick={handleDeleteAdvertisement}
-                    className="hover:bg-white hover:text-blue hover:border-[1px] hover:border-blue transition-all w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
+                    className="w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
                   />
                 </div>
               ) : (
