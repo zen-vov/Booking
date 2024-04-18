@@ -35,7 +35,7 @@ interface IconButton {
 
 interface FormData {
   location: string;
-  uploaded_images: string[]; // Массив файлов изображений
+  uploaded_images: File[]; // Массив файлов изображений
   title: string;
   description: string;
   typeOfHouse: string; // Тип дома: например, "апартаменты", "дом", "квартира" и т. д.
@@ -103,25 +103,25 @@ export default function PostSettlementPage() {
   const [formData, setFormData] = useState<FormData>({
     location: "СДУ",
     uploaded_images: [],
-    title: "",
-    description: "",
-    typeOfHouse: "", // Изменено на пустую строку, так как тип дома не указан
+    title: "string",
+    description: "string",
+    typeOfHouse: "string", // Изменено на пустую строку, так как тип дома не указан
     price: "3000",
-    numberOfRooms: 0, // Изменено на 0, так как количество комнат может быть любым
+    numberOfRooms: 1, // Изменено на 0, так как количество комнат может быть любым
     paymentTime: "daily",
-    floor: 5, // Изменено на 0, так как этаж может быть любым
-    square: 5, // Изменено на 0, так как площадь квартиры может быть любой
-    haveWifi: false, // Изменено на false, так как значение по умолчанию false
-    haveTV: false, // Изменено на false, так как значение по умолчанию false
-    haveWashingMachine: false, // Изменено на false, так как значение по умолчанию false
-    haveParking: false, // Изменено на false, так как значение по умолчанию false
-    haveConditioner: false, // Изменено на false, так как значение по умолчанию false
-    nearbyTradeCenter: false, // Изменено на false, так как значение по умолчанию false
-    nearbyHospital: false, // Изменено на false, так как значение по умолчанию false
-    nearbySchool: false, // Изменено на false, так как значение по умолчанию false
-    nearbyGym: false, // Изменено на false, так как значение по умолчанию false
-    isSold: false, // Изменено на false, так как значение по умолчанию false
-    isArchived: false, // Изменено на false, так как значение по умолчанию false
+    floor: 5,
+    square: 5,
+    haveWifi: false,
+    haveTV: false,
+    haveWashingMachine: false,
+    haveParking: false,
+    haveConditioner: false,
+    nearbyTradeCenter: false,
+    nearbyHospital: false,
+    nearbySchool: false,
+    nearbyGym: false,
+    isSold: false,
+    isArchived: false,
   });
 
   const [selectedIcons, setSelectedIcons] = useState<boolean[]>(
@@ -551,27 +551,6 @@ export default function PostSettlementPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, price: e.target.value })
                   }
-                />
-                <button onClick={increase}>
-                  <Plus />
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="mb-[28px]">
-            <p className="text-[16px] text-black font-[500]">Залог</p>
-            <p className="text-[12px] mb-[6px]">
-              Его можно изменить в любое время.
-            </p>
-            <div className="flex items-center">
-              <div className="mr-5 flex gap-2 items-center">
-                <button onClick={decrease}>
-                  <Minus />
-                </button>
-                <Input
-                  className="text-[14px] w-[30%]"
-                  onChange={handleInputChange}
-                  value={price}
                 />
                 <button onClick={increase}>
                   <Plus />

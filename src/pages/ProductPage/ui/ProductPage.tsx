@@ -104,13 +104,13 @@ export default function ProductPage() {
         console.error("Access token not found.");
         return;
       }
-      const res = await axios.delete(`${BASE_URL}/advertisement/id`, {
+      const res = await axios.delete(`${BASE_URL}/advertisement/${params.id}`, {
         headers: {
           Authorization: `JWT ${accessToken}`,
         },
       });
       console.log("Advertisement deleted successfully:", res.data);
-      router.push("/");
+      router.push("/routs/product");
     } catch (error) {
       console.error("Error deleting advertisement:", error);
     }
@@ -318,13 +318,13 @@ export default function ProductPage() {
                         2015 год
                       </span>
                       <span className="text-[16px] whitespace-nowrap">
-                        {advertisement.floor}
+                        {advertisement.floor} из {advertisement.floor * 3}
                       </span>
                       <span className="text-[16px] whitespace-nowrap">
                         свободная планировка
                       </span>
                       <span className="text-[16px] whitespace-nowrap">
-                        {advertisement.square}
+                        {advertisement.square} м²
                       </span>
                     </div>
                   </div>
