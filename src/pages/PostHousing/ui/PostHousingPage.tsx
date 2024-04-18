@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import Link from "next/link";
 import { data, data2 } from "./data/data";
@@ -8,6 +8,7 @@ import Button from "@/shared/ui/Button/Button";
 export default function PostHousePage() {
   const [isChecked, setIsChecked] = useState(false);
   const [validationError, setValidationError] = useState("");
+  const [role, setRole] = useState<"Student" | "Landlord" | null>(null);
 
   const handleCheckboxChange = (event: any) => {
     setIsChecked(event.target.checked);
@@ -23,6 +24,32 @@ export default function PostHousePage() {
       console.log("error");
     }
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
+
+    const decodedToken = jwt.decode(accessToken);
+    const userId = decodedToken?.user_id;
+
+    if (userId) {
+      localStorage.setItem("userId", userId);
+    }
+
+    const fetchRole = async () => {
+      try {
+        const userResponse = await fetch(
+          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+        );
+        const user = await userResponse.json();
+        setRole(user.role.role_name);
+      } catch (error) {
+        console.error("Error fetching user role: ", error);
+      }
+    };
+
+    fetchRole();
+  }, []);
 
   return (
     <section className="py-[30px] pb-[74px]">
@@ -83,15 +110,22 @@ export default function PostHousePage() {
           {validationError && (
             <p className="text-red-500 text-[15px] mt-2">{validationError}</p>
           )}
-          <div className="flex justify-end">
-            <Link href={'/routs/postsettlement'}>
-              <Button
-                label="Продолжить"
-                onClick={handleContinueClick}
-                className="rounded-[5px] text-center text-white bg-blue text-[15px] font-medium mt-[33px] p-[1rem]"
-              />
-            </Link>
-          </div>
+          {role === "Landlord" ? (
+            <div className="flex justify-end">
+              <Link href={"/routs/postsettlement"}>
+                <Button
+                  label="Продолжить"
+                  onClick={handleContinueClick}
+                  className="rounded-[5px] text-center text-white bg-blue text-[15px] font-medium mt-[33px] p-[1rem]"
+                />
+              </Link>
+            </div>
+          ) : (
+            <p className="text-red-500 text-[15px] mt-2">
+              У вас нет доступа к этой странице. Пожалуйста, свяжитесь с
+              администратором.
+            </p>
+          )}
         </div>
       </div>
     </section>
