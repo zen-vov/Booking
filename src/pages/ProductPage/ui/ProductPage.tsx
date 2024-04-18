@@ -253,9 +253,11 @@ export default function ProductPage() {
                       placeholder="Отправить сообщение..."
                       className="text-[0.9rem] font-medium w-full text-[#A8A2A2] py-[11px] px-5"
                     />
-                    <Button className="bg-blue text-white rounded-[6px] text-[0.9rem] font-medium text-center p-2.5">
-                      Отправить
-                    </Button>
+                    <Link href={"/routs/chat"}>
+                      <Button className="bg-blue text-white rounded-[6px] text-[0.9rem] font-medium text-center p-2.5">
+                        Отправить
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               ) : (
@@ -309,7 +311,7 @@ export default function ProductPage() {
                             />
                           </svg>
                         ) : (
-                          <Link href={'/routs/edit'}>
+                          <Link href={"/routs/edit"}>
                             <Edit />
                           </Link>
                         )}

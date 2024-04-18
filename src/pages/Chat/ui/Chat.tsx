@@ -45,48 +45,58 @@ export default function ChatPage() {
         <h2 className="text-lg font-[400]">Назад к объявлению</h2>
       </div>
       <div className="flex justify-between">
-        <div className="bg-white h-[622px] w-[80%] rounded-[12px]">
-          <div className="pt-6 pl-[37px] pr-6 flex items-center pb-6 justify-between border-b-[1px] border-[#534949]">
-            <div className="flex items-center gap-6">
-              <Image
-                src={"/settings/flatMini.png"}
-                width={82}
-                height={55}
-                alt="#"
-              />
-              <p className="text-md">
-                г. Алматы, Бостандыкский район · 3-х комнатная квартира
-              </p>
-            </div>
-            <Dots />
-          </div>
-          <div className="px-6 flex flex-col items-end py-4">
-            {messages.map((message) => (
-              <Message
-                key={message.id}
-                text={message.text}
-                sender={message.sender}
-                id={message.id}
-              />
-            ))}
-          </div>
-          <div className="px-6 py-[19px] border-t-[1px] border-[#534949] flex items-center justify-between">
-            <div className="flex items-center justify-between gap-[22px]">
-              <Image src={"/Attach.png"} width={28} height={28} alt="attach" />
-              <div className="w-[500px]">
-                <Input
-                  className="text-[#837777] text-[16px] w-[80%]"
-                  placeholder="Написать сообщение"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                />
+        <div className="flex justify-between">
+          <div className="bg-white h-[622px] w-[1100px] rounded-[12px] flex flex-col justify-between">
+            <div>
+              <div className="pt-6 pl-[37px] pr-6 flex items-center pb-6 justify-between border-b-[1px] border-[#534949]">
+                <div className="flex items-center gap-6">
+                  <Image
+                    src={"/settings/flatMini.png"}
+                    width={82}
+                    height={55}
+                    alt="#"
+                  />
+                  <p className="text-md">
+                    г. Алматы, Бостандыкский район · 3-х комнатная квартира
+                  </p>
+                </div>
+                <Dots />
+              </div>
+              <div className="px-6 flex flex-col items-end py-4">
+                {messages.map((message) => (
+                  <Message
+                    key={message.id}
+                    text={message.text}
+                    sender={message.sender}
+                    id={message.id}
+                  />
+                ))}
               </div>
             </div>
-            <button onClick={handleMessageSend} className="cursor-pointer">
-              <Image src={"/Sent.png"} width={27} height={27} alt="send" />
-            </button>
+            <div className="px-6 py-[19px] border-t-[1px] border-[#534949] flex items-center justify-between">
+              <div className="flex items-center justify-between gap-[22px]">
+                <Image
+                  src={"/Attach.png"}
+                  width={28}
+                  height={28}
+                  alt="attach"
+                />
+                <div className="w-[500px]">
+                  <Input
+                    className="text-[#837777] text-[16px] w-[1000px]"
+                    placeholder="Написать сообщение"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                  />
+                </div>
+              </div>
+              <button onClick={handleMessageSend} className="cursor-pointer">
+                <Image src={"/Sent.png"} width={27} height={27} alt="send" />
+              </button>
+            </div>
           </div>
         </div>
+
         <div className="flex flex-col gap-[22px]">
           <h1 className="whitespace-nowrap text-md font-medium mb-0.5">
             Все сообщение{" "}

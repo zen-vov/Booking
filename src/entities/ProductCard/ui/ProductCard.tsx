@@ -49,6 +49,11 @@ export default function ProductCard(props: ProductProps) {
       });
   };
 
+  const addToFavorite = () => {
+    setLike(!like);
+    alert("Добавлено в избранные!");
+  };
+
   return (
     <div key={id} className="bg-white rounded-[12px] pb-[30px]">
       <Link href={`/routs/product/${id}`}>
@@ -73,7 +78,7 @@ export default function ProductCard(props: ProductProps) {
           <button onClick={copyLinkToClipboard}>
             <Share />
           </button>
-          <button onClick={() => setLike(!like)}>
+          <button onClick={() => addToFavorite()}>
             <Like className={like ? "like" : ""} />
           </button>
         </div>
