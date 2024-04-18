@@ -10,6 +10,7 @@ import Button from "@/shared/ui/Button/Button";
 import AuthModal from "@/features/AuthModal/ui/AuthModal";
 import Link from "next/link";
 import Modal from "@/shared/ui/Modal/ui/Modal";
+import { BASE_URL } from "@/shared/api/BASE";
 
 const dataFilter = [
   { text: "Срок аренды", className: "mb-[42px]" },
@@ -47,12 +48,32 @@ export default function LandLord() {
     setCurrent(parsedPage);
   }, []);
 
-  // const recordsPerPage = 6;
-  // const lastIndex = current * recordsPerPage;
-  // const firstIndex = lastIndex - recordsPerPage;
-  // const records = .slice(firstIndex, lastIndex);
-  // const npage = Math.ceil(mainData.length / recordsPerPage);
-  // const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+
+        const { data: res } = await axios.get(`${BASE_URL}/advertisement`, {
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        });
+        console.log(res);
+        setData(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const recordsPerPage = 6;
+  const lastIndex = current * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = data.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(data.length / recordsPerPage);
+  const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
 
   const changeCurrentPage = (page: number) => {
     setCurrent(page);
@@ -80,7 +101,6 @@ export default function LandLord() {
                 <span className="text-[45px] mr-[1rem] font-semibold text-center">
                   +
                 </span>
-                {/*  */}
               </Button>
             </Link>
           </div>
@@ -118,9 +138,9 @@ export default function LandLord() {
         </div>
       </div>
       <div className="container grid grid-cols-2 gap-[92px] mb-12">
-        <ProductList />
+        <ProductList records={records} />
       </div>
-      {/* <div className="container flex gap-4 items-center justify-center">
+      <div className="container flex gap-4 items-center justify-center">
         {numbers.map((n, i) => (
           <div
             className={`py-2 px-4 cursor-pointer text-md rounded-[6px] ${
@@ -132,11 +152,7 @@ export default function LandLord() {
             {n}
           </div>
         ))}
-      </div> */}
-      {/* {activeModal && (
-        <div className="modal-overlay" onClick={() => setActiveModal(false)} />
-      )}
-      <AuthModal onClose={() => setActiveModal(false)} active={activeModal} /> */}
+      </div>
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
           <div className="flex justify-center gap-[90px]">

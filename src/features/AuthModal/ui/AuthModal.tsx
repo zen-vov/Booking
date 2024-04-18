@@ -4,6 +4,7 @@ import cn from "classnames";
 import axios from "axios";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
+import { BASE_URL } from "@/shared/api/BASE";
 
 interface ModalI {
   onClose: () => void;
@@ -22,6 +23,8 @@ interface UserData {
 
 const AuthModal = ({ onClose, active }: ModalI) => {
   const [username, setUsername] = useState("");
+  const [activate, setActivate] = useState<string>("");
+  const [showActivation, setShowActivation] = useState<boolean>(false);
   const [mail, setMain] = React.useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
@@ -55,6 +58,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         if (!registerResponse.ok) {
           throw new Error("Registration failed");
         }
+        setShowActivation(true);
 
         const registerData = await registerResponse.json();
 
@@ -94,6 +98,24 @@ const AuthModal = ({ onClose, active }: ModalI) => {
   const handleClickOutside = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       onClose();
+    }
+  };
+
+  const handleActivationSubmit = async (event: any) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/auth/user/activate_user/`,
+        {
+          code: activate,
+        }
+      );
+      if (response.data.is_active) {
+      } else {
+        setErrorMessage("Неверный код активации");
+      }
+    } catch (error: any) {
+      setErrorMessage(error.message || "Произошла ошибка");
     }
   };
 
@@ -162,7 +184,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
                 required
               />
             </label>
-            {isRegistering && (
+            {isRegistering && !showActivation && (
               <div className="mb-[100px] flex items-center">
                 <input
                   type="checkbox"
@@ -180,10 +202,27 @@ const AuthModal = ({ onClose, active }: ModalI) => {
               </div>
             )}
 
+            {showActivation && (
+              <label className="mb-[20px]">
+                <p className="text-[18px] font-[500]">Код активации</p>
+                <Input
+                  className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
+                  style={{ color: "#A8A2A2" }}
+                  name="activate"
+                  placeholder="Введите код активации"
+                  type="text"
+                  value={activate}
+                  onChange={(e) => setActivate(e.target.value)}
+                  required
+                />
+              </label>
+            )}
+
             <div className="error-message">{errorMessage}</div>
             <Button
               className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
               type="submit"
+              onClick={() => setShowActivation(true)}
               label={isRegistering ? "Зарегистрироваться" : "Войти"}
             />
           </form>
