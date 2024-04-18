@@ -3,6 +3,7 @@ import Facebook from "@/shared/ui/Icons/Facebook/Facebook";
 import Twitter from "@/shared/ui/Icons/Twitter/Twitter";
 import VK from "@/shared/ui/Icons/VK/VK";
 import Instagram from "@/shared/ui/Icons/Instagram/Instagram";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -17,12 +18,24 @@ export default function Footer() {
 
             <div className="flex gap-[80px] flex-[600]">
               <div className="text-left flex flex-col gap-[5px]">
-                <p className="cursor-pointer">Компания</p>
-                <p className="cursor-pointer">Кто мы</p>
-                <p className="cursor-pointer">Контакты</p>
-                <p className="cursor-pointer">Корпоративным клиентам</p>
-                <p className="cursor-pointer">Благотворительность</p>
-                <p className="cursor-pointer">Адреса сервисных центров</p>
+                <Link href={"/routs/about"}>
+                  <p className="cursor-pointer">Компания</p>
+                </Link>
+                <Link href={"/routs/about"}>
+                  <p className="cursor-pointer">Кто мы</p>
+                </Link>
+                <Link href={"/routs/about"}>
+                  <p className="cursor-pointer">Контакты</p>
+                </Link>
+                <Link href={"/routs/about"}>
+                  <p className="cursor-pointer">Корпоративным клиентам</p>
+                </Link>
+                <Link href={"/routs/about"}>
+                  <p className="cursor-pointer">Благотворительность</p>
+                </Link>
+                <Link href={"/routs/about"}>
+                  <p className="cursor-pointer">Адреса сервисных центров</p>
+                </Link>
               </div>
               <div className="text-left flex flex-col gap-[5px]">
                 <p className="cursor-pointer">Помощь арендатору</p>
