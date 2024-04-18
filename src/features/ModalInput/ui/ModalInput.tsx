@@ -6,7 +6,7 @@ import Button from "@/shared/ui/Button/Button";
 
 interface ModalInputFieldProps {
   initialValue: string;
-  onSave: (newValue: string) => void;
+  onSave: (value: string) => void;
   onClose: () => void;
   fieldName: string;
   buttonField: string;

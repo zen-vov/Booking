@@ -98,6 +98,8 @@ const Profile = () => {
     const decodedToken = jwt.decode(accessToken);
     const userId = decodedToken?.user_id;
 
+    console.log("asdasdas");
+
     try {
       const response = await fetch(
         `http://studhouse.kz/api/v1/auth/user/${userId}/`,
@@ -112,8 +114,7 @@ const Profile = () => {
         }
       );
       if (response.ok) {
-        window.location.reload();
-        console.log(`Данные успешно обновлены для поля ${field}`);
+        console.log(`Данные успешно обновлены для поля ${fields[field]}`);
       } else {
         console.error("Ошибка при обновлении данных");
       }
@@ -140,7 +141,7 @@ const Profile = () => {
               {isEditing && (
                 <ModalInput
                   initialValue={fieldValue}
-                  onSave={(newValue: string) => handleChange(field, newValue)}
+                  onSave={() => handleSaveClick(field)}
                   onClose={() =>
                     setEditingFields({ ...editingFields, [field]: false })
                   }

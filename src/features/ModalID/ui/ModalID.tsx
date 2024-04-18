@@ -13,7 +13,7 @@ interface ModalInputFieldProps {
   children: React.ReactNode;
 }
 
-const ModalInputField: React.FC<ModalInputFieldProps> = ({
+const ModalID: React.FC<ModalInputFieldProps> = ({
   initialValue,
   onSave,
   onClose,
@@ -46,4 +46,4 @@ const ModalInputField: React.FC<ModalInputFieldProps> = ({
   );
 };
 
-export default ModalInputField;
+export default ModalID;
