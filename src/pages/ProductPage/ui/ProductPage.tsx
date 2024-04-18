@@ -22,6 +22,11 @@ interface Advertisement {
   square: number;
   isSold: boolean;
   isArchived: boolean;
+  owner: {
+    additionalProp1: string;
+    additionalProp2: string;
+    additionalProp3: string;
+  };
   haveWifi: boolean;
   haveTV: boolean;
   haveWashingMachine: boolean;
@@ -77,6 +82,7 @@ export default function ProductPage() {
           `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
+        console.log(advertisement?.owner);
         setRole(user.role.role_name);
       } catch (error) {
         console.error("Error fetching user role: ", error);
@@ -274,6 +280,7 @@ export default function ProductPage() {
                     <span className="text-[16px]">Этаж</span>
                     <span className="text-[16px]">Состояние</span>
                     <span className="text-[16px]">Площадь</span>
+                    <span className="text-[16px]">Кол.людей</span>
                   </div>
                 </div>
                 <div className="">
@@ -309,7 +316,7 @@ export default function ProductPage() {
                             />
                           </svg>
                         ) : (
-                          <Link href={'/routs/edit'}>
+                          <Link href={"/routs/edit"}>
                             <Edit />
                           </Link>
                         )}
@@ -328,6 +335,11 @@ export default function ProductPage() {
                       </span>
                       <span className="text-[16px] whitespace-nowrap">
                         {advertisement.square} м²
+                      </span>
+                      <span className="text-[16px] whitespace-nowrap">
+                        {advertisement.owner
+                          ? Object.keys(advertisement.owner).length
+                          : "Данные отсутствуют"}
                       </span>
                     </div>
                   </div>
