@@ -1,6 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
@@ -17,11 +16,13 @@ import School from "@/shared/ui/Icons/School/School";
 import Hospital from "@/shared/ui/Icons/Hospital/Hospital";
 import Dumbell from "@/shared/ui/Icons/Dumbell/Dumbell";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
+import Image from "next/image";
 import ProductList from "@/widgets/productList/ui/productLIst";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import axios from "axios";
-import { redirect } from "next/dist/server/api-utils";
-import { useRouter } from "next/navigation";
+import { BASE_URL } from "@/shared/api/BASE";
+import { useParams } from "next/navigation";
+import { title } from "process";
 // import Map from "@/features/Map/ui/Map";
 
 interface Counter {
@@ -81,7 +82,7 @@ const options = [
   { label: "полгода", path: "/half-year" },
 ];
 
-export default function PostSettlementPage() {
+export default function EditPage() {
   const [counterState, setCounterState] = useState<Counter[]>([
     { name: "Максимальное количество жителей", count: 0 },
     { name: "Количество комнат", count: 0 },
@@ -92,11 +93,11 @@ export default function PostSettlementPage() {
   const MIN_PRICE2 = 0;
   const [price, setPrice] = useState<number>(MIN_PRICE);
   const [price2, setPrice2] = useState<number>(MIN_PRICE2);
-  const [uploadedImages] = useState<File[] | null>([]);
+  const [images, setImages] = useState([]);
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
+  const params = useParams() as { id: number | string };
 
   const [formData, setFormData] = useState<FormData>({
     location: "СДУ",
@@ -126,173 +127,52 @@ export default function PostSettlementPage() {
     icons.map(() => false)
   );
 
-  const handleIconClick = (index: number) => {
-    setSelectedIcons((prevSelectedIcons) => {
-      const newSelectedIcons = [...prevSelectedIcons];
-      newSelectedIcons[index] = !newSelectedIcons[index];
-
-      // Обработка выбора иконок в соответствии с индексом
-      if (index < icons.length) {
-        switch (index) {
-          case 0:
-            setFormData({ ...formData, haveWifi: newSelectedIcons[index] });
-            break;
-          case 1:
-            setFormData({ ...formData, haveTV: newSelectedIcons[index] });
-            break;
-          case 2:
-            setFormData({
-              ...formData,
-              haveWashingMachine: newSelectedIcons[index],
-            });
-            break;
-          case 3:
-            setFormData({ ...formData, haveParking: newSelectedIcons[index] });
-            break;
-          case 4:
-            setFormData({
-              ...formData,
-              haveConditioner: newSelectedIcons[index],
-            });
-            break;
-          default:
-            break;
-        }
-      } else {
-        switch (index - icons.length) {
-          case 0:
-            setFormData({
-              ...formData,
-              nearbyTradeCenter: newSelectedIcons[index],
-            });
-            break;
-          case 1:
-            setFormData({
-              ...formData,
-              nearbyHospital: newSelectedIcons[index],
-            });
-            break;
-          case 2:
-            setFormData({ ...formData, nearbySchool: newSelectedIcons[index] });
-            break;
-          case 3:
-            setFormData({ ...formData, nearbyGym: newSelectedIcons[index] });
-            break;
-          default:
-            break;
-        }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("URL_вашего_API_для_получения_данных");
+        setFormData(response.data); // Установка полученных данных в состояние формы
+      } catch (error) {
+        console.error("Ошибка при загрузке данных:", error);
       }
+    };
 
-      return newSelectedIcons;
-    });
+    fetchData();
+  }, []);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImages([file]);
   };
 
-  const createApartment = async (apartmentData: any) => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.post(
-        `http://studhouse.kz/api/v1/advertisement/`,
-        apartmentData,
-        {
-          headers: {
-            Authorization: `JWT ${token}`,
-          },
+  const handleSubmit = () => {
+    const formData = new FormData();
+    images.forEach((image, index) => {
+      formData.append(`image${index}`, image);
+    });
+
+    // Добавьте другие данные формы, такие как title и body, если необходимо
+    formData.append("title", title);
+    formData.append("body", body);
+
+    const endpoint = `/api/post/`;
+
+    fetch(endpoint, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
-      );
-
-      console.log(response.data);
-    } catch (error) {
-      console.error("Ошибка при создании квартиры:", error);
-    }
-  };
-
-  const saveToLocalStorageAndSend = async () => {
-    try {
-      const apartmentData = {
-        location: formData.location,
-        uploaded_images: formData.uploaded_images.map((image) => image), // Предполагая, что вы хотите отправить только имена файлов
-        title: formData.title,
-        description: formData.description,
-        typeOfHouse: formData.typeOfHouse || "", // Если тип дома не указан, используем пустую строку
-        price: formData.price,
-        numberOfRooms: formData.numberOfRooms || 0, // Если количество комнат не указано, используем 0
-        paymentTime: formData.paymentTime,
-        floor: formData.floor,
-        square: formData.square,
-        haveWifi: formData.haveWifi,
-        haveTV: formData.haveTV,
-        haveWashingMachine: formData.haveWashingMachine,
-        haveParking: formData.haveParking,
-        haveConditioner: formData.haveConditioner,
-        nearbyTradeCenter: formData.nearbyTradeCenter,
-        nearbyHospital: formData.nearbyHospital,
-        nearbySchool: formData.nearbySchool,
-        nearbyGym: formData.nearbyGym,
-        isSold: formData.isSold,
-        isArchived: formData.isArchived,
-      };
-
-      await createApartment(apartmentData);
-
-      router.push("/routs/congru");
-    } catch (error) {
-      console.error(
-        "Ошибка при сохранении данных и отправке на сервер:",
-        error
-      );
-      alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
-    }
-  };
-
-  const handleIncrement = (index: number) => {
-    setCounterState((prevCounters) => {
-      const updatedCounters = [...prevCounters];
-      updatedCounters[index] = {
-        ...updatedCounters[index],
-        count: updatedCounters[index].count + 1,
-      };
-      return updatedCounters;
-    });
-  };
-
-  const handleButtonClick = (type: string) => {
-    setSelectedType((prevType) => (prevType === type ? null : type));
-  };
-
-  const increase = () => {
-    setPrice((prevprice) => Math.max(MIN_PRICE, prevprice + 5000));
-  };
-  const increase2 = () => {
-    setPrice2((prevprice) => Math.max(MIN_PRICE2, prevprice + 5000));
-  };
-
-  const decrease = () => {
-    setPrice((prevPrice) => Math.max(MIN_PRICE, prevPrice - 5000));
-  };
-  const decrease2 = () => {
-    setPrice2((prevprice) => Math.max(MIN_PRICE2, prevprice - 5000));
-  };
-
-  const handleDecrement = (index: number) => {
-    setCounterState((prevCounters) => {
-      const updatedCounters = [...prevCounters];
-      updatedCounters[index] = {
-        ...updatedCounters[index],
-        count: Math.max(0, updatedCounters[index].count - 1),
-      };
-      return updatedCounters;
-    });
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const fileNames = Array.from(files).map((file) => file.name);
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        uploaded_images: [...prevFormData.uploaded_images, ...fileNames],
-      }));
-    }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Ошибка при загрузке изображения:", error);
+      });
   };
 
   return (
@@ -339,11 +219,11 @@ export default function PostSettlementPage() {
               >
                 <p className="text-[14px] font-[400]">{counter.name}</p>
                 <div className="flex items-center gap-[5px]">
-                  <button onClick={() => handleDecrement(index)}>
+                  <button>
                     <Minus />
                   </button>
                   <p className="text-[14px] font-[400]">{counter.count}</p>
-                  <button onClick={() => handleIncrement(index)}>
+                  <button>
                     <Plus />
                   </button>
                 </div>
@@ -361,7 +241,7 @@ export default function PostSettlementPage() {
                   className={`bg-[#f1f1f1] rounded-[5px] w-[60px] h-[40px] py-[12px] px-[23px] text-[22px] font-500 ${
                     selectedIcons[index] ? "bg-blue text-white" : ""
                   }`}
-                  onClick={() => handleIconClick(index)}
+                  // onClick={() => handleIconClick(index)}
                 >
                   {icon.icon}
                 </button>
@@ -396,7 +276,9 @@ export default function PostSettlementPage() {
           <div className="flex items-center gap-[13px]">
             {formData.uploaded_images.map((imageUrl, index) => (
               <div key={index} className="bg-white w-[70px] h-[49px] ">
-                <img
+                <Image
+                  width={70}
+                  height={49}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   src={imageUrl}
                   alt={`Uploaded Image ${index}`}
@@ -412,7 +294,7 @@ export default function PostSettlementPage() {
               type="file"
               accept="image/*"
               multiple
-              onChange={handleImageUpload}
+              // onChange={handleImageUpload}
               style={{ display: "none" }}
               ref={fileInputRef}
             />
@@ -455,7 +337,7 @@ export default function PostSettlementPage() {
             </p>
             <div className="flex items-center gap-[35px]">
               <Button
-                onClick={() => handleButtonClick("Для девушек")}
+                // onClick={() => handleButtonClick("Для девушек")}
                 label={"Для девушек"}
                 className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
                   selectedType === "Для девушек"
@@ -464,7 +346,7 @@ export default function PostSettlementPage() {
                 }`}
               />
               <Button
-                onClick={() => handleButtonClick("Для парней")}
+                // onClick={() => handleButtonClick("Для парней")}
                 label={"Для парней"}
                 className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
                   selectedType === "Для парней"
@@ -530,7 +412,7 @@ export default function PostSettlementPage() {
                 </svg>
               </div>
               <div className="mr-5 flex gap-2 items-center">
-                <button onClick={decrease2}>
+                <button>
                   <Minus />
                 </button>
                 <Input
@@ -538,7 +420,7 @@ export default function PostSettlementPage() {
                   // onChange={handleInputChange2}
                   value={price}
                 />
-                <button onClick={increase2}>
+                <button>
                   <Plus />
                 </button>
               </div>
@@ -568,7 +450,7 @@ export default function PostSettlementPage() {
                 </svg>
               </div>
               <div className="mr-5 flex gap-2 items-center">
-                <button onClick={decrease}>
+                <button>
                   <Minus />
                 </button>
                 <Input
@@ -578,7 +460,7 @@ export default function PostSettlementPage() {
                     setFormData({ ...formData, price: e.target.value })
                   }
                 />
-                <button onClick={increase}>
+                <button>
                   <Plus />
                 </button>
               </div>
@@ -587,7 +469,7 @@ export default function PostSettlementPage() {
           <Button
             label="Сохранить и отправить на проверку"
             className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
-            onClick={saveToLocalStorageAndSend}
+            // onClick={saveToLocalStorageAndSend}
           />
         </div>
         <div className="right">

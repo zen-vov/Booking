@@ -8,6 +8,7 @@ import axios from "axios";
 import Image from "next/image";
 import Edit from "@/shared/ui/Icons/Edit/Edit";
 import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
 
 interface Advertisement {
   id: number;
@@ -95,7 +96,7 @@ export default function ProductPage() {
           console.log("error");
         });
     }
-  }, []);
+  }, [params]);
 
   const handleDeleteAdvertisement = async () => {
     try {
@@ -308,7 +309,9 @@ export default function ProductPage() {
                             />
                           </svg>
                         ) : (
-                          <Edit />
+                          <Link href={'/routs/edit'}>
+                            <Edit />
+                          </Link>
                         )}
                       </div>
                       <span className="whitespace-nowrap text-[16px]">
