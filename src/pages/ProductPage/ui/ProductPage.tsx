@@ -22,6 +22,11 @@ interface Advertisement {
   square: number;
   isSold: boolean;
   isArchived: boolean;
+  owner: {
+    additionalProp1: string;
+    additionalProp2: string;
+    additionalProp3: string;
+  };
   haveWifi: boolean;
   haveTV: boolean;
   haveWashingMachine: boolean;
@@ -33,12 +38,22 @@ interface Advertisement {
   nearbyGym: boolean;
 }
 
+interface User {
+  full_name: string;
+  user_info: {
+    contacts: string;
+  };
+}
+
 export default function ProductPage() {
   const [role, setRole] = useState<"Student" | "Landlord" | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [advertisement, setAdvertisement] = useState<Advertisement | null>(
     null
   );
+  const [people, setPeople] = useState<number | any>(1);
+  const [user, setUser] = useState<User | null>(null);
+  const [showPhoneNumber, setShowPhoneNumber] = useState<boolean>(false);
   const router = useRouter();
   const params = useParams() as { id: number | string };
 
@@ -60,6 +75,22 @@ export default function ProductPage() {
     }
   };
 
+  const fetchUserData = async (userId: number) => {
+    try {
+      const response = await axios.get(
+        `http://studhouse.kz/api/v1/auth/user/${userId}/`
+      );
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  useEffect(() => {
+    const userId = 2;
+    fetchUserData(userId);
+  }, []);
+
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
@@ -77,6 +108,7 @@ export default function ProductPage() {
           `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
+        console.log(advertisement?.owner);
         setRole(user.role.role_name);
       } catch (error) {
         console.error("Error fetching user role: ", error);
@@ -97,6 +129,22 @@ export default function ProductPage() {
         });
     }
   }, [params]);
+
+  const handleShowPhoneNumber = () => {
+    setShowPhoneNumber(true);
+  };
+
+  const handleAddPeople = () => {
+    if (people < 5) {
+      setPeople((prevPeople: any) => {
+        const updatedPeople = prevPeople + 1;
+        localStorage.setItem("people", updatedPeople);
+        return updatedPeople;
+      });
+    } else {
+      return people;
+    }
+  };
 
   const handleDeleteAdvertisement = async () => {
     try {
@@ -205,6 +253,7 @@ export default function ProductPage() {
                 <div className="flex flex-col gap-7">
                   <Button
                     label="Добавить людей"
+                    onClick={handleAddPeople}
                     className="w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
                   />
                   <Button
@@ -226,13 +275,20 @@ export default function ProductPage() {
                         height={27}
                         alt="user"
                       />
-                      <span className="text-[1rem]">Мурат С.</span>
+                      <span className="text-[1rem]">{user?.full_name}</span>
                     </div>
                     <h3 className="text-[0.8rem]">Хозяин квартиры</h3>
                   </div>
                   <div className="mb-[1rem] flex items-center justify-between">
-                    <h1 className="text-[1rem]">8-777-***-**-17</h1>
-                    <span className="text-blue text-[0.8rem] cursor-pointer">
+                    <h1 className="text-[1rem]">
+                      {showPhoneNumber
+                        ? user?.user_info.contacts
+                        : "****-***-**-" + user?.user_info.contacts.slice(-2)}
+                    </h1>
+                    <span
+                      onClick={handleShowPhoneNumber}
+                      className="text-blue text-[0.8rem] cursor-pointer"
+                    >
                       Показать номер
                     </span>
                   </div>
@@ -276,6 +332,7 @@ export default function ProductPage() {
                     <span className="text-[16px]">Этаж</span>
                     <span className="text-[16px]">Состояние</span>
                     <span className="text-[16px]">Площадь</span>
+                    <span className="text-[16px]">Кол.людей</span>
                   </div>
                 </div>
                 <div className="">
@@ -330,6 +387,9 @@ export default function ProductPage() {
                       </span>
                       <span className="text-[16px] whitespace-nowrap">
                         {advertisement.square} м²
+                      </span>
+                      <span className="text-[16px] whitespace-nowrap">
+                        {people}/5
                       </span>
                     </div>
                   </div>
