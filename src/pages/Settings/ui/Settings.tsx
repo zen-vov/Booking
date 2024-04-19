@@ -14,13 +14,13 @@ interface Fields {
   birthDate: string;
   identification: string;
   additional_user: string;
-  // university_data?: string;
-  // student_hobbies?: string;
+  university_data?: string;
+  student_hobbies?: string;
 }
 
 const Profile = () => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  // const [userRole, setUserRole] = React.useState("");
+  const [userRole, setUserRole] = React.useState("");
 
   const handleModalClose = () => {
     setModalOpen(false);
@@ -48,8 +48,8 @@ const Profile = () => {
     birthDate: false,
     identification: false,
     additional_user: false,
-    // university_data: false,
-    // student_hobbies: false,
+    university_data: false,
+    student_hobbies: false,
   });
 
   React.useEffect(() => {
@@ -57,16 +57,16 @@ const Profile = () => {
     const jwt = require("jsonwebtoken");
     const decodedToken = jwt.decode(accessToken);
     const userId = decodedToken?.user_id;
-    // let initialUserRole = null;
-    // setUserRole(userRole);
+    let initialUserRole = null;
+    setUserRole(userRole);
     const fetchUser = async () => {
       try {
         const userResponse = await fetch(
           `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
-        // const userRole = user?.role?.role_name;
-        // setUserRole(userRole);
+        const userRole = user?.role?.role_name;
+        setUserRole(userRole);
 
         setFields({
           ...fields,
@@ -76,8 +76,8 @@ const Profile = () => {
           birthDate: user.user_info.birthDate,
           identification: user.user_info.frontIDCard,
           additional_user: user.additional_user,
-          // university_data: user.university_data,
-          // student_hobbies: user.student_hobbies,
+          university_data: user.university_data,
+          student_hobbies: user.student_hobbies,
         });
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
@@ -139,7 +139,7 @@ const Profile = () => {
         <div>
           <div>
             <span>
-              {isEditing && (
+              {/* {isEditing && (
                 <ModalInputField
                   initialValue={fieldValue}
                   onSave={() => handleSaveClick(field)}
@@ -151,7 +151,7 @@ const Profile = () => {
                 >
                   <h2>{label}</h2>
                 </ModalInputField>
-              )}
+              )} */}
             </span>
           </div>
         </div>
@@ -187,17 +187,17 @@ const Profile = () => {
     );
   };
 
-  // const renderStudentFields = () => {
-  // if (userRole && userRole.toLowerCase() === "student") {
-  //   return (
-  //     <>
-  //       {renderField("university_data", "Данные об университете")}
-  //       {renderField("student_hobbies", "Увлечения студента")}
-  //     </>
-  //   );
-  // }
-  //   return null;
-  // };
+  const renderStudentFields = () => {
+    if (userRole === "Student") {
+      return (
+        <>
+          {renderField("university_data", "Данные об университете")}
+          {renderField("student_hobbies", "Увлечения студента")}
+        </>
+      );
+    }
+    return null;
+  };
 
   return (
     <div>
@@ -221,7 +221,7 @@ const Profile = () => {
             "additional_user",
             "Контактное лицо в чрезвычайной ситуации"
           )}
-          {/* {renderStudentFields()} */}
+          {renderStudentFields()}
         </div>
         <div className="mt-[84px]">
           <p className="text-[18px] font-[400]">Хотите онулировать аккаунт?</p>
