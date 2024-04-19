@@ -202,22 +202,6 @@ const AuthModal = ({ onClose, active }: ModalI) => {
               </div>
             )}
 
-            {showActivation && (
-              <label className="mb-[20px]">
-                <p className="text-[18px] font-[500]">Код активации</p>
-                <Input
-                  className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
-                  style={{ color: "#A8A2A2" }}
-                  name="activate"
-                  placeholder="Введите код активации"
-                  type="text"
-                  value={activate}
-                  onChange={(e) => setActivate(e.target.value)}
-                  required
-                />
-              </label>
-            )}
-
             <div className="error-message">{errorMessage}</div>
             <Button
               className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
