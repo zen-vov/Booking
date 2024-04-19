@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import Pen from "@/shared/ui/Icons/Pen/Pen";
 import Link from "next/link";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
-import ModalInput from "@/features/ModalInput/ui/ModalInput";
+import ModalInputField from "@/features/ModalInput/ui/ModalInput";
 
 interface Fields {
   full_name: string;
@@ -140,7 +140,7 @@ const Profile = () => {
           <div>
             <span>
               {isEditing && (
-                <ModalInput
+                <ModalInputField
                   initialValue={fieldValue}
                   onSave={() => handleSaveClick(field)}
                   onClose={() =>
@@ -150,7 +150,7 @@ const Profile = () => {
                   buttonField="Сохранить"
                 >
                   <h2>{label}</h2>
-                </ModalInput>
+                </ModalInputField>
               )}
             </span>
           </div>

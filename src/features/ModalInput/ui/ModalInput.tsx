@@ -4,20 +4,9 @@ import React, { useState } from "react";
 import Modal from "@/shared/ui/Modal/ui/Modal";
 import Button from "@/shared/ui/Button/Button";
 
-interface Fields {
-  full_name: string;
-  contacts: string;
-  email: string;
-  birthDate: string;
-  identification: string;
-  additional_user: string;
-  // Добавьте другие поля, если необходимо
-}
-
 interface ModalInputFieldProps {
   initialValue: string;
-  // onSave: (value: string) => void;
-  onSave: () => void;
+  onSave: (value: string) => void;
   onClose: () => void;
   fieldName: string;
   buttonField: string;
@@ -40,7 +29,7 @@ const ModalInputField: React.FC<ModalInputFieldProps> = ({
   };
 
   const handleSave = () => {
-    onSave();
+    onSave(value);
     onClose();
   };
 
