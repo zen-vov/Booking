@@ -4,9 +4,20 @@ import React, { useState } from "react";
 import Modal from "@/shared/ui/Modal/ui/Modal";
 import Button from "@/shared/ui/Button/Button";
 
+interface Fields {
+  full_name: string;
+  contacts: string;
+  email: string;
+  birthDate: string;
+  identification: string;
+  additional_user: string;
+  // Добавьте другие поля, если необходимо
+}
+
 interface ModalInputFieldProps {
   initialValue: string;
-  onSave: (value: string) => void;
+  // onSave: (value: string) => void;
+  onSave: () => void;
   onClose: () => void;
   fieldName: string;
   buttonField: string;
@@ -24,12 +35,12 @@ const ModalInputField: React.FC<ModalInputFieldProps> = ({
   const [value, setValue] = useState(initialValue);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
     setValue(e.target.value);
+    console.log(value);
   };
 
   const handleSave = () => {
-    onSave(value);
+    onSave();
     onClose();
   };
 

@@ -114,6 +114,7 @@ const Profile = () => {
         }
       );
       if (response.ok) {
+        window.location.reload();
         console.log(`Данные успешно обновлены для поля ${fields[field]}`);
       } else {
         console.error("Ошибка при обновлении данных");
