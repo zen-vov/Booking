@@ -110,7 +110,7 @@ export default function PostHousePage() {
           {validationError && (
             <p className="text-red-500 text-[15px] mt-2">{validationError}</p>
           )}
-          {role === "Landlord" ? (
+          {role ? (
             <div className="flex justify-end">
               <Link href={"/routs/postsettlement"}>
                 <Button
