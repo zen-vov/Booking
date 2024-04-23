@@ -55,7 +55,7 @@ export default function FavoritePage() {
   useEffect(() => {
     const fetchFavourite = async () => {
       try {
-        const accessToken = localStorage.getItem("access_token");
+        const accessToken = localStorage.getItem("accessToken");
         const res = await axios.get(
           `${BASE_URL}/advertisement/get_favorite_advertisements/`,
           {
@@ -69,6 +69,8 @@ export default function FavoritePage() {
         console.log("err", error);
       }
     };
+
+    fetchFavourite();
   }, []);
 
   return (

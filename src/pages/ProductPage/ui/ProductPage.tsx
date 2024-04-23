@@ -222,6 +222,44 @@ export default function ProductPage() {
     checkFavoriteStatus();
   }, []);
 
+  const createChat = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const jwt = require("jsonwebtoken");
+
+      const decodedToken = jwt.decode(accessToken);
+      const userId = decodedToken?.user_id;
+
+      if (userId) {
+        localStorage.setItem("userId", userId);
+      }
+
+      let interlocutor;
+
+      if (userId === 1) {
+        interlocutor = 2;
+      } else if (userId === 2) {
+        interlocutor = 1;
+      } else {
+        console.error("Invalid userId:", userId);
+        return;
+      }
+
+      const chatData = {
+        creationDate: new Date().toISOString(),
+        author: userId,
+        interlocutor: interlocutor,
+      };
+      const res = await axios.post(
+        "http://studhouse.kz/api/v1/chat/chats/",
+        chatData
+      );
+      console.log("Chat created successfully:", res.data);
+    } catch (error) {
+      console.error("Error creating chat:", error);
+    }
+  };
+
   return (
     <section className="py-[75px]">
       {advertisement && (
@@ -310,7 +348,10 @@ export default function ProductPage() {
                       className="text-[0.9rem] font-medium w-full text-[#A8A2A2] py-[11px] px-5"
                     />
                     <Link href={"/routs/chat"}>
-                      <Button className="bg-blue text-white rounded-[6px] text-[0.9rem] font-medium text-center p-2.5">
+                      <Button
+                        onClick={createChat}
+                        className="bg-blue text-white rounded-[6px] text-[0.9rem] font-medium text-center p-2.5"
+                      >
                         Отправить
                       </Button>
                     </Link>
