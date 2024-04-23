@@ -4,6 +4,7 @@ import AboutUs from "@/widgets/AboutUs/ui/aboutus";
 import Contacts from "@/widgets/Contacts/ui/contacts";
 import RateUs from "@/widgets/RateUs/ui/RateUs";
 import Faq from "@/widgets/faq/ui/faq";
+import Problem from "@/widgets/Problem/ui/Problem";
 
 export default function AboutPage() {
   const [activeTab, setActiveTab] = useState("about");
@@ -33,10 +34,12 @@ export default function AboutPage() {
           >
             Контакты
           </h3>
-          <h3 className={`border-b-[1px] text-md font-semibold whitespace-nowrap border-[#767272] py-[9px] cursor-pointer ${
+          <h3
+            className={`border-b-[1px] text-md font-semibold whitespace-nowrap border-[#767272] py-[9px] cursor-pointer ${
               activeTab === "faq" ? "text-blue" : ""
             }`}
-            onClick={() => handleTabClick("faq")}>
+            onClick={() => handleTabClick("faq")}
+          >
             FAQ
           </h3>
           <h3
@@ -49,9 +52,9 @@ export default function AboutPage() {
           </h3>
           <h3
             className={`border-b-[1px] text-md font-semibold whitespace-nowrap border-[#767272] py-[9px] cursor-pointer ${
-              activeTab === "rateus" ? "text-blue" : ""
+              activeTab === "problem" ? "text-blue" : ""
             }`}
-            onClick={() => handleTabClick("rateus")}
+            onClick={() => handleTabClick("problem")}
           >
             Сообщить о проблеме
           </h3>
@@ -60,7 +63,8 @@ export default function AboutPage() {
       {activeTab === "about" && <AboutUs />}
       {activeTab === "contacts" && <Contacts />}
       {activeTab === "rateus" && <RateUs />}
-      {activeTab === 'faq' && <Faq />}
+      {activeTab === "faq" && <Faq />}
+      {activeTab === "problem" && <Problem />}
     </section>
   );
 }
