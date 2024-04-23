@@ -4,38 +4,107 @@ import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import Image from "next/image";
 import Dots from "@/shared/ui/Icons/3dots/dots";
 import Input from "@/shared/ui/Input/Input";
+import axios from "axios";
+import { BASE_URL } from "@/shared/api/BASE";
+import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 interface Message {
-  id: number;
-  text: string;
-  sender: string;
+  id?: number;
+  chat?: number;
+  text?: string;
+  creationDate?: string;
+  author?: number;
+  author_detail?: {
+    author_type?: string;
+    author?: {
+      id?: number;
+      username?: string | null;
+    };
+  };
 }
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [userId, setUserId] = useState<number | null>(null);
+  const [fullName, setFullName] = useState<string | null>(null);
+  const router = useRouter();
+  const params = useParams() as { id: number | string };
 
   useEffect(() => {
-    fetch("http://studhouse.kz/api/v1/userfeed/landlord/")
-      .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setMessages(data);
-        } else {
-          console.error("Received data is not an array:", data);
+    const fetchMessages = async () => {
+      try {
+        const storedMessages = localStorage.getItem(
+          `chatMessages_${params.id}`
+        );
+        if (storedMessages) {
+          setMessages(JSON.parse(storedMessages));
         }
-      })
-      .catch((error) => console.error("Error fetching messages:", error));
-  }, []);
 
-  const handleMessageSend = () => {
-    const newMessageObject = {
-      id: messages.length + 1,
-      text: newMessage,
-      sender: "user",
+        const res = await axios.get(
+          `${BASE_URL}/chat/chats/${params.id}/messages/`
+        );
+        setMessages(res.data);
+        localStorage.setItem(
+          `chatMessages_${params.id}`,
+          JSON.stringify(res.data)
+        );
+      } catch (err) {
+        console.log(err);
+      }
     };
-    setMessages([...messages, newMessageObject]);
-    setNewMessage("");
+
+    fetchMessages();
+
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
+
+    const decodedToken = jwt.decode(accessToken);
+    const userId = decodedToken?.user_id;
+    const full_name = decodedToken?.full_name;
+
+    if (userId) {
+      setUserId(userId);
+    }
+    if (full_name) {
+      setFullName(full_name);
+    }
+  }, [params.id]);
+
+  const handleMessageSend = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const newMessageObject = {
+        text: newMessage,
+        creationDate: new Date().toISOString(),
+      };
+
+      const res = await axios.post(
+        `${BASE_URL}/chat/chats/${params.id}/messages/`,
+        newMessageObject,
+        {
+          headers: {
+            Authorization: `JWT ${accessToken}`,
+          },
+        }
+      );
+
+      setMessages([...messages, res.data]);
+      setNewMessage("");
+
+      localStorage.setItem(
+        `chatMessages_${params.id}`,
+        JSON.stringify([...messages, res.data])
+      );
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    router.push("/");
   };
 
   return (
@@ -43,6 +112,7 @@ export default function ChatPage() {
       <div className="flex items-center gap-[6px] mb-[25px]">
         <Arrow />
         <h2 className="text-lg font-[400]">Назад к объявлению</h2>
+        <button onClick={handleLogout}>Выйти</button>
       </div>
       <div className="flex justify-between">
         <div className="flex justify-between">
@@ -67,8 +137,10 @@ export default function ChatPage() {
                   <Message
                     key={message.id}
                     text={message.text}
-                    sender={message.sender}
-                    id={message.id}
+                    creationDate={message.creationDate}
+                    author={message.author}
+                    fullName={fullName}
+                    userId={userId}
                   />
                 ))}
               </div>
@@ -107,14 +179,25 @@ export default function ChatPage() {
   );
 }
 
-function Message({ text, sender }: Message) {
+function Message({
+  text,
+  creationDate,
+  author,
+  userId,
+  fullName,
+}: Message & { fullName: string | null; userId: number | null }) {
+  const isCurrentUser = author === userId;
+
   return (
     <div
       className={`rounded-lg flex flex-col justify-end bg-background w-[30%] mb-5 p-3 ${
-        sender === "user" ? "bg-blue-100" : "bg-gray-100"
+        isCurrentUser ? "self-end bg-blue-100" : "bg-gray-100"
       }`}
     >
       <p className="text-sm">{text}</p>
+      <p className="text-xs text-[#837777]">
+        {fullName} - {new Date(creationDate).toLocaleString()}
+      </p>
     </div>
   );
 }

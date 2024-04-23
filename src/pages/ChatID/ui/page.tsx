@@ -39,7 +39,7 @@ export default function ChatIdPage() {
           <p className="text-center text-lg font-medium">У вас нет сообщений</p>
         ) : (
           data.map(({ id, creationDate, interlocutor, author }) => (
-            <div className="flex gap-9" key={id}>
+            <Link href={`/routs/chat/${id}`} className="flex gap-9" key={id}>
               <Image
                 src={""}
                 className="rounded-[12px]"
@@ -55,7 +55,7 @@ export default function ChatIdPage() {
                   Здравствуйте! Хотели бы снять эту квартиру
                 </p>
               </div>
-            </div>
+            </Link>
           ))
         )}
       </div>
