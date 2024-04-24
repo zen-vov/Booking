@@ -5,9 +5,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
-import styles from "./styles.module.scss";
 import Button from "@/shared/ui/Button/Button";
-import AuthModal from "@/features/AuthModal/ui/AuthModal";
 import { BASE_URL } from "@/shared/api/BASE";
 import Link from "next/link";
 
@@ -26,7 +24,7 @@ export default function FavoritePage() {
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  // const records = mainData.slice(firstIndex, lastIndex);
+  const records = data.slice(firstIndex, lastIndex);
   // const npage = Math.ceil(mainData.length / recordsPerPage);
   // const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
 
@@ -117,7 +115,7 @@ export default function FavoritePage() {
         </div>
       ) : (
         <div className="container grid grid-cols-2 gap-[92px] mb-12">
-          <ProductList />
+          <ProductList records={records} />
         </div>
       )}
       {/* <div className="container flex gap-4 items-center justify-center">

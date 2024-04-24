@@ -6,14 +6,14 @@ import Dots from "@/shared/ui/Icons/3dots/dots";
 import Input from "@/shared/ui/Input/Input";
 import axios from "axios";
 import { BASE_URL } from "@/shared/api/BASE";
-import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 interface Message {
   id?: number;
   chat?: number;
   text?: string;
-  creationDate?: string;
+  creationDate?: string | any;
   author?: number;
   author_detail?: {
     author_type?: string;
@@ -26,11 +26,11 @@ interface Message {
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [chats, setChats] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [userId, setUserId] = useState<number | null>(null);
   const [fullName, setFullName] = useState<string | null>(null);
-  const router = useRouter();
-  const params = useParams() as { id: number | string };
+  const params = useParams() as { id: string | number };
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -102,23 +102,38 @@ export default function ChatPage() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    router.push("/");
-  };
+  useEffect(() => {
+    const FetchMessages = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const res = await axios.get(`${BASE_URL}/chat/chats/`, {
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        });
+        setChats(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    FetchMessages();
+  }, []);
 
   return (
     <section className="pb-20 pt-5">
-      <div className="flex items-center gap-[6px] mb-[25px]">
+      <Link
+        href={"/routs/product"}
+        className="flex items-center gap-[6px] mb-[25px]"
+      >
         <Arrow />
         <h2 className="text-lg font-[400]">Назад к объявлению</h2>
-        <button onClick={handleLogout}>Выйти</button>
-      </div>
-      <div className="flex justify-between">
+      </Link>
+      <div className="flex justify-between gap-10">
         <div className="flex justify-between">
-          <div className="bg-white h-[622px] w-[1100px] rounded-[12px] flex flex-col justify-between">
+          <div className="bg-white h-full w-[1100px] rounded-[12px] flex flex-col justify-between">
             <div>
-              <div className="pt-6 pl-[37px] pr-6 flex items-center pb-6 justify-between border-b-[1px] border-[#534949]">
+              <div className="static pt-6 pl-[37px] pr-6 flex items-center pb-6 justify-between border-b-[1px] border-[#534949]">
                 <div className="flex items-center gap-6">
                   <Image
                     src={"/settings/flatMini.png"}
@@ -132,15 +147,16 @@ export default function ChatPage() {
                 </div>
                 <Dots />
               </div>
-              <div className="px-6 flex flex-col items-end py-4">
+              <div className="px-6 overflow-y-auto flex flex-col items-end py-4">
                 {messages.map((message) => (
                   <Message
                     key={message.id}
                     text={message.text}
                     creationDate={message.creationDate}
                     author={message.author}
+                    author_detail={message.author_detail}
                     fullName={fullName}
-                    userId={userId}
+                    currentUserType="me"
                   />
                 ))}
               </div>
@@ -173,6 +189,31 @@ export default function ChatPage() {
           <h1 className="whitespace-nowrap text-md font-medium mb-0.5">
             Все сообщение{" "}
           </h1>
+          <div className="flex flex-col gap-[22px]">
+            {chats.map(({ id }) => (
+              <Link
+                href={`/routs/chat/${id}`}
+                className="flex gap-4 items-center"
+                key={id}
+              >
+                <Image
+                  src={""}
+                  width={82}
+                  className="rounded-xl"
+                  height={61}
+                  alt="chats"
+                />
+                <div className="flex flex-col gap-4">
+                  <h1 className="text-[14px] font-medium">
+                    г. Алматы, Бостандыкский район · 3-х комнатная квартира
+                  </h1>
+                  <p className="text-[12px] font-light">
+                    Здравствуйте! Хотели бы снять эту квартиру
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -182,19 +223,24 @@ export default function ChatPage() {
 function Message({
   text,
   creationDate,
-  author,
-  userId,
+  author_detail,
   fullName,
-}: Message & { fullName: string | null; userId: number | null }) {
-  const isCurrentUser = author === userId;
+  currentUserType,
+}: Message & {
+  fullName: string | null;
+  currentUserType: string | null;
+}) {
+  const isCurrentUser = author_detail?.author_type === currentUserType;
 
   return (
     <div
       className={`rounded-lg flex flex-col justify-end bg-background w-[30%] mb-5 p-3 ${
-        isCurrentUser ? "self-end bg-blue-100" : "bg-gray-100"
+        isCurrentUser ? `self-end bg-blue-100` : `bg-gray-100`
       }`}
     >
-      <p className="text-sm">{text}</p>
+      <p className="text-sm overflow-hidden overflow-ellipsis break-words">
+        {text}
+      </p>
       <p className="text-xs text-[#837777]">
         {fullName} - {new Date(creationDate).toLocaleString()}
       </p>
