@@ -53,7 +53,8 @@ export default function HeaderLandlord() {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userId");
     window.location.reload();
   };
 

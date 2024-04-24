@@ -41,6 +41,7 @@ export default function LandLord() {
   const [current, setCurrent] = useState(1);
   const [active, setActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [role, setRole] = useState<1 | 2 | null>(null);
 
   useEffect(() => {
     const pageNumber = new URLSearchParams(window.location.search).get("page");
@@ -49,6 +50,8 @@ export default function LandLord() {
   }, []);
 
   useEffect(() => {
+    const userId = localStorage.getItem("userId");
+
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("accessToken");
@@ -65,6 +68,20 @@ export default function LandLord() {
       }
     };
 
+    const fetchRole = async () => {
+      try {
+        const userResponse = await fetch(
+          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+        );
+        const user = await userResponse.json();
+        setRole(user.role.id);
+        console.log("user role asdasd", user.role.id);
+      } catch (error) {
+        console.log("Error fetching user role: ", error);
+      }
+    };
+
+    fetchRole();
     fetchData();
   }, []);
 
@@ -87,25 +104,30 @@ export default function LandLord() {
 
   return (
     <section className="pb-[45px]">
-      <div className={`${styles.imgbg} flex`}>
-        <div className=" py-[128px] flex flex-col items-start w-full">
-          <div className="container flex flex-col">
-            <span className="text-2xl mb-[1rem] font-semibold text-primary">
-              Создай себе идеальное <br /> окружение
-            </span>
-            <Link href={"/routs/posthouse"} className="">
-              <Button
-                className="border-[1px] flex items-center px-[10rem] justify-center border-black rounded-[10px] text-center bg-white text-[20px]"
-                label="Добавить объявление"
-              >
-                <span className="text-[45px] mr-[1rem] font-semibold text-center">
-                  +
-                </span>
-              </Button>
-            </Link>
+      {/*-----*/}
+      {role === 1 && (
+        <div className={`${styles.imgbg} flex`}>
+          <div className=" py-[128px] flex flex-col items-start w-full">
+            <div className="container flex flex-col">
+              <span className="text-2xl mb-[1rem] font-semibold text-primary">
+                Создай себе идеальное <br /> окружение
+              </span>
+              <Link href={"/routs/posthouse"} className="">
+                <Button
+                  className="border-[1px] flex items-center px-[10rem] justify-center border-black rounded-[10px] text-center bg-white text-[20px]"
+                  label="Добавить объявление"
+                >
+                  <span className="text-[45px] mr-[1rem] font-semibold text-center">
+                    +
+                  </span>
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/*-----*/}
       <div className="container mt-[50px] flex items-center  gap-[100px] mb-[60px]">
         <div className="flex items-center gap-2">
           <Image src={"/Search.png"} width={29} height={29} alt="search" />
