@@ -239,7 +239,9 @@ function Message({
         isCurrentUser ? `self-end bg-blue-100` : `bg-gray-100`
       }`}
     >
-      <p className="text-sm overflow-hidden overflow-ellipsis">{text}</p>
+      <p className="text-sm overflow-hidden overflow-ellipsis break-words">
+        {text}
+      </p>
       <p className="text-xs text-[#837777]">
         {fullName} - {new Date(creationDate).toLocaleString()}
       </p>
