@@ -174,7 +174,9 @@ export default function ProductPage() {
       }
       const res = await axios.post(
         `${BASE_URL}/advertisement/add_to_favorite/`,
-        {},
+        {
+          advertisement: params.id,
+        },
         {
           headers: {
             Authorization: `JWT ${accessToken}`,
@@ -252,7 +254,12 @@ export default function ProductPage() {
       };
       const res = await axios.post(
         "http://studhouse.kz/api/v1/chat/chats/",
-        chatData
+        chatData,
+        {
+          headers: {
+            Authorization: `JWT ${accessToken}`,
+          },
+        }
       );
       console.log("Chat created successfully:", res.data);
     } catch (error) {
