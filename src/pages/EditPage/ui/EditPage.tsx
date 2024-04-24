@@ -46,6 +46,7 @@ interface Fields {
 
 interface Counter {
   name: string;
+  title: string;
   count: number;
 }
 
@@ -80,10 +81,10 @@ export default function EditPage() {
     icons.map(() => false)
   );
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const MIN_PRICE = 0;
-  const MIN_PRICE2 = 0;
-  const [price, setPrice] = React.useState<number>(MIN_PRICE);
-  const [price2, setPrice2] = React.useState<number>(MIN_PRICE2);
+  const MIN_PRICE = "0";
+  const MIN_PRICE2 = "0";
+  const [price, setPrice] = React.useState<string>(MIN_PRICE);
+  const [price2, setPrice2] = React.useState<string>(MIN_PRICE2);
   const [uploadedImages] = React.useState<File[] | null>([]);
   const [selectedType, setSelectedType] = React.useState<string | null>(null);
   const [formErrors, setFormErrors] = React.useState<string[]>([]);
@@ -95,13 +96,13 @@ export default function EditPage() {
     price: "0",
     location: "",
     paymentTime: "daily",
-    floor: 2147483647,
+    floor: 0,
     typeOfHouse: "",
-    numberOfRooms: 2147483647,
-    square: 2147483647,
+    numberOfRooms: 0,
+    square: 0,
     isSold: true,
     isArchived: true,
-    haveWifi: true,
+    haveWifi: false,
     haveTV: true,
     haveWashingMachine: true,
     haveParking: true,
@@ -114,10 +115,10 @@ export default function EditPage() {
   });
 
   const [counterState, setCounterState] = React.useState<Counter[]>([
-    { name: "Максимальное количество жителей", count: 0 },
-    { name: "Количество комнат", count: 0 },
-    { name: "Спальни", count: 0 },
-    { name: "Ванные, душ", count: 0 },
+    { name: "Максимальное количество жителей", title: "", count: 0 },
+    { name: "Количество комнат", title: "numberOfRooms", count: 0 },
+    { name: "Спальни", title: "", count: 0 },
+    { name: "Ванные, душ", title: "", count: 0 },
   ]);
 
   React.useEffect(() => {
@@ -272,17 +273,27 @@ export default function EditPage() {
   };
 
   const increase = () => {
-    setPrice((prevprice) => Math.max(MIN_PRICE, prevprice + 5000));
+    setPrice((prevprice) =>
+      String(Math.max(Number(MIN_PRICE), Number(prevprice) + 5000))
+    );
+    setFields({ ...fields, price: price });
   };
   const increase2 = () => {
-    setPrice2((prevprice) => Math.max(MIN_PRICE2, prevprice + 5000));
+    setPrice2((prevprice) =>
+      String(Math.max(Number(MIN_PRICE2), Number(prevprice) + 5000))
+    );
   };
 
   const decrease = () => {
-    setPrice((prevPrice) => Math.max(MIN_PRICE, prevPrice - 5000));
+    setPrice((prevPrice) =>
+      String(Math.max(Number(MIN_PRICE), Number(prevPrice) - 5000))
+    );
+    setFields({ ...fields, price: price });
   };
   const decrease2 = () => {
-    setPrice2((prevprice) => Math.max(MIN_PRICE2, prevprice - 5000));
+    setPrice2((prevprice) =>
+      String(Math.max(Number(MIN_PRICE2), Number(prevprice) - 5000))
+    );
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -333,10 +344,14 @@ export default function EditPage() {
   return (
     <section className="pt-[30px] pb-[200px]">
       <div>
-        <Link href={"/"} className="flex gap-[5px] items-center ">
+        <div
+          className="flex items-center gap-[8px] cursor-pointer"
+          onClick={handleGoBack}
+        >
           <Arrow />
           <p className="text-[16px] font-[500]">Вернуться на главное меню</p>
-        </Link>
+        </div>
+
         <h1 className="text-[24px] mt-[20px] mb-[55px] font-[500]">
           Информация о жилье
         </h1>
@@ -346,18 +361,19 @@ export default function EditPage() {
           <h1 className="font-medium text-[1rem] pb-2.5">
             Где расположено ваше жилье?
           </h1>
-          <div className="flex items-center gap-4 mb-2.5">
-            <div className="py-2.5 px-4 flex bg-[#F3F3F3] rounded-[12px] items-center">
+          <div className="flex flex-col items-start gap-4 mb-2.5">
+            {/* <div className="py-2.5 px-4 flex bg-[#F3F3F3] rounded-[12px] items-center">
               <Input
                 className="text-[1rem] w-full"
-                placeholder="Введите адрес"
+                placeholder="Введите название"
                 name="address"
                 value={fields.title}
                 onChange={(e) =>
                   setFields({ ...fields, title: e.target.value })
                 }
+                // onChange={handleInputChange}
               />
-            </div>
+            </div> */}
             <div className="py-2.5 px-4 flex bg-[#F3F3F3] rounded-[12px] items-center">
               <Input
                 className="text-[1rem] w-full"
@@ -385,7 +401,12 @@ export default function EditPage() {
               >
                 <p className="text-[14px] font-[400]">{counter.name}</p>
                 <div className="flex items-center gap-[5px]">
-                  <button onClick={() => handleDecrement(index)}>
+                  <button
+                    onClick={() => handleDecrement(index)}
+                    onChange={() =>
+                      setFields({ ...fields, numberOfRooms: counter.count })
+                    }
+                  >
                     <Minus />
                   </button>
                   <p className="text-[14px] font-[400]">{counter.count}</p>
@@ -553,45 +574,7 @@ export default function EditPage() {
                   buttonStyle="whitespace-nowrap text-[14px] font-[400]"
                   listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
                   options={options}
-                  label="в месяц"
-                />
-                <svg
-                  className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m19 9-7 7-7-7"
-                  />
-                </svg>
-              </div>
-              <div className="mr-5 flex gap-2 items-center">
-                <button onClick={decrease2}>
-                  <Minus />
-                </button>
-                <Input
-                  className="text-[14px] w-[30%]"
-                  // onChange={handleInputChange2}
-                  value={price}
-                />
-                <button onClick={increase2}>
-                  <Plus />
-                </button>
-              </div>
-              <div className="mr-5 flex gap-[5px] justify-center items-center">
-                <Dropdown
-                  buttonStyle="whitespace-nowrap text-[14px] font-[400]"
-                  listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
-                  options={options}
-                  label="в месяц"
+                  label="В месяц"
                 />
                 <svg
                   className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
@@ -616,28 +599,71 @@ export default function EditPage() {
                   <Minus />
                 </button>
                 <Input
-                  className="text-[14px] w-[30%]"
+                  className="text-[14px] w-[40%]"
                   value={fields.price}
-                  onChange={(e) =>
-                    setFields({ ...fields, price: e.target.value })
-                  }
+                  // onChange={handleInputChange2}
+                  // onChange={(e) =>
+                  //   setFields({ ...fields, price: e.target.value })
+                  // }
                 />
                 <button onClick={increase}>
                   <Plus />
                 </button>
               </div>
+              <div className="mr-5 flex gap-[5px] justify-center items-center">
+                <Dropdown
+                  buttonStyle="whitespace-nowrap text-[14px] font-[400]"
+                  listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
+                  options={options}
+                  label="Депозит"
+                />
+                <svg
+                  className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m19 9-7 7-7-7"
+                  />
+                </svg>
+              </div>
+              <div className="mr-5 flex gap-2 items-center">
+                <button onClick={decrease2}>
+                  <Minus />
+                </button>
+                <Input
+                  className="text-[14px] w-[40%]"
+                  value={price2}
+                  onChange={(e) =>
+                    setFields({ ...fields, price: e.target.value })
+                  }
+                />
+                <button onClick={increase2}>
+                  <Plus />
+                </button>
+              </div>
             </div>
           </div>
-          <Button
-            label="Сохранить и отправить на проверку"
-            className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
-            onClick={updateAdvertisement}
-          />
-          <Button
-            label="Назад"
-            className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
-            onClick={handleGoBack}
-          />
+          <div className="flex gap-[20px]">
+            <Button
+              label="Сохранить и отправить на проверку"
+              className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
+              onClick={updateAdvertisement}
+            />
+            <Button
+              label="Назад"
+              className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
+              onClick={handleGoBack}
+            />
+          </div>
         </div>
         <div className="right">
           <ProductList />
