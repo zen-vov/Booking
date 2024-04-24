@@ -1,11 +1,9 @@
 "use client";
-import React, { useState } from "react";
-import Modal from "@/shared/ui/Modal/ui/Modal";
-import jwt from "jsonwebtoken";
+import React, { useState, useEffect } from "react";
+import ModalInputField from "@/features/ModalInput/ui/ModalInput";
 import Pen from "@/shared/ui/Icons/Pen/Pen";
 import Link from "next/link";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
-import ModalInputField from "@/features/ModalInput/ui/ModalInput";
 
 interface Fields {
   full_name: string;
@@ -19,17 +17,6 @@ interface Fields {
 }
 
 const Profile = () => {
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [userRole, setUserRole] = React.useState("");
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
-
-  const handleButtonClick = () => {
-    setModalOpen(true);
-  };
-
   const [fields, setFields] = useState<Fields>({
     full_name: "",
     contacts: "",
@@ -39,37 +26,22 @@ const Profile = () => {
     additional_user: "",
   });
 
-  const [editingFields, setEditingFields] = useState<
-    Record<keyof Fields, boolean>
-  >({
-    full_name: false,
-    contacts: false,
-    email: false,
-    birthDate: false,
-    identification: false,
-    additional_user: false,
-    university_data: false,
-    student_hobbies: false,
-  });
+  const [editingField, setEditingField] = useState<keyof Fields | null>(null);
+  const [userRole, setUserRole] = useState<string>("");
 
-  React.useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const jwt = require("jsonwebtoken");
-    const decodedToken = jwt.decode(accessToken);
-    const userId = decodedToken?.user_id;
-    let initialUserRole = null;
-    setUserRole(userRole);
+  useEffect(() => {
     const fetchUser = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      const jwt = require("jsonwebtoken");
+      if (!accessToken) return;
+      const decodedToken: any = jwt.decode(accessToken);
+      const userId = decodedToken?.user_id;
       try {
         const userResponse = await fetch(
           `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
-        const userRole = user?.role?.role_name;
-        setUserRole(userRole);
-
         setFields({
-          ...fields,
           full_name: user.full_name,
           contacts: user.user_info.contacts,
           email: user.user_info.email,
@@ -79,27 +51,33 @@ const Profile = () => {
           university_data: user.university_data,
           student_hobbies: user.student_hobbies,
         });
+        setUserRole(user?.role?.role_name || "");
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
       }
     };
-
     fetchUser();
   }, []);
 
-  const handleEditClick = (field: keyof Fields) => {
-    setEditingFields({ ...editingFields, [field]: true });
+  const handleOpenModal = (field: keyof Fields) => {
+    setEditingField(field);
   };
 
-  const handleSaveClick = async (field: keyof Fields) => {
-    setEditingFields({ ...editingFields, [field]: false });
+  const handleSave = (field: keyof Fields, value: string) => {
+    setFields((prevFields) => ({
+      ...prevFields,
+      [field]: value,
+    }));
+    setEditingField(null);
+    updateField(field, value);
+  };
+
+  const updateField = async (field: keyof Fields, value: string) => {
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
-    const decodedToken = jwt.decode(accessToken);
+    if (!accessToken) return;
+    const decodedToken: any = jwt.decode(accessToken);
     const userId = decodedToken?.user_id;
-
-    console.log("asdasdas");
-
     try {
       const response = await fetch(
         `http://studhouse.kz/api/v1/auth/user/${userId}/`,
@@ -109,13 +87,12 @@ const Profile = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            [field]: fields[field],
+            [field]: value,
           }),
         }
       );
       if (response.ok) {
-        window.location.reload();
-        console.log(`Данные успешно обновлены для поля ${fields[field]}`);
+        console.log(`Данные успешно обновлены для поля ${field}`);
       } else {
         console.error("Ошибка при обновлении данных");
       }
@@ -124,65 +101,68 @@ const Profile = () => {
     }
   };
 
-  const handleChange = (field: keyof Fields, value: string) => {
-    setFields((prevFields) => ({
-      ...prevFields,
-      [field]: value,
-    }));
+  const getFieldLabel = (fieldName: keyof Fields): string => {
+    switch (fieldName) {
+      case "full_name":
+        return "Имя по документам";
+      case "contacts":
+        return "Номер телефона";
+      case "email":
+        return "Электронная почта";
+      case "birthDate":
+        return "Дата рождения";
+      case "identification":
+        return "Удостоверение личности";
+      case "additional_user":
+        return "Контактное лицо в чрезвычайной ситуации";
+      case "university_data":
+        return "Данные об университете";
+      case "student_hobbies":
+        return "Увлечения студента";
+      default:
+        return "";
+    }
   };
 
-  const renderField = (field: keyof Fields, label: string) => {
-    const isEditing = editingFields[field];
+  const renderField = (field: keyof Fields) => {
+    const isEditing = editingField === field;
     const fieldValue = fields[field] || "";
     return (
-      <div>
+      <div key={field}>
         <div>
           <div>
             <span>
-              {/* {isEditing && (
+              {isEditing && (
                 <ModalInputField
                   initialValue={fieldValue}
-                  onSave={() => handleSaveClick(field)}
-                  onClose={() =>
-                    setEditingFields({ ...editingFields, [field]: false })
-                  }
-                  fieldName={label}
+                  onSave={(updatedValue) => handleSave(field, updatedValue)}
+                  onClose={() => setEditingField(null)}
+                  fieldName={getFieldLabel(field)}
                   buttonField="Сохранить"
                 >
-                  <h2>{label}</h2>
+                  <h2>{getFieldLabel(field)}</h2>
                 </ModalInputField>
-              )} */}
+              )}
             </span>
           </div>
         </div>
 
         <div className="flex justify-between items-center mb-2">
-          <span className="text-16 text-black font-[500]">{label}</span>
-          {isEditing ? (
+          <span className="text-16 text-black font-[500]">
+            {getFieldLabel(field)}
+          </span>
+          {!isEditing && (
             <button
               className="cursor-pointer text-blue-500"
-              onClick={() => handleSaveClick(field)}
-            >
-              Сохранить
-            </button>
-          ) : (
-            <button
-              className="cursor-pointer text-blue-500"
-              onClick={() => handleEditClick(field)}
+              onClick={() => handleOpenModal(field)}
             >
               <Pen />
             </button>
           )}
         </div>
-        {isEditing ? (
-          <input
-            className="w-full p-2 border rounded"
-            value={fields[field]}
-            onChange={(e) => handleChange(field, e.target.value)}
-          />
-        ) : (
-          <span className="text-16 font-400 text-gray">{fields[field]}</span>
-        )}
+        {!isEditing ? (
+          <span className="text-16 font-400 text-gray">{fieldValue}</span>
+        ) : null}
       </div>
     );
   };
@@ -191,8 +171,8 @@ const Profile = () => {
     if (userRole === "Student") {
       return (
         <>
-          {renderField("university_data", "Данные об университете")}
-          {renderField("student_hobbies", "Увлечения студента")}
+          {renderField("university_data")}
+          {renderField("student_hobbies")}
         </>
       );
     }
@@ -209,28 +189,23 @@ const Profile = () => {
       <div className="mx-10 mt-[35px] mb-[100px] py-[60px] px-[65px] bg-white rounded-lg">
         <div className="flex flex-col gap-[16px]">
           <div className="text-16 font-[600] mb-30">Личная информация</div>
-          {renderField("full_name", "Имя по документам")}
-          {renderField("contacts", "Номер телефона")}
-          {renderField("email", "Электронная почта")}
-          {renderField("birthDate", "Дата рождения")}
-          {renderField(
-            "identification",
-            "Удостоверение личности государственного образца"
-          )}
-          {renderField(
-            "additional_user",
-            "Контактное лицо в чрезвычайной ситуации"
-          )}
+          {renderField("full_name")}
+          {renderField("contacts")}
+          {renderField("email")}
+          {renderField("birthDate")}
+          {renderField("identification")}
+          {renderField("additional_user")}
           {renderStudentFields()}
         </div>
         <div className="mt-[84px]">
-          <p className="text-[18px] font-[400]">Хотите онулировать аккаунт?</p>
+          <p className="text-[18px] font-[400]">Хотите удалить аккаунт?</p>
           <p className="decoration-solid text-[16px] cursor-pointer font-[500]">
-            Приступить
+            Удалить
           </p>
         </div>
       </div>
     </div>
   );
 };
+
 export default Profile;
