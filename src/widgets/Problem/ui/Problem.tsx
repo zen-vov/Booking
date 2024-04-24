@@ -1,9 +1,29 @@
+"use client";
 import React from "react";
 import Button from "@/shared/ui/Button/Button";
+import AuthModal from "@/features/AuthModal/ui/AuthModal";
+import { useUser } from "@/features/UserContext/ui/UserProvider";
 
 export default function Problem() {
   const accessToken = localStorage.getItem("accessToken");
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const { user, setUser } = useUser();
 
+  const handleLoginClick = () => {
+    if (!user) {
+      setIsModalOpen(true);
+    }
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+  const handleButtonClick = () => {
+    setModalOpen(true);
+  };
   return (
     <>
       {!accessToken && (
@@ -14,10 +34,14 @@ export default function Problem() {
             и решить другие вопросы.
           </p>
           <div className="flex justify-end">
-            <Button className="text-[22px] font-medium mt-10 rounded-[12px] bg-blue text-white py-[11px] px-[88px]">
+            <Button
+              onClick={handleLoginClick}
+              className="text-[22px] font-medium mt-10 rounded-[12px] bg-blue text-white py-[11px] px-[88px]"
+            >
               Войти или зарегистрироваться
             </Button>
           </div>
+          {isModalOpen && <AuthModal onClose={closeModal} />}
         </article>
       )}
       {accessToken && (
