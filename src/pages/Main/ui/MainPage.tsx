@@ -10,6 +10,7 @@ import Modal from "@/shared/ui/Modal/ui/Modal";
 import Button from "@/shared/ui/Button/Button";
 import styles from "./styles.module.scss";
 import Link from "next/link";
+import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 
 const dataFilter = [
   { text: "Срок аренды", className: "mb-[42px]" },
@@ -35,12 +36,21 @@ const dataU = [
   { text: "Балкон" },
 ];
 
+const roomsData = [
+  { label: "1 -комнатная" },
+  { label: "2 -комнатная" },
+  { label: "3 -комнатная" },
+  { label: "4 и более комнат" },
+];
+
 export default function LandLord() {
   const [data, setData] = useState([]);
   const [current, setCurrent] = useState(1);
-  const [active, setActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [numberOfRooms, setNumberOfRooms] = useState("");
+  const [maxPayment, setMaxPayment] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const pageNumber = new URLSearchParams(window.location.search).get("page");
@@ -54,18 +64,40 @@ export default function LandLord() {
         const token = localStorage.getItem("accessToken");
 
         const { data: res } = await axios.get(`${BASE_URL}/advertisement/`, {
+          params: {
+            numberOfRooms: numberOfRooms,
+            price: maxPayment,
+          },
           headers: {
             Authorization: `JWT ${token}`,
           },
         });
-        setData(res);
+
+        let filteredData = res;
+        if (maxPayment) {
+          filteredData = res.filter(
+            (item: any) => item.price <= parseInt(maxPayment)
+          );
+        }
+
+        if (numberOfRooms !== "") {
+          filteredData = res.filter((item: any) => {
+            if (numberOfRooms === "4 и более комнат") {
+              return item.numberOfRooms >= 4;
+            } else {
+              return item.numberOfRooms === parseInt(numberOfRooms);
+            }
+          });
+        }
+
+        setData(filteredData);
       } catch (err) {
         console.log(err);
       }
     };
 
     fetchData();
-  }, []);
+  }, [numberOfRooms, maxPayment]);
 
   // const filteredData = data.filter((item: any) =>
   //   item.address?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -80,8 +112,11 @@ export default function LandLord() {
 
   const changeCurrentPage = (page: number) => {
     setCurrent(page);
-    setActive(true);
     window.history.pushState({}, "", `/?page=${page}`);
+  };
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
   };
 
   const onFilterClick = () => {
@@ -94,6 +129,22 @@ export default function LandLord() {
     setSearchQuery(event.target.value);
   };
 
+  const handleRoomSelect = (selectedOption: any) => {
+    const roomMapping: { [key: string]: any } = {
+      "1 -комнатная": 1,
+      "2 -комнатная": 2,
+      "3 -комнатная": 3,
+      "4 и более комнат": 4,
+    };
+
+    setNumberOfRooms(roomMapping[selectedOption]);
+  };
+
+  const handleMaxPayment = (event: string | any) => {
+    const numericValue = event.target.value.replace(/\D/g, "");
+    setMaxPayment(numericValue);
+  };
+
   return (
     <section className="pb-[45px]">
       <div className={`${styles.imgbg} flex`}>
@@ -104,6 +155,7 @@ export default function LandLord() {
             </span>
             <Link href={"/routs/posthouse"} className="">
               <Button
+                onClick={toggleDropdown}
                 className="border-[1px] flex items-center px-[10rem] justify-center border-black rounded-[10px] text-center bg-white text-[20px]"
                 label="Добавить объявление"
               >
@@ -126,15 +178,55 @@ export default function LandLord() {
         </div>
         <div className="flex gap-[30px] items-center">
           <div className="flex gap-[5px] items-center">
-            <span className="text-md text-black font-medium">Макс. оплата</span>
+            <div className="relative">
+              <Button
+                className="text-[20px] font-medium"
+                onClick={toggleDropdown}
+              >
+                Макс. оплата
+              </Button>
+            </div>
             <span className="-rotate-90">
               <Arrow />
             </span>
+            <div className="relative">
+              {isOpen && (
+                <div className="absolute rounded-[6px] bg-white py-4 px-[15px] z-50 top-5 left-[-15rem]">
+                  <div className="flex gap-5 items-center">
+                    <div className="border-[1px] border-black rounded-[10px] ">
+                      <Input
+                        className="p-2"
+                        placeholder="Напишите сумму"
+                        onChange={handleMaxPayment}
+                        onKeyPress={(event: any) => {
+                          const regex = new RegExp("^[0-9]+$");
+                          if (!regex.test(event.key)) {
+                            event.preventDefault();
+                          }
+                        }}
+                      />
+                    </div>
+                    <Button
+                      onClick={() => handleMaxPayment(maxPayment)}
+                      className="rounded-[10px] py-[5px] px-[15px] text-white bg-blue text-[16px] font-medium"
+                    >
+                      ок
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex gap-[15px]">
-            <span className="text-md text-black font-medium items-center">
-              Кол. комнат
-            </span>
+            <Dropdown
+              options={roomsData}
+              buttonStyle="text-[20px] font-medium "
+              listStyle="bg-white gap-3 py-3 px-10"
+              defaultLabel={"Кол. комнат"}
+              onSelect={(selectedOption: any) =>
+                handleRoomSelect(selectedOption)
+              }
+            />
             <span className="-rotate-90">
               <Arrow />
             </span>
