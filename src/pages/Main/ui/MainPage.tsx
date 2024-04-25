@@ -67,15 +67,15 @@ export default function LandLord() {
     fetchData();
   }, []);
 
-  const filteredData = data.filter((item: any) =>
-    item.address?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // const filteredData = data.filter((item: any) =>
+  //   item.address?.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = filteredData.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(filteredData.length / recordsPerPage);
+  const records = data.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(data.length / recordsPerPage);
   const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
 
   const changeCurrentPage = (page: number) => {
