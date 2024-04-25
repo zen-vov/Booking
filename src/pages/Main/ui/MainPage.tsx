@@ -53,7 +53,7 @@ export default function LandLord() {
       try {
         const token = localStorage.getItem("accessToken");
 
-        const { data: res } = await axios.get(`${BASE_URL}/advertisement`, {
+        const { data: res } = await axios.get(`${BASE_URL}/advertisement/`, {
           headers: {
             Authorization: `JWT ${token}`,
           },
@@ -68,7 +68,7 @@ export default function LandLord() {
   }, []);
 
   const filteredData = data.filter((item: any) =>
-    item.address.toLowerCase().includes(searchQuery.toLowerCase())
+    item.address?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const recordsPerPage = 6;

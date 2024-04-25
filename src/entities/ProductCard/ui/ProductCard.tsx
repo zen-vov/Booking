@@ -40,7 +40,7 @@ export default function ProductCard(props: ProductProps) {
   //здесь будет логика вытаскивания айди продукта и формирования ссылки для копирования
 
   const copyLinkToClipboard = () => {
-    const url = `http://localhost:3000/routs/product/${params.id}`;
+    const url = `http://localhost:3000/routs/product/${id}`;
     navigator.clipboard
       .writeText(url)
       .then(() => {
