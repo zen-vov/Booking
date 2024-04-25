@@ -40,6 +40,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 -- student --
 2003anvarbek2003@gmail.com
 Anvarbek2003
+
+role id: 1
+
 --landlord --
 bekzatomargazy@gmail.com
 Studhouse2024
+
+role id: 2

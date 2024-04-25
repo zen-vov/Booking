@@ -41,6 +41,7 @@ export default function LandLord() {
   const [active, setActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [role, setRole] = useState<1 | 2 | null>(null);
+  const [hasAuth, setHasAuth] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -55,6 +56,10 @@ export default function LandLord() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("accessToken");
+
+        if (token) {
+          setHasAuth(true);
+        }
 
         const { data: res } = await axios.get(`${BASE_URL}/advertisement`, {
           headers: {
@@ -114,7 +119,7 @@ export default function LandLord() {
   return (
     <section className="pb-[45px]">
       {/*-----*/}
-      {role === 1 && (
+      {role === 1 && hasAuth && (
         <div className={`${styles.imgbg} flex`}>
           <div className=" py-[128px] flex flex-col items-start w-full">
             <div className="container flex flex-col">

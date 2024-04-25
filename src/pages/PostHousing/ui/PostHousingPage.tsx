@@ -9,6 +9,7 @@ export default function PostHousePage() {
   const [isChecked, setIsChecked] = useState(false);
   const [validationError, setValidationError] = useState("");
   const [role, setRole] = useState<"Student" | "Landlord" | null>(null);
+  const [hasToken, setHasToken] = useState(false);
 
   const handleCheckboxChange = (event: any) => {
     setIsChecked(event.target.checked);
@@ -21,7 +22,6 @@ export default function PostHousePage() {
         "Вы должны принять условия использования и политику конфиденциальности."
       );
     } else {
-      console.log("error");
     }
   };
 
@@ -34,6 +34,7 @@ export default function PostHousePage() {
 
     if (userId) {
       localStorage.setItem("userId", userId);
+      setHasToken(true);
     }
 
     const fetchRole = async () => {
@@ -110,7 +111,7 @@ export default function PostHousePage() {
           {validationError && (
             <p className="text-red-500 text-[15px] mt-2">{validationError}</p>
           )}
-          {role ? (
+          {isChecked && (
             <div className="flex justify-end">
               <Link href={"/routs/postsettlement"}>
                 <Button
@@ -120,7 +121,8 @@ export default function PostHousePage() {
                 />
               </Link>
             </div>
-          ) : (
+          )}
+          {!hasToken && (
             <p className="text-red-500 text-[15px] mt-2">
               У вас нет доступа к этой странице. Пожалуйста, свяжитесь с
               администратором.
