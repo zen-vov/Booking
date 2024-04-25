@@ -25,15 +25,28 @@ const AuthModal = ({ onClose, active }: ModalI) => {
   const [username, setUsername] = useState("");
   const [activate, setActivate] = useState<string>("");
   const [showActivation, setShowActivation] = useState<boolean>(false);
-  const [mail, setMain] = React.useState("");
+  const [mail, setMail] = React.useState("");
   const [password, setPassword] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedRole, setSelectedRole] = useState(2);
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const modalRef = React.useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (event: any) => {
+    console.log("register button");
     event.preventDefault();
+
+    // if (!username.trim()) {
+    //   setErrorMessage("Email is required");
+    //   return;
+    // }
+
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // if (!emailRegex.test(username.trim())) {
+    //   setErrorMessage("Invalid email format");
+    //   return;
+    // }
+
     try {
       if (isRegistering) {
         const registerResponse = await fetch(
@@ -44,7 +57,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              role: 1,
+              role: selectedRole,
               login: username,
               full_name: username,
               password: password,
@@ -88,32 +101,47 @@ const AuthModal = ({ onClose, active }: ModalI) => {
 
       const loginData = await loginResponse.json();
       localStorage.setItem("accessToken", loginData.access);
-      window.location.reload();
-      onClose();
+      if (!isRegistering) {
+        window.location.reload();
+        onClose();
+      }
     } catch (error: any) {
       setErrorMessage(error.message || "Произошла ошибка");
+    }
+    if (isRegistering) {
+      handleActiveForm();
     }
   };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       onClose();
+      // window.location.reload();
     }
+
+    setErrorMessage("");
   };
 
   const handleActivationSubmit = async (event: any) => {
+    console.log("activation code: ", activate);
     event.preventDefault();
+
     try {
-      const response = await axios.post(
-        `${BASE_URL}/auth/user/activate_user/`,
+      const activateResponse = await fetch(
+        "http://studhouse.kz/api/v1/auth/user/activate_user/",
         {
-          code: activate,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            login: username,
+            code: activate,
+          }),
         }
       );
-      if (response.data.is_active) {
-      } else {
-        setErrorMessage("Неверный код активации");
-      }
+      alert("Вы успешно активировали аккаунт!");
+      onClose();
     } catch (error: any) {
       setErrorMessage(error.message || "Произошла ошибка");
     }
@@ -128,6 +156,10 @@ const AuthModal = ({ onClose, active }: ModalI) => {
 
   const handleRoleChange = (event: any) => {
     setSelectedRole(event.target.value);
+  };
+
+  const handleActiveForm = () => {
+    setShowActivation(true);
   };
 
   return (
@@ -158,51 +190,193 @@ const AuthModal = ({ onClose, active }: ModalI) => {
             className="flex flex-col justify-between"
             onSubmit={handleSubmit}
           >
-            <label className="mb-[30px]">
-              <p className="text-[18px] font-[500]">Почта</p>
-              <Input
-                className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
-                style={{ color: "#A8A2A2" }}
-                name="username"
-                placeholder="Введите электронную почту"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </label>
-            <label className="mb-[20px]">
-              <p className="text-[18px] font-[500]">Пароль</p>
-              <Input
-                className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
-                style={{ color: "#A8A2A2" }}
-                name="password"
-                placeholder="Введите пароль"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </label>
-            {isRegistering && !showActivation && (
-              <div className="mb-[100px] flex items-center">
-                <input
-                  type="checkbox"
-                  id="studentRole"
-                  checked={selectedRole === "student"}
-                  onChange={() => {
-                    setSelectedRole(
-                      selectedRole === "student" ? "" : "student"
-                    );
-                  }}
-                />
-                <label htmlFor="studentRole" className="ml-[10px]">
-                  Студент
+            {!showActivation && (
+              <>
+                <label className="mb-[30px]">
+                  <p className="text-[18px] font-[500]">Почта</p>
+                  <Input
+                    className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
+                    style={{ color: "#A8A2A2" }}
+                    name="username"
+                    placeholder="Введите электронную почту"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
                 </label>
+                <label className="mb-[20px]">
+                  <p className="text-[18px] font-[500]">Пароль</p>
+                  <Input
+                    className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
+                    style={{ color: "#A8A2A2" }}
+                    name="password"
+                    placeholder="Введите пароль"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </label>
+                {isRegistering && (
+                  <div className="mb-[100px] flex items-center">
+                    <input
+                      type="checkbox"
+                      id="studentRole"
+                      checked={selectedRole === 1}
+                      onChange={() => {
+                        setSelectedRole(selectedRole === 2 ? 1 : 2);
+                      }}
+                    />
+                    <label htmlFor="studentRole" className="ml-[10px]">
+                      Студент
+                    </label>
+                  </div>
+                )}
+              </>
+            )}
+
+            {showActivation && (
+              <div className="mb-4">
+                <div className="w-full">
+                  <label
+                    className="block mb-2 text-[18px] font-[500]"
+                    htmlFor="activate1"
+                  >
+                    Код активации
+                  </label>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="w-[20%]">
+                      <input
+                        className="w-full h-[50px] py-[10px] px-[20px] border-b border-black focus:outline-none text-center"
+                        id="activate1"
+                        name="activate1"
+                        type="text"
+                        maxLength={1}
+                        value={activate[0] || ""}
+                        onChange={(e) => {
+                          setActivate(e.target.value + activate.slice(1, 4));
+                          if (e.target.value.length === 1) {
+                            document.getElementById("activate2")?.focus();
+                          }
+                        }}
+                        onKeyUp={(e) => {
+                          if (e.key === "Backspace" && activate[0] === "") {
+                            document.getElementById("activate1")?.blur();
+                            document.getElementById("activate1")?.focus();
+                          }
+                        }}
+                        required
+                      />
+                    </div>
+                    <div className="w-[20%]">
+                      <input
+                        className="w-full h-[50px] py-[10px] px-[20px] border-b border-black focus:outline-none text-center"
+                        id="activate2"
+                        name="activate2"
+                        type="text"
+                        maxLength={1}
+                        value={activate[1] || ""}
+                        onChange={(e) => {
+                          setActivate(
+                            activate.slice(0, 1) +
+                              e.target.value +
+                              activate.slice(2, 4)
+                          );
+                          if (e.target.value.length === 1) {
+                            document.getElementById("activate3")?.focus();
+                          }
+                        }}
+                        onKeyUp={(e) => {
+                          if (e.key === "Backspace" && activate[1] === "") {
+                            document.getElementById("activate1")?.focus();
+                          }
+                        }}
+                        required
+                      />
+                    </div>
+                    <div className="w-[20%]">
+                      <input
+                        className="w-full h-[50px] py-[10px] px-[20px] border-b border-black focus:outline-none text-center"
+                        id="activate3"
+                        name="activate3"
+                        type="text"
+                        maxLength={1}
+                        value={activate[2] || ""}
+                        onChange={(e) => {
+                          setActivate(
+                            activate.slice(0, 2) +
+                              e.target.value +
+                              activate.slice(3, 4)
+                          );
+                          if (e.target.value.length === 1) {
+                            document.getElementById("activate4")?.focus();
+                          }
+                        }}
+                        onKeyUp={(e) => {
+                          if (e.key === "Backspace" && activate[2] === "") {
+                            document.getElementById("activate2")?.focus();
+                          }
+                        }}
+                        required
+                      />
+                    </div>
+                    <div className="w-[20%]">
+                      <input
+                        className="w-full h-[50px] py-[10px] px-[20px] border-b border-black focus:outline-none text-center"
+                        id="activate4"
+                        name="activate4"
+                        type="text"
+                        maxLength={1}
+                        value={activate[3] || ""}
+                        onChange={(e) => {
+                          setActivate(activate.slice(0, 3) + e.target.value);
+                        }}
+                        onKeyUp={(e) => {
+                          if (e.key === "Backspace" && activate[3] === "") {
+                            document.getElementById("activate3")?.focus();
+                          }
+                        }}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
-            {showActivation && isRegistering && (
+            <div className="error-message">{errorMessage}</div>
+            {showActivation && (
+              <Button
+                className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
+                type="submit"
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleActivationSubmit(e)
+                }
+                label="Продолжить"
+              />
+            )}
+            {!showActivation && (
+              <Button
+                className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
+                type="submit"
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleSubmit(e)
+                }
+                label={isRegistering ? "Зарегистрироваться" : "Войти"}
+              />
+            )}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AuthModal;
+
+{
+  /* {showActivation && (
               <label className="mb-[20px]">
                 <p className="text-[18px] font-[500]">Код активации</p>
                 <Input
@@ -216,23 +390,8 @@ const AuthModal = ({ onClose, active }: ModalI) => {
                   required
                 />
               </label>
-            )}
-
-            <div className="error-message">{errorMessage}</div>
-            <Button
-              className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
-              type="submit"
-              onClick={() => setShowActivation(true)}
-              label={isRegistering ? "Зарегистрироваться" : "Войти"}
-            />
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default AuthModal;
+            )} */
+}
 
 // import React, { useState, useEffect } from 'react';
 // import axios from 'axios';

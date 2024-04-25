@@ -99,7 +99,23 @@ export default function ChatPage() {
           </div>
           <div className="px-6 overflow-y-auto flex flex-col items-end py-4">
             {messages?.map((message) => (
-              <Message key={message.id} text={message.text} id={message.id} />
+              <Message
+                key={message.id}
+                text={message.text}
+                id={message.id}
+                chat={0}
+                creationDate={undefined}
+                author={0}
+                author_detail={{
+                  author_type: "",
+                  author: {
+                    id: 0,
+                    username: null,
+                  },
+                }}
+                fullName={null}
+                currentUserType={null}
+              />
             ))}
           </div>
           <div className="px-6 py-[19px] border-t-[1px] border-[#534949] flex items-center justify-between">

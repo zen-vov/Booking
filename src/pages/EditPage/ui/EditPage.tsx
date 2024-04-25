@@ -76,7 +76,7 @@ const options = [
 ];
 
 export default function EditPage() {
-  const id = localStorage?.getItem("productId");
+  const id = localStorage.getItem("productId");
   const [selectedIcons, setSelectedIcons] = React.useState<boolean[]>(
     icons.map(() => false)
   );

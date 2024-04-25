@@ -4,6 +4,7 @@ import ModalInputField from "@/features/ModalInput/ui/ModalInput";
 import Pen from "@/shared/ui/Icons/Pen/Pen";
 import Link from "next/link";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
+import { useRouter } from "next/navigation";
 
 interface Fields {
   full_name: string;
@@ -28,6 +29,7 @@ const Profile = () => {
 
   const [editingField, setEditingField] = useState<keyof Fields | null>(null);
   const [userRole, setUserRole] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -179,6 +181,41 @@ const Profile = () => {
     return null;
   };
 
+  const deleteUser = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return;
+
+    const jwt = require("jsonwebtoken");
+    const decodedToken: any = jwt.decode(accessToken);
+    const userId = decodedToken?.user_id;
+
+    try {
+      const response = await fetch(
+        `http://studhouse.kz/api/v1/auth/user/${userId}/`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFTOKEN":
+              "d2yg9dlTCExrPKRqz122a6fD3uA7FPNGgI3PXyfJ77HSCJhY7lE82It17s8bTefc",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({}),
+        }
+      );
+      if (response.ok) {
+        console.log(`Аккаунт успешно удален`);
+        window.location.reload();
+        router.push("/");
+        alert("Ваш аккаунт удален");
+      } else {
+        console.error("Ошибка при удалении аккаунта");
+      }
+    } catch (error) {
+      console.error("Ошибка при отправке запроса: ", error);
+    }
+  };
+
   return (
     <div>
       <Link href={"/"} className="flex gap-1 items-center mt-[25px] mb-[16px]">
@@ -198,10 +235,13 @@ const Profile = () => {
           {renderStudentFields()}
         </div>
         <div className="mt-[84px]">
-          <p className="text-[18px] font-[400]">Хотите удалить аккаунт?</p>
-          <p className="decoration-solid text-[16px] cursor-pointer font-[500]">
-            Удалить
-          </p>
+          <p className="text-[18px] font-[400]">Хотите онулировать аккаунт?</p>
+          <button
+            onClick={deleteUser}
+            className="decoration-solid text-[16px] cursor-pointer font-[500] mt-[8px]"
+          >
+            Приступить
+          </button>
         </div>
       </div>
     </div>

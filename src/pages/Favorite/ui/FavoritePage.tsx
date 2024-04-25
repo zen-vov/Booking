@@ -74,7 +74,7 @@ export default function FavoritePage() {
   return (
     <section className="pb-[45px]">
       <div className="container mt-[32px] flex flex-col gap-[56px] mb-[60px]">
-        <div className="flex items-center gap-[100px]">
+        {/* <div className="flex items-center gap-[100px]">
           <div className="flex items-center gap-2">
             <Image src={"/Search.png"} width={29} height={29} alt="search" />
             <Input
@@ -101,15 +101,17 @@ export default function FavoritePage() {
             </div>
             <h3 className="text-md font-medium text-black">Фильтр</h3>
           </div>
-        </div>
-        <h1 className="text-xl font-[500] ">Мои объявление</h1>
+        </div> */}
+        <h1 className="text-xl font-[500] ">Мои избранные</h1>
       </div>
       {data.length === 0 ? (
         <div className="container pb-20 flex flex-col justify-center items-center mt-8 text-lg">
-          <h1 className="text-xl font-medium">У вас нет объявление вашей квартиры</h1>
-          <Link href={'/routs/posthouse'} className="mt-[45px]">
+          <h1 className="text-xl font-medium">
+            У вас нет объявление вашей квартиры
+          </h1>
+          <Link href={"/routs/posthouse"} className="mt-[45px]">
             <Button className="text-md font-medium rounded-[5px] border-[1px] border-solid border-black py-[13px] px-[22px]">
-            Разместить объявление
+              Разместить объявление
             </Button>
           </Link>
         </div>

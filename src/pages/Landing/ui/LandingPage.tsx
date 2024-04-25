@@ -12,6 +12,35 @@ import { Modal } from "@/shared/ui/Modal/Modal";
 export default function LandingPage() {
   const [modal, setModal] = React.useState(false);
   const [modalActive, setModalActive] = React.useState(false);
+  const [role, setRole] = React.useState<"Student" | "Landlord" | null>(null);
+
+  React.useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
+
+    const decodedToken = jwt.decode(accessToken);
+    console.log("decoded token: ", decodedToken);
+    const userId = decodedToken?.user_id;
+
+    if (userId) {
+      localStorage.setItem("userId", userId);
+    }
+
+    const fetchRole = async () => {
+      try {
+        const userResponse = await fetch(
+          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+        );
+        const user = await userResponse.json();
+        console.log("user role: ", user.role.id);
+        setRole(user.role.id);
+      } catch (error) {
+        console.error("Error fetching user role: ", error);
+      }
+    };
+
+    fetchRole();
+  }, []);
 
   const sliderParams = [
     {

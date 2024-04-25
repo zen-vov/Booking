@@ -53,8 +53,9 @@ export default function HeaderLandlord() {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
-    window.location.reload();
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userId");
+    window.location.href = "/";
   };
 
   const closeModal = () => {

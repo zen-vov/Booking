@@ -58,7 +58,8 @@ export default function HeaderStudent() {
   const handleLogout = () => {
     // setUser(null);
     localStorage.removeItem("accessToken");
-    window.location.reload();
+    localStorage.removeItem("userId");
+    window.location.href = "/";
   };
 
   const closeModal = () => {

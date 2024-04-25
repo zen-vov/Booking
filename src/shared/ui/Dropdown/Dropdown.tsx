@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import React, { ReactNode, useState } from "react";
 import Link from "next/link";
 
 type Option = {
-  label: ReactNode | any;
+  label: ReactNode | any | string;
   onClick?: () => void;
   path?: string; // New property to determine the path to navigate
 };
