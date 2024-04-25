@@ -32,7 +32,6 @@ export default function ChatPage() {
 
   useEffect(() => {
     subscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const subscribe = async () => {
@@ -45,9 +44,12 @@ export default function ChatPage() {
           },
         }
       );
-      setMessages((prev) => [data, ...prev]);
+      if (data.length > 0) {
+        setMessages((prev) => [...data, ...prev]);
+      }
       await subscribe();
     } catch (err) {
+      console.error("Error in long polling:", err);
       setTimeout(() => {
         subscribe();
       }, 500);
@@ -55,18 +57,22 @@ export default function ChatPage() {
   };
 
   const sendMessage = async () => {
-    await axios.post(
-      `${BASE_URL}/chat/chats/${params.id}}/messages/`,
-      {
-        text: newMessage,
-        creationDate: new Date().toISOString(),
-      },
-      {
-        headers: {
-          Authorization: `JWT ${token}`,
+    try {
+      await axios.post(
+        `${BASE_URL}/chat/chats/${params.id}}/messages/`,
+        {
+          text: newMessage,
+          creationDate: new Date().toISOString(),
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
   return (

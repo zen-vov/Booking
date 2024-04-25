@@ -555,7 +555,7 @@ export default function PostSettlementPage() {
                   buttonStyle="whitespace-nowrap text-[14px] font-[400]"
                   listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
                   options={options}
-                  label="в месяц"
+                  defaultLabel="в месяц"
                 />
                 <svg
                   className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
@@ -593,7 +593,7 @@ export default function PostSettlementPage() {
                   buttonStyle="whitespace-nowrap text-[14px] font-[400]"
                   listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
                   options={options}
-                  label="в месяц"
+                  defaultLabel="в месяц"
                 />
                 <svg
                   className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
