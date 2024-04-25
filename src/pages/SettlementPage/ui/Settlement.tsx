@@ -10,6 +10,7 @@ import Modal from "@/shared/ui/Modal/ui/Modal";
 import Button from "@/shared/ui/Button/Button";
 import styles from "./styles.module.scss";
 import Link from "next/link";
+import SettlementList from "@/widgets/SettlementList/ui/Settlement";
 
 const dataFilter = [
   { text: "Срок аренды", className: "mb-[42px]" },
@@ -126,7 +127,7 @@ export default function LandLord() {
               <span className="text-2xl mb-[1rem] font-semibold text-primary">
                 Создай себе идеальное <br /> окружение
               </span>
-              <Link href={"/routs/posthouse"} className="">
+              <Link href={"/routs/student/posthouse"} className="">
                 <Button
                   className="border-[1px] flex items-center px-[10rem] justify-center border-black rounded-[10px] text-center bg-white text-[20px]"
                   label="Добавить объявление"
@@ -175,7 +176,7 @@ export default function LandLord() {
         </div>
       </div>
       <div className="container grid grid-cols-2 gap-[92px] mb-12">
-        <ProductList records={records} />
+        <SettlementList records={records} />
       </div>
       <div className="container flex gap-4 items-center justify-center">
         {numbers.map((n, i) => (

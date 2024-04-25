@@ -101,10 +101,8 @@ export default function PostSettlementPage() {
   const [price2, setPrice2] = useState<number>(MIN_PRICE2);
   const [uploadedImages] = useState<File[] | null>([]);
   const [map, setMap] = useState<any>(null);
+  const [formErrors] = useState<any>(null);
   const [searchInput, setSearchInput] = useState<string>("");
-  const [entranceCoordinates, setEntranceCoordinates] = useState<any>(null);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [formErrors, setFormErrors] = useState<string[]>([]);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -301,6 +299,7 @@ export default function PostSettlementPage() {
 
   const handleButtonClick = (type: string) => {
     setSelectedType((prevType) => (prevType === type ? null : type));
+    setFormData({ ...formData, typeOfHouse: type });
   };
 
   const increase = () => {
@@ -641,7 +640,7 @@ export default function PostSettlementPage() {
         </div>
       </div>
       <div>
-        {formErrors.map((error, index) => (
+        {formErrors?.map((error: any, index: any) => (
           <p key={index} className="text-red-500">
             {error}
           </p>

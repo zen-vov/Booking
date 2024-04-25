@@ -113,7 +113,7 @@ export default function PostHousePage() {
           )}
           {isChecked && (
             <div className="flex justify-end">
-              <Link href={"/routs/postsettlement"}>
+              <Link href={"/routs/student/posthouse/create"}>
                 <Button
                   label="Продолжить"
                   onClick={handleContinueClick}

@@ -45,7 +45,7 @@ export default function SettlementCard(props: ProductProps) {
   // };
 
   const copyLinkToClipboard = () => {
-    const url = `http://localhost:3000/routs/product/${id}`;
+    const url = `http://localhost:3000/routs/settlement/${id}`;
     navigator.clipboard
       .writeText(url)
       .then(() => {
