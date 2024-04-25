@@ -16,7 +16,6 @@ import Shop from "@/shared/ui/Icons/Shop/Shop";
 import School from "@/shared/ui/Icons/School/School";
 import Hospital from "@/shared/ui/Icons/Hospital/Hospital";
 import Dumbell from "@/shared/ui/Icons/Dumbell/Dumbell";
-import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import ProductList from "@/widgets/productList/ui/productLIst";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import axios from "axios";
@@ -24,6 +23,7 @@ import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
 import mapgl from "@2gis/mapgl";
 import Map2GIS from "@/entities/2GISmap/map";
+import DropdownFilter from "@/features/DropdownFilter/ui/DropdownFilter";
 
 interface Counter {
   name: string;
@@ -551,7 +551,7 @@ export default function PostSettlementPage() {
             </p>
             <div className="flex items-center">
               <div className="mr-5 flex gap-[5px] justify-center items-center">
-                <Dropdown
+                <DropdownFilter
                   buttonStyle="whitespace-nowrap text-[14px] font-[400]"
                   listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
                   options={options}
@@ -589,7 +589,7 @@ export default function PostSettlementPage() {
                 </button>
               </div>
               <div className="mr-5 flex gap-[5px] justify-center items-center">
-                <Dropdown
+                <DropdownFilter
                   buttonStyle="whitespace-nowrap text-[14px] font-[400]"
                   listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
                   options={options}
