@@ -33,6 +33,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
   const modalRef = React.useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (event: any) => {
+    console.log("register button");
     event.preventDefault();
 
     if (!username.trim()) {
@@ -116,6 +117,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
   };
 
   const handleActivationSubmit = async (event: any) => {
+    console.log("activation code: ", activate);
     event.preventDefault();
     try {
       const response = await axios.post(
@@ -333,7 +335,38 @@ const AuthModal = ({ onClose, active }: ModalI) => {
               </div>
             )}
 
-            {/* {showActivation && (
+            <div className="error-message">{errorMessage}</div>
+            {showActivation && (
+              <Button
+                className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
+                type="submit"
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleActivationSubmit(e)
+                }
+                label="Продолжить"
+              />
+            )}
+            {!showActivation && (
+              <Button
+                className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
+                type="submit"
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleSubmit(e)
+                }
+                label={isRegistering ? "Зарегистрироваться" : "Войти"}
+              />
+            )}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AuthModal;
+
+{
+  /* {showActivation && (
               <label className="mb-[20px]">
                 <p className="text-[18px] font-[500]">Код активации</p>
                 <Input
@@ -347,23 +380,8 @@ const AuthModal = ({ onClose, active }: ModalI) => {
                   required
                 />
               </label>
-            )} */}
-
-            <div className="error-message">{errorMessage}</div>
-            <Button
-              className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
-              type="submit"
-              onClick={() => handleActiveForm()}
-              label={isRegistering ? "Зарегистрироваться" : "Войти"}
-            />
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default AuthModal;
+            )} */
+}
 
 // import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
