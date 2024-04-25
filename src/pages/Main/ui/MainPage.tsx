@@ -10,8 +10,8 @@ import Modal from "@/shared/ui/Modal/ui/Modal";
 import Button from "@/shared/ui/Button/Button";
 import styles from "./styles.module.scss";
 import Link from "next/link";
-import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import { headers } from "next/headers";
+import DropdownFilter from "@/features/DropdownFilter/ui/DropdownFilter";
 
 const dataFilter = [
   { text: "Срок аренды", className: "mb-[42px]" },
@@ -245,7 +245,7 @@ export default function LandLord() {
             </div>
           </div>
           <div className="flex gap-[15px]">
-            <Dropdown
+            <DropdownFilter
               options={roomsData}
               buttonStyle="text-[20px] font-medium "
               listStyle="bg-white gap-3 py-3 px-10"
