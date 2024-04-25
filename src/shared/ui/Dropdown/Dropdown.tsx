@@ -12,7 +12,7 @@ interface DropdownProps {
   buttonStyle?: string;
   listStyle?: string;
   options: Option[];
-  defaultLabel: string; // Add a default label prop
+  defaultLabel: string | any; // Add a default label prop
   onSelect?: (label: string) => void; // Pass the selected label to onSelect function
 }
 

@@ -105,7 +105,7 @@ export default function HeaderStudent() {
               buttonStyle="text-md font-[500]"
               listStyle="flex items-center bg-white text-base py-[14px] px-[45px] flex flex-col border-white rounded-[6px] gap-[13px] w-[210px] h-fit"
               options={options}
-              label={<Avatar /> || "Name"}
+              defaultLabel={<Avatar /> || "Name"}
               // onClick={handleLogout}
             />
           </div>
