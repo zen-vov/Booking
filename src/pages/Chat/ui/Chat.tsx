@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
 import axios from "axios";
 import { BASE_URL } from "@/shared/api/BASE";
 import { useParams } from "next/navigation";
@@ -27,106 +26,47 @@ interface Message {
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [receivedMessages, setReceivedMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
-  const [userId, setUserId] = useState<number | null>(null);
-  const [fullName, setFullName] = useState<string | null>(null);
   const params = useParams() as { id: string | number };
+  const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const jwt = require("jsonwebtoken");
-    const decodedToken: any = jwt.decode(accessToken);
-    const userId = decodedToken?.user_id;
-    const full_name = decodedToken?.full_name;
-
-    if (userId) {
-      setUserId(userId);
-    }
-    if (full_name) {
-      setFullName(full_name);
-    }
-
-    const socket = io(BASE_URL);
-    socket.on("connect", () => {
-      console.log("Connected to socket");
-    });
-
-    socket.on("message", (message: Message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-      localStorage.setItem(
-        `chatMessages_${params.id}`,
-        JSON.stringify([...messages, message])
-      );
-    });
-
-    const storedMessages = localStorage.getItem(`chatMessages_${params.id}`);
-    if (storedMessages) {
-      setMessages(JSON.parse(storedMessages));
-    }
-
-    return () => {
-      socket.disconnect();
-    };
+    subscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const getMessages = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        const res = await axios.get(
-          `${BASE_URL}/chat/chats/${params.id}/messages/`,
-          {
-            headers: {
-              Authorization: `JWT ${token}`,
-            },
-          }
-        );
-        if (Array.isArray(res.data)) {
-          setReceivedMessages(res.data);
-        } else {
-          setReceivedMessages([]);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getMessages();
-  }, [params.id]);
-
-  useEffect(() => {
-    setMessages((prevMessages) => [...prevMessages, ...receivedMessages]);
-  }, [receivedMessages]);
-
-  const handleMessageSend = async () => {
+  const subscribe = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-      const newMessageObject = {
-        text: newMessage,
-        creationDate: new Date().toISOString(),
-        author: userId, // Идентификатор отправителя
-      };
-
-      const res = await axios.post(
+      const { data } = await axios.get(
         `${BASE_URL}/chat/chats/${params.id}/messages/`,
-        newMessageObject,
         {
           headers: {
-            Authorization: `JWT ${accessToken}`,
+            Authorization: `JWT ${token}`,
           },
         }
       );
-
-      setMessages([...messages, res.data]);
-      setNewMessage("");
-      localStorage.setItem(
-        `chatMessages_${params.id}`,
-        JSON.stringify([...messages, res.data])
-      );
-    } catch (error) {
-      console.error("Error sending message:", error);
+      setMessages((prev) => [data, ...prev]);
+      await subscribe();
+    } catch (err) {
+      setTimeout(() => {
+        subscribe();
+      }, 500);
     }
+  };
+
+  const sendMessage = async () => {
+    await axios.post(
+      `${BASE_URL}/chat/chats/${params.id}}/messages/`,
+      {
+        text: newMessage,
+        creationDate: new Date().toISOString(),
+      },
+      {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      }
+    );
   };
 
   return (
@@ -136,7 +76,7 @@ export default function ChatPage() {
         <h2 className="text-lg font-[400]">Назад к объявлению</h2>
       </div>
       <div className="flex justify-between gap-10">
-        <div className="bg-white h-full w-[1100px] rounded-[12px] flex flex-col justify-between">
+        <div className="bg-white h-[100%] w-[1100px] rounded-[12px] flex flex-col justify-between">
           <div className="static pt-6 pl-[37px] pr-6 flex items-center pb-6 justify-between border-b-[1px] border-[#534949]">
             <div className="flex items-center gap-6">
               <Image
@@ -152,20 +92,8 @@ export default function ChatPage() {
             <Dots />
           </div>
           <div className="px-6 overflow-y-auto flex flex-col items-end py-4">
-            {messages.map((message) => (
-              <Message
-                key={message.id}
-                text={message.text}
-                creationDate={message.creationDate}
-                author_detail={message.author_detail}
-                fullName={fullName}
-                currentUserType={
-                  message.author === userId ? "me" : "interlocutor"
-                }
-                id={message.id}
-                chat={message.chat}
-                author={message.author}
-              />
+            {messages?.map((message) => (
+              <Message key={message.id} text={message.text} id={message.id} />
             ))}
           </div>
           <div className="px-6 py-[19px] border-t-[1px] border-[#534949] flex items-center justify-between">
@@ -180,7 +108,7 @@ export default function ChatPage() {
                 />
               </div>
             </div>
-            <button onClick={handleMessageSend} className="cursor-pointer">
+            <button onClick={sendMessage} className="cursor-pointer">
               <Image src={"/Sent.png"} width={27} height={27} alt="send" />
             </button>
           </div>
