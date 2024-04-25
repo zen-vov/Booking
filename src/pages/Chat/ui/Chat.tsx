@@ -1,67 +1,42 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
-import Image from "next/image";
-import Dots from "@/shared/ui/Icons/3dots/dots";
-import Input from "@/shared/ui/Input/Input";
-import "./styles.scss";
+import io from "socket.io-client";
 import axios from "axios";
 import { BASE_URL } from "@/shared/api/BASE";
 import { useParams } from "next/navigation";
-import Link from "next/link";
+import Image from "next/image";
+import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
+import Dots from "@/shared/ui/Icons/3dots/dots";
+import Input from "@/shared/ui/Input/Input";
+import "./styles.scss";
 
 interface Message {
-  id?: number;
-  chat?: number;
-  text?: string;
-  creationDate?: string | any;
-  author?: number;
-  author_detail?: {
-    author_type?: string;
-    author?: {
-      id?: number;
-      username?: string | null;
+  id: number;
+  chat: number;
+  text: string;
+  creationDate: string | any;
+  author: number;
+  author_detail: {
+    author_type: string;
+    author: {
+      id: number;
+      username: string | null;
     };
   };
 }
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [chats, setChats] = useState([]);
+  const [receivedMessages, setReceivedMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [userId, setUserId] = useState<number | null>(null);
   const [fullName, setFullName] = useState<string | null>(null);
   const params = useParams() as { id: string | number };
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const storedMessages = localStorage.getItem(
-          `chatMessages_${params.id}`
-        );
-        if (storedMessages) {
-          setMessages(JSON.parse(storedMessages));
-        }
-
-        const res = await axios.get(
-          `${BASE_URL}/chat/chats/${params.id}/messages/`
-        );
-        setMessages(res.data);
-        localStorage.setItem(
-          `chatMessages_${params.id}`,
-          JSON.stringify(res.data)
-        );
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchMessages();
-
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
-
-    const decodedToken = jwt.decode(accessToken);
+    const decodedToken: any = jwt.decode(accessToken);
     const userId = decodedToken?.user_id;
     const full_name = decodedToken?.full_name;
 
@@ -71,7 +46,58 @@ export default function ChatPage() {
     if (full_name) {
       setFullName(full_name);
     }
+
+    const socket = io(BASE_URL);
+    socket.on("connect", () => {
+      console.log("Connected to socket");
+    });
+
+    socket.on("message", (message: Message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+      localStorage.setItem(
+        `chatMessages_${params.id}`,
+        JSON.stringify([...messages, message])
+      );
+    });
+
+    const storedMessages = localStorage.getItem(`chatMessages_${params.id}`);
+    if (storedMessages) {
+      setMessages(JSON.parse(storedMessages));
+    }
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const res = await axios.get(
+          `${BASE_URL}/chat/chats/${params.id}/messages/`,
+          {
+            headers: {
+              Authorization: `JWT ${token}`,
+            },
+          }
+        );
+        if (Array.isArray(res.data)) {
+          setReceivedMessages(res.data);
+        } else {
+          setReceivedMessages([]);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getMessages();
   }, [params.id]);
+
+  useEffect(() => {
+    setMessages((prevMessages) => [...prevMessages, ...receivedMessages]);
+  }, [receivedMessages]);
 
   const handleMessageSend = async () => {
     try {
@@ -79,6 +105,7 @@ export default function ChatPage() {
       const newMessageObject = {
         text: newMessage,
         creationDate: new Date().toISOString(),
+        author: userId, // Идентификатор отправителя
       };
 
       const res = await axios.post(
@@ -93,7 +120,6 @@ export default function ChatPage() {
 
       setMessages([...messages, res.data]);
       setNewMessage("");
-
       localStorage.setItem(
         `chatMessages_${params.id}`,
         JSON.stringify([...messages, res.data])
@@ -103,117 +129,68 @@ export default function ChatPage() {
     }
   };
 
-  useEffect(() => {
-    const FetchMessages = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        const res = await axios.get(`${BASE_URL}/chat/chats/`, {
-          headers: {
-            Authorization: `JWT ${token}`,
-          },
-        });
-        setChats(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    FetchMessages();
-  }, []);
-
   return (
     <section className="pb-20 pt-5">
-      <Link
-        href={"/routs/product"}
-        className="flex items-center gap-[6px] mb-[25px]"
-      >
+      <div className="flex items-center gap-[6px] mb-[25px]">
         <Arrow />
         <h2 className="text-lg font-[400]">Назад к объявлению</h2>
-      </Link>
+      </div>
       <div className="flex justify-between gap-10">
-        <div className="flex justify-between">
-          <div className="bg-white h-full w-[1100px] rounded-[12px] flex flex-col justify-between">
-            <div>
-              <div className="static pt-6 pl-[37px] pr-6 flex items-center pb-6 justify-between border-b-[1px] border-[#534949]">
-                <div className="flex items-center gap-6">
-                  <Image
-                    src={"/settings/flatMini.png"}
-                    width={82}
-                    height={55}
-                    alt="#"
-                  />
-                  <p className="text-md">
-                    г. Алматы, Бостандыкский район · 3-х комнатная квартира
-                  </p>
-                </div>
-                <Dots />
-              </div>
-              <div className="px-6 overflow-y-auto flex flex-col items-end py-4">
-                {messages.map((message) => (
-                  <Message
-                    key={message.id}
-                    text={message.text}
-                    creationDate={message.creationDate}
-                    author={message.author}
-                    author_detail={message.author_detail}
-                    fullName={fullName}
-                    currentUserType="me"
-                  />
-                ))}
-              </div>
+        <div className="bg-white h-full w-[1100px] rounded-[12px] flex flex-col justify-between">
+          <div className="static pt-6 pl-[37px] pr-6 flex items-center pb-6 justify-between border-b-[1px] border-[#534949]">
+            <div className="flex items-center gap-6">
+              <Image
+                src={"/settings/flatMini.png"}
+                width={82}
+                height={55}
+                alt="#"
+              />
+              <p className="text-md">
+                г. Алматы, Бостандыкский район · 3-х комнатная квартира
+              </p>
             </div>
-            <div className="px-6 py-[19px] border-t-[1px] border-[#534949] flex items-center justify-between">
-              <div className="flex items-center justify-between gap-[22px]">
-                <Image
-                  src={"/Attach.png"}
-                  width={28}
-                  height={28}
-                  alt="attach"
+            <Dots />
+          </div>
+          <div className="px-6 overflow-y-auto flex flex-col items-end py-4">
+            {messages.map((message) => (
+              <Message
+                key={message.id}
+                text={message.text}
+                creationDate={message.creationDate}
+                author_detail={message.author_detail}
+                fullName={fullName}
+                currentUserType={
+                  message.author === userId ? "me" : "interlocutor"
+                }
+                id={message.id}
+                chat={message.chat}
+                author={message.author}
+              />
+            ))}
+          </div>
+          <div className="px-6 py-[19px] border-t-[1px] border-[#534949] flex items-center justify-between">
+            <div className="flex items-center justify-between gap-[22px]">
+              <Image src={"/Attach.png"} width={28} height={28} alt="attach" />
+              <div className="w-[500px]">
+                <Input
+                  className="text-[#837777] text-[16px] w-[1000px]"
+                  placeholder="Написать сообщение"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
                 />
-                <div className="w-[500px]">
-                  <Input
-                    className="text-[#837777] text-[16px] w-[1000px]"
-                    placeholder="Написать сообщение"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                  />
-                </div>
               </div>
-              <button onClick={handleMessageSend} className="cursor-pointer">
-                <Image src={"/Sent.png"} width={27} height={27} alt="send" />
-              </button>
             </div>
+            <button onClick={handleMessageSend} className="cursor-pointer">
+              <Image src={"/Sent.png"} width={27} height={27} alt="send" />
+            </button>
           </div>
         </div>
-
         <div className="flex flex-col gap-[22px]">
           <h1 className="whitespace-nowrap text-md font-medium mb-0.5">
             Все сообщение{" "}
           </h1>
           <div className="flex flex-col gap-[22px]">
-            {chats.map(({ id }) => (
-              <Link
-                href={`/routs/chat/${id}`}
-                className="flex gap-4 items-center"
-                key={id}
-              >
-                <Image
-                  src={""}
-                  width={82}
-                  className="rounded-xl"
-                  height={61}
-                  alt="chats"
-                />
-                <div className="flex flex-col gap-4">
-                  <h1 className="text-[14px] font-medium">
-                    г. Алматы, Бостандыкский район · 3-х комнатная квартира
-                  </h1>
-                  <p className="text-[12px] font-light">
-                    Здравствуйте! Хотели бы снять эту квартиру
-                  </p>
-                </div>
-              </Link>
-            ))}
+            {/* Список всех чатов */}
           </div>
         </div>
       </div>
@@ -231,7 +208,7 @@ function Message({
   fullName: string | null;
   currentUserType: string | null;
 }) {
-  const isCurrentUser = author_detail?.author_type === currentUserType;
+  const isCurrentUser = currentUserType === "me";
 
   return (
     <div
