@@ -38,7 +38,7 @@ export default function ProductCard(props: ProductProps) {
   // };
 
   const copyLinkToClipboard = () => {
-    const url = `http://localhost:3000/routs/product/${id}`;
+    const url = `http://localhost:3000/routs/product/${params.id}`;
     navigator.clipboard
       .writeText(url)
       .then(() => {

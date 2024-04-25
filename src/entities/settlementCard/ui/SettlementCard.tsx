@@ -14,22 +14,29 @@ export type ProductProps = {
   description?: string;
   location?: string;
   price: string;
+  typeOfHouse?: string;
   advertisement_images: string[];
   creationDate: string;
 };
 
-export default function ProductCard(props: ProductProps) {
+export default function SettlementCard(props: ProductProps) {
   const {
     id,
     title,
     price,
     description,
+    typeOfHouse,
     advertisement_images,
     location,
     creationDate,
   } = props;
   const [like, setLike] = useState<boolean>(false);
   const params = useParams() as { id: string | number };
+  const accessToken = localStorage.getItem("accessToken");
+  const jwt = require("jsonwebtoken");
+
+  const decodedToken = jwt.decode(accessToken);
+  const full_name = decodedToken?.full_name;
 
   // const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -38,7 +45,7 @@ export default function ProductCard(props: ProductProps) {
   // };
 
   const copyLinkToClipboard = () => {
-    const url = `http://localhost:3000/routs/product/${params.id}`;
+    const url = `http://localhost:3000/routs/product/${id}`;
     navigator.clipboard
       .writeText(url)
       .then(() => {
@@ -70,6 +77,8 @@ export default function ProductCard(props: ProductProps) {
 
       <div className="flex justify-between px-7 pt-6">
         <div className="flex flex-col">
+          <h1 className="text-[20px] font-medium mb-5">{typeOfHouse}</h1>
+          <span className="text-[20px] font-medium mb-1">{full_name}</span>
           <h1 className="text-md font-medium mb-[14px]">{location}</h1>
           <h3 className="text-md mb-6">{price} т/мес.</h3>
           <h5 className="text-sm">Опубликовано в {creationDate}</h5>
