@@ -1,16 +1,15 @@
 "use client";
-import Input from "@/shared/ui/Input/Input";
-import ProductList from "@/widgets/productList/ui/productLIst";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
-import styles from "./styles.module.scss";
-import Button from "@/shared/ui/Button/Button";
-import AuthModal from "@/features/AuthModal/ui/AuthModal";
-import Link from "next/link";
-import Modal from "@/shared/ui/Modal/ui/Modal";
 import { BASE_URL } from "@/shared/api/BASE";
+import Input from "@/shared/ui/Input/Input";
+import ProductList from "@/widgets/productList/ui/productLIst";
+import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
+import Modal from "@/shared/ui/Modal/ui/Modal";
+import Button from "@/shared/ui/Button/Button";
+import styles from "./styles.module.scss";
+import Link from "next/link";
 
 const dataFilter = [
   { text: "Срок аренды", className: "mb-[42px]" },
@@ -42,6 +41,7 @@ export default function LandLord() {
   const [active, setActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [role, setRole] = useState<1 | 2 | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const pageNumber = new URLSearchParams(window.location.search).get("page");
@@ -61,7 +61,6 @@ export default function LandLord() {
             Authorization: `JWT ${token}`,
           },
         });
-        console.log(res);
         setData(res);
       } catch (err) {
         console.log(err);
@@ -85,11 +84,15 @@ export default function LandLord() {
     fetchData();
   }, []);
 
+  const filteredData = data.filter((item: any) =>
+    item.address?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = data.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(data.length / recordsPerPage);
+  const records = filteredData.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(filteredData.length / recordsPerPage);
   const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
 
   const changeCurrentPage = (page: number) => {
@@ -100,6 +103,12 @@ export default function LandLord() {
 
   const onFilterClick = () => {
     setIsModalOpen(true);
+  };
+
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchQuery(event.target.value);
   };
 
   return (
@@ -132,8 +141,9 @@ export default function LandLord() {
         <div className="flex items-center gap-2">
           <Image src={"/Search.png"} width={29} height={29} alt="search" />
           <Input
-            placeholder="Выбор"
+            placeholder="Поиск"
             className="search-input pb-[5px] text-black text-md"
+            onChange={handleSearchInputChange}
           />
         </div>
         <div className="flex gap-[30px] items-center">

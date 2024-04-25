@@ -55,7 +55,6 @@ export default function HeaderLandlord() {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userId");
-
     window.location.href = "/";
   };
 

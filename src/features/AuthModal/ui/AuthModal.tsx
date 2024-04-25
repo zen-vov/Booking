@@ -27,7 +27,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
   const [showActivation, setShowActivation] = useState<boolean>(false);
   const [mail, setMail] = React.useState("");
   const [password, setPassword] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedRole, setSelectedRole] = useState(2);
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const modalRef = React.useRef<HTMLDivElement>(null);
@@ -36,16 +36,16 @@ const AuthModal = ({ onClose, active }: ModalI) => {
     console.log("register button");
     event.preventDefault();
 
-    if (!username.trim()) {
-      setErrorMessage("Email is required");
-      return;
-    }
+    // if (!username.trim()) {
+    //   setErrorMessage("Email is required");
+    //   return;
+    // }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(username.trim())) {
-      setErrorMessage("Invalid email format");
-      return;
-    }
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // if (!emailRegex.test(username.trim())) {
+    //   setErrorMessage("Invalid email format");
+    //   return;
+    // }
 
     try {
       if (isRegistering) {
@@ -57,7 +57,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              role: 1,
+              role: selectedRole,
               login: username,
               full_name: username,
               password: password,
@@ -74,10 +74,10 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         setShowActivation(true);
 
         const registerData = await registerResponse.json();
-
+        console.log("registration spend ok");
         localStorage.setItem("accessToken", registerData.jwt);
-        window.location.reload();
-        onClose();
+        // window.location.reload();
+        // onClose();
       }
 
       const loginResponse = await fetch(
@@ -101,16 +101,22 @@ const AuthModal = ({ onClose, active }: ModalI) => {
 
       const loginData = await loginResponse.json();
       localStorage.setItem("accessToken", loginData.access);
-      window.location.reload();
-      onClose();
+      if (!isRegistering) {
+        window.location.reload();
+        onClose();
+      }
     } catch (error: any) {
       setErrorMessage(error.message || "Произошла ошибка");
+    }
+    if (isRegistering) {
+      handleActiveForm();
     }
   };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       onClose();
+      // window.location.reload();
     }
 
     setErrorMessage("");
@@ -119,17 +125,23 @@ const AuthModal = ({ onClose, active }: ModalI) => {
   const handleActivationSubmit = async (event: any) => {
     console.log("activation code: ", activate);
     event.preventDefault();
+
     try {
-      const response = await axios.post(
-        `${BASE_URL}/auth/user/activate_user/`,
+      const activateResponse = await fetch(
+        "http://studhouse.kz/api/v1/auth/user/activate_user/",
         {
-          code: activate,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            login: username,
+            code: activate,
+          }),
         }
       );
-      if (response.data.is_active) {
-      } else {
-        setErrorMessage("Неверный код активации");
-      }
+      alert("Вы успешно активировали аккаунт!");
+      onClose();
     } catch (error: any) {
       setErrorMessage(error.message || "Произошла ошибка");
     }
@@ -211,11 +223,9 @@ const AuthModal = ({ onClose, active }: ModalI) => {
                     <input
                       type="checkbox"
                       id="studentRole"
-                      checked={selectedRole === "student"}
+                      checked={selectedRole === 1}
                       onChange={() => {
-                        setSelectedRole(
-                          selectedRole === "student" ? "" : "student"
-                        );
+                        setSelectedRole(selectedRole === 2 ? 1 : 2);
                       }}
                     />
                     <label htmlFor="studentRole" className="ml-[10px]">

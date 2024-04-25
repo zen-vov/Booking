@@ -6,6 +6,7 @@ import Share from "@/shared/ui/Icons/Share/Share";
 import Image from "next/image";
 import Link from "next/link";
 import "./styles.scss";
+import { useParams } from "next/navigation";
 
 export type ProductProps = {
   id: number;
@@ -28,6 +29,7 @@ export default function ProductCard(props: ProductProps) {
     creationDate,
   } = props;
   const [like, setLike] = useState<boolean>(false);
+  const params = useParams() as { id: string | number };
 
   // const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -38,7 +40,7 @@ export default function ProductCard(props: ProductProps) {
   //здесь будет логика вытаскивания айди продукта и формирования ссылки для копирования
 
   const copyLinkToClipboard = () => {
-    const url = "http://localhost:3000/routs/product";
+    const url = `http://localhost:3000/routs/product/${params.id}`;
     navigator.clipboard
       .writeText(url)
       .then(() => {

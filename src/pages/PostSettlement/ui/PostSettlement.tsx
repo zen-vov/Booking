@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
@@ -22,11 +22,18 @@ import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import axios from "axios";
 import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
-// import Map from "@/features/Map/ui/Map";
+import mapgl from "@2gis/mapgl";
+import Map2GIS from "@/entities/2GISmap/map";
 
 interface Counter {
   name: string;
   count: number;
+}
+
+interface Props {
+  apiKey: string;
+  center: [number, number];
+  markerCoordinates?: [number, number];
 }
 
 interface IconButton {
@@ -93,10 +100,47 @@ export default function PostSettlementPage() {
   const [price, setPrice] = useState<number>(MIN_PRICE);
   const [price2, setPrice2] = useState<number>(MIN_PRICE2);
   const [uploadedImages] = useState<File[] | null>([]);
+  const [map, setMap] = useState<any>(null);
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [entranceCoordinates, setEntranceCoordinates] = useState<any>(null);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  const mapRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const searchAddress = async () => {
+    const apiKey = "96f12dd1-d29d-4b0f-9f4c-0ac1a9f84ca8";
+    const address = encodeURIComponent("Никитский переулок, 3"); // адрес для поиска
+
+    const response = await fetch(
+      `https://catalog.api.2gis.com/3.0/items/geocode?q=${address}&fields=items.point,items.geometry.centroid&sort_point=37.62143%2C55.752966&sort=distance&key=${apiKey}`
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      const firstItem = data.result.items[0]; // берем первый найденный элемент
+
+      if (firstItem) {
+        const point = firstItem.point; // координаты точки
+        const centroid = firstItem.geometry.centroid; // центроид геометрии
+
+        console.log("Координаты точки:", point);
+        console.log("Центроид геометрии:", centroid);
+      } else {
+        console.error("Адрес не найден");
+      }
+    } else {
+      console.error("Ошибка при запросе к API");
+    }
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+  };
 
   const [formData, setFormData] = useState<FormData>({
     location: "СДУ",
@@ -312,21 +356,23 @@ export default function PostSettlementPage() {
             Где расположено ваше жилье?
           </h1>
           <div className="flex items-center gap-4 mb-2.5">
-            <div className="py-2.5 px-4 flex bg-[#F3F3F3] rounded-[12px] items-center">
-              <Input
+            <div className="flex items-center gap-4 mb-2.5">
+              <input
+                ref={searchInputRef}
                 className="text-[1rem] w-full"
                 placeholder="Введите адрес"
-                name="address"
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData({ ...formData, location: e.target.value })
-                }
+                value={searchInput}
+                onChange={handleSearchInputChange}
               />
+              <button onClick={searchAddress}>Найти</button>
             </div>
             <span className="text-blue font-medium text-[0.8rem] cursor-pointer">
               указать на карте
             </span>
-            {/* <Map address={formData.location} /> */}
+            <Map2GIS
+              apiKey="96f12dd1-d29d-4b0f-9f4c-0ac1a9f84ca8"
+              center={[55.752966, 37.62143]}
+            />
           </div>
           <p className="text-[16px] font-[500] mb-[15px]">
             Основная информация о жилье
@@ -603,4 +649,7 @@ export default function PostSettlementPage() {
       </div>
     </section>
   );
+}
+function setEntranceCoordinates(arg0: number[]) {
+  throw new Error("Function not implemented.");
 }
