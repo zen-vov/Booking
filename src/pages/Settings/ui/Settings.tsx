@@ -30,6 +30,10 @@ const Profile = () => {
   const [editingField, setEditingField] = useState<keyof Fields | null>(null);
   const [userRole, setUserRole] = useState<string>("");
   const router = useRouter();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+
+  // todo добавить стэйти для университета, хобби, сохранять в локал хост
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -213,6 +217,18 @@ const Profile = () => {
       }
     } catch (error) {
       console.error("Ошибка при отправке запроса: ", error);
+    }
+  };
+
+  const handlePhoneChange = (event: any) => {
+    const value = event.target.value;
+    setPhoneNumber(value);
+
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(value)) {
+      setPhoneError("Некорретный номер телефона");
+    } else {
+      setPhoneError("");
     }
   };
 
