@@ -47,7 +47,7 @@ interface FormData {
   title: string;
   description: string;
   typeOfHouse: string; // Тип дома: например, "апартаменты", "дом", "квартира" и т. д.
-  price: string; // Цена за жилье (может быть строкой, если нужно учитывать валюту и т. д.)
+  price: number; // Цена за жилье (может быть строкой, если нужно учитывать валюту и т. д.)
   numberOfRooms: number; // Количество комнат
   paymentTime: "daily" | "year" | "half-year"; // Время оплаты: ежедневно, ежегодно, раз в полгода
   floor: number; // Этаж
@@ -146,7 +146,7 @@ export default function PostSettlementPage() {
     title: "string",
     description: "string",
     typeOfHouse: "string", // Изменено на пустую строку, так как тип дома не указан
-    price: "3000",
+    price: 0,
     numberOfRooms: 1, // Изменено на 0, так как количество комнат может быть любым
     paymentTime: "daily",
     floor: 5,
@@ -620,7 +620,7 @@ export default function PostSettlementPage() {
                   className="text-[14px] w-[30%]"
                   value={formData.price}
                   onChange={(e) =>
-                    setFormData({ ...formData, price: e.target.value })
+                    setFormData({ ...formData, price: price })
                   }
                 />
                 <button onClick={increase}>
