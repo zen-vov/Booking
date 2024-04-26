@@ -245,7 +245,11 @@ export default function LandLord() {
             </div>
           </div>
           <div className="flex gap-[15px]">
+<<<<<<< HEAD
+            {/* <Dropdown
+=======
             <DropdownFilter
+>>>>>>> dev
               options={roomsData}
               buttonStyle="text-[20px] font-medium "
               listStyle="bg-white gap-3 py-3 px-10"
@@ -253,7 +257,7 @@ export default function LandLord() {
               onSelect={(selectedOption: any) =>
                 handleRoomSelect(selectedOption)
               }
-            />
+            /> */}
             <span className="-rotate-90">
               <Arrow />
             </span>
