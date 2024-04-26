@@ -91,7 +91,7 @@ export default function HeaderStudent() {
             <Link href={"/routs/product"}>
               <Button className="text-md font-[500]" label="Квартиры" />
             </Link>
-            <Link href={"/routs/posthouse"}>
+            <Link href={"/routs/settlement"}>
               <Button className="text-md font-[500]" label="Подселение" />
             </Link>
             <Link href={"/routs/chat"}>

@@ -139,12 +139,13 @@ export default function LandingPage() {
                   label="Начать"
                 />
               </Link>
-
-              <Button
-                className=" w-[130px] rounded-[5px] py-[10px] text-black  text-[20px] font-[500]"
-                type="submit"
-                label="Изучить"
-              />
+              <Link href={"/"}>
+                <Button
+                  className=" w-[130px] rounded-[5px] py-[10px] text-black  text-[20px] font-[500]"
+                  type="submit"
+                  label="Изучить"
+                />
+              </Link>
             </div>
             <div className="relative top-[-80px]">
               <Image
