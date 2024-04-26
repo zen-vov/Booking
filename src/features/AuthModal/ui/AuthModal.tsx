@@ -31,21 +31,11 @@ const AuthModal = ({ onClose, active }: ModalI) => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const modalRef = React.useRef<HTMLDivElement>(null);
+  const isFormValid = username.trim() !== "" && password.trim() !== "";
 
   const handleSubmit = async (event: any) => {
     console.log("register button");
     event.preventDefault();
-
-    // if (!username.trim()) {
-    //   setErrorMessage("Email is required");
-    //   return;
-    // }
-
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!emailRegex.test(username.trim())) {
-    //   setErrorMessage("Invalid email format");
-    //   return;
-    // }
 
     try {
       if (isRegistering) {
@@ -68,16 +58,28 @@ const AuthModal = ({ onClose, active }: ModalI) => {
           }
         );
 
-        if (!registerResponse.ok) {
-          throw new Error("Registration failed");
+        if (registerResponse.ok) {
+          setShowActivation(true);
+        } else {
+          const errorData = await registerResponse.clone().json();
+          console.log("Registration error data:", errorData);
+
+          if (
+            errorData &&
+            errorData.detail === "Введенный логин или пароль не верен!"
+          ) {
+            setErrorMessage("Введенный логин или пароль неверен!");
+          } else if (errorData && errorData.error && errorData.error.login) {
+            setErrorMessage("Такой аккаунт уже существует");
+          } else {
+            setErrorMessage("Произошла ошибка при регистрации");
+            throw new Error("Registration failed");
+          }
         }
-        setShowActivation(true);
 
         const registerData = await registerResponse.json();
         console.log("registration spend ok");
         localStorage.setItem("accessToken", registerData.jwt);
-        // window.location.reload();
-        // onClose();
       }
 
       const loginResponse = await fetch(
@@ -96,7 +98,6 @@ const AuthModal = ({ onClose, active }: ModalI) => {
 
       if (!loginResponse.ok) {
         throw new Error("Login failed");
-        alert("login error");
       }
 
       const loginData = await loginResponse.json();
@@ -105,11 +106,12 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         window.location.reload();
         onClose();
       }
+      if (isRegistering) {
+        handleActiveForm();
+      }
     } catch (error: any) {
+      console.log("asdkdfds;klfl;kfsd;kf", error.message);
       setErrorMessage(error.message || "Произошла ошибка");
-    }
-    if (isRegistering) {
-      handleActiveForm();
     }
   };
 
@@ -140,24 +142,37 @@ const AuthModal = ({ onClose, active }: ModalI) => {
           }),
         }
       );
-      alert("Вы успешно активировали аккаунт!");
-      onClose();
+
+      if (activateResponse.ok) {
+        const loginResponse = await fetch(
+          "http://studhouse.kz/api/v1/jwt/create/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              login: username,
+              password: password,
+            }),
+          }
+        );
+
+        if (loginResponse.ok) {
+          const loginData = await loginResponse.json();
+          localStorage.setItem("accessToken", loginData.access);
+          window.location.reload();
+          onClose();
+        } else {
+          throw new Error("Failed to authenticate user after activation");
+        }
+      } else {
+        throw new Error("Failed to activate user");
+      }
     } catch (error: any) {
       setErrorMessage(error.message || "Произошла ошибка");
     }
   };
-
-  React.useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
-  const handleRoleChange = (event: any) => {
-    setSelectedRole(event.target.value);
-  };
-
   const handleActiveForm = () => {
     setShowActivation(true);
   };
@@ -219,7 +234,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
                   />
                 </label>
                 {isRegistering && (
-                  <div className="mb-[100px] flex items-center">
+                  <div className="mb-[40px] flex items-center">
                     <input
                       type="checkbox"
                       id="studentRole"
@@ -345,7 +360,9 @@ const AuthModal = ({ onClose, active }: ModalI) => {
               </div>
             )}
 
-            <div className="error-message">{errorMessage}</div>
+            {errorMessage && (
+              <p className="text-red text-lg font-semibold">{errorMessage}</p>
+            )}
             {showActivation && (
               <Button
                 className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
@@ -356,14 +373,27 @@ const AuthModal = ({ onClose, active }: ModalI) => {
                 label="Продолжить"
               />
             )}
-            {!showActivation && (
+            {!showActivation && isRegistering && (
+              <Button
+                className={`bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500 ${
+                  !isFormValid ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                type="submit"
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleSubmit(e)
+                }
+                disabled={!isFormValid}
+                label={"Зарегистрироваться"}
+              />
+            )}
+            {!showActivation && !isRegistering && (
               <Button
                 className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
                 type="submit"
                 onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
                   handleSubmit(e)
                 }
-                label={isRegistering ? "Зарегистрироваться" : "Войти"}
+                label={"Войти"}
               />
             )}
           </form>
@@ -374,91 +404,3 @@ const AuthModal = ({ onClose, active }: ModalI) => {
 };
 
 export default AuthModal;
-
-{
-  /* {showActivation && (
-              <label className="mb-[20px]">
-                <p className="text-[18px] font-[500]">Код активации</p>
-                <Input
-                  className="w-full h-[50px] py-[10px] px-[20px] border bg-[#F7F7F7] rounded-[12px] focus:outline-none"
-                  style={{ color: "#A8A2A2" }}
-                  name="activate"
-                  placeholder="Введите код активации"
-                  type="text"
-                  value={activate}
-                  onChange={(e) => setActivate(e.target.value)}
-                  required
-                />
-              </label>
-            )} */
-}
-
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-
-// const EditAdvertisementPage = ({ match }) => {
-//   const [advertisement, setAdvertisement] = useState({
-//     title: '',
-//     description: '',
-//     price: '',
-//     location: '',
-//     paymentTime: '',
-//     floor: 0,
-//     typeOfHouse: '',
-//     numberOfRooms: 0,
-//     square: 0,
-//     isSold: false,
-//     isArchived: false,
-//     haveWifi: false,
-//     haveTV: false,
-//     haveWashingMachine: false,
-//     haveParking: false,
-//     haveConditioner: false,
-//     nearbyTradeCenter: false,
-//     nearbyHospital: false,
-//     nearbySchool: false,
-//     nearbyGym: false,
-//     uploaded_images: [],
-//   });
-
-//   useEffect(() => {
-//     const fetchAdvertisement = async () => {
-//       try {
-//         const response = await axios.get(`http://studhouse.kz/api/v1/advertisement/${match.params.id}`);
-//         setAdvertisement(response.data);
-//       } catch (error) {
-//         console.error('Error fetching advertisement:', error);
-//       }
-//     };
-//     fetchAdvertisement();
-//   }, [match.params.id]);
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setAdvertisement((prev) => ({ ...prev, [name]: value }));
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       await axios.put(`http://studhouse.kz/api/v1/advertisement/${match.params.id}`, advertisement);
-//     } catch (error) {
-//       console.error('Error updating advertisement:', error);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h2>Edit Advertisement</h2>
-//       <form onSubmit={handleSubmit}>
-//         <label>
-//           Title:
-//           <input type="text" name="title" value={advertisement.title} onChange={handleChange} />
-//         </label>
-//         <button type="submit">Save Changes</button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default EditAdvertisementPage;
