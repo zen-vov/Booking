@@ -12,7 +12,7 @@ export default function Footer() {
   const handleFooterTab = (tab: any) => {
     setFooterTab(tab);
     localStorage.setItem("footerTab", tab);
-    window.location.reload();
+    // window.location.reload();
   };
 
   return (
@@ -28,12 +28,7 @@ export default function Footer() {
             <div className="flex gap-[80px] flex-[600]">
               <div className="text-left flex flex-col gap-[5px]">
                 <Link href={"/routs/about"}>
-                  <p
-                    className="cursor-pointer"
-                    onClick={() => handleFooterTab("about")}
-                  >
-                    Компания
-                  </p>
+                  <p className="cursor-pointer">Компания</p>
                 </Link>
                 <Link href={"/routs/about"}>
                   <p

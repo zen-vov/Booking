@@ -7,6 +7,7 @@ import Star from "@/shared/ui/Icons/Star/Star";
 import Button from "@/shared/ui/Button/Button";
 import Image from "next/image";
 import Link from "next/link";
+import ReviewSlider from "@/widgets/reviewsSlider/ui/reviewsSlider";
 import { Modal } from "@/shared/ui/Modal/Modal";
 
 export default function LandingPage() {
@@ -164,7 +165,10 @@ export default function LandingPage() {
           >
             Отзывы про нас
           </h2>
-          <Slider {...settings}>
+          <div>
+            <ReviewSlider />
+          </div>
+          {/* <Slider {...settings}>
             {sliderParams.map((item, index) => (
               <div
                 className="w-[50%] h-[auto] py-6 px-4 bg-transparent"
@@ -181,7 +185,7 @@ export default function LandingPage() {
                 <p className="text-[16px] font-[500]">{item.author}</p>
               </div>
             ))}
-          </Slider>
+          </Slider> */}
         </div>
       </div>
     </>
