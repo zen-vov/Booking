@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import Link from "next/link";
-import { data, data2 } from "./data/data";
+import { data, data2 } from "../data/data";
 import Button from "@/shared/ui/Button/Button";
 
-export default function PostHousePage() {
+export default function StudentPostHouse() {
   const [isChecked, setIsChecked] = useState(false);
   const [validationError, setValidationError] = useState("");
   const [role, setRole] = useState<"Student" | "Landlord" | null>(null);
@@ -113,7 +113,7 @@ export default function PostHousePage() {
           )}
           {isChecked && (
             <div className="flex justify-end">
-              <Link href={"/routs/postsettlement"}>
+              <Link href={"/routs/student/posthouse/create"}>
                 <Button
                   label="Продолжить"
                   onClick={handleContinueClick}

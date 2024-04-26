@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
@@ -16,24 +16,18 @@ import Shop from "@/shared/ui/Icons/Shop/Shop";
 import School from "@/shared/ui/Icons/School/School";
 import Hospital from "@/shared/ui/Icons/Hospital/Hospital";
 import Dumbell from "@/shared/ui/Icons/Dumbell/Dumbell";
+import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import ProductList from "@/widgets/productList/ui/productLIst";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import axios from "axios";
 import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
-import mapgl from "@2gis/mapgl";
-import Map2GIS from "@/entities/2GISmap/map";
-import DropdownFilter from "@/features/DropdownFilter/ui/DropdownFilter";
+import Image from "next/image";
+// import Map from "@/features/Map/ui/Map";
 
 interface Counter {
   name: string;
   count: number;
-}
-
-interface Props {
-  apiKey: string;
-  center: [number, number];
-  markerCoordinates?: [number, number];
 }
 
 interface IconButton {
@@ -49,7 +43,7 @@ interface FormData {
   typeOfHouse: string; // Тип дома: например, "апартаменты", "дом", "квартира" и т. д.
   price: number; // Цена за жилье (может быть строкой, если нужно учитывать валюту и т. д.)
   numberOfRooms: number; // Количество комнат
-  paymentTime: "daily" | "year" | "half-year"; // Время оплаты: ежедневно, ежегодно, раз в полгода
+  paymentTime: "daily" | "monthly" | "yearly"; // Время оплаты: ежедневно, ежегодно, раз в полгода
   floor: number; // Этаж
   square: number; // Площадь квартиры
   haveWifi: boolean; // Наличие Wi-Fi
@@ -83,9 +77,9 @@ const iconsNear: IconButton[] = [
 const NearButton = ["Торговый центр", "Больница", "Школа", "Тренажорный зал"];
 
 const options = [
-  { label: "в год", path: "/year" },
-  { label: "на день", path: "/day" },
-  { label: "полгода", path: "/half-year" },
+  { label: "в год" },
+  { label: "на день" },
+  { label: "полгода" },
 ];
 
 export default function PostSettlementPage() {
@@ -95,57 +89,20 @@ export default function PostSettlementPage() {
     { name: "Спальни", count: 0 },
     { name: "Ванные, душ", count: 0 },
   ]);
-  const MIN_PRICE = 0;
   const MIN_PRICE2 = 0;
-  const [price, setPrice] = useState<number>(MIN_PRICE);
   const [price2, setPrice2] = useState<number>(MIN_PRICE2);
   const [uploadedImages] = useState<File[] | null>([]);
-  const [map, setMap] = useState<any>(null);
-  const [formErrors] = useState<any>(null);
-  const [searchInput, setSearchInput] = useState<string>("");
+  const [formErrors, setFormErrors] = useState<string[]>([]);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const mapRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-
-  const searchAddress = async () => {
-    const apiKey = "96f12dd1-d29d-4b0f-9f4c-0ac1a9f84ca8";
-    const address = encodeURIComponent("Никитский переулок, 3"); // адрес для поиска
-
-    const response = await fetch(
-      `https://catalog.api.2gis.com/3.0/items/geocode?q=${address}&fields=items.point,items.geometry.centroid&sort_point=37.62143%2C55.752966&sort=distance&key=${apiKey}`
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      const firstItem = data.result.items[0]; // берем первый найденный элемент
-
-      if (firstItem) {
-        const point = firstItem.point; // координаты точки
-        const centroid = firstItem.geometry.centroid; // центроид геометрии
-
-        console.log("Координаты точки:", point);
-        console.log("Центроид геометрии:", centroid);
-      } else {
-        console.error("Адрес не найден");
-      }
-    } else {
-      console.error("Ошибка при запросе к API");
-    }
-  };
-
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(e.target.value);
-  };
-
   const [formData, setFormData] = useState<FormData>({
-    location: "СДУ",
+    location: "",
     uploaded_images: [],
-    title: "string",
-    description: "string",
-    typeOfHouse: "string", // Изменено на пустую строку, так как тип дома не указан
+    title: "",
+    description: "",
+    typeOfHouse: "", // Изменено на пустую строку, так как тип дома не указан
     price: 0,
     numberOfRooms: 1, // Изменено на 0, так как количество комнат может быть любым
     paymentTime: "daily",
@@ -163,6 +120,7 @@ export default function PostSettlementPage() {
     isSold: false,
     isArchived: false,
   });
+  const [priceCounter, setPriceCounter] = useState<number>(formData.price);
 
   const [selectedIcons, setSelectedIcons] = useState<boolean[]>(
     icons.map(() => false)
@@ -173,7 +131,6 @@ export default function PostSettlementPage() {
       const newSelectedIcons = [...prevSelectedIcons];
       newSelectedIcons[index] = !newSelectedIcons[index];
 
-      // Обработка выбора иконок в соответствии с индексом
       if (index < icons.length) {
         switch (index) {
           case 0:
@@ -232,6 +189,9 @@ export default function PostSettlementPage() {
   const createApartment = async (apartmentData: any) => {
     try {
       const token = localStorage.getItem("accessToken");
+      if (apartmentData.price < 0) {
+        throw new Error("Цена не может быть меньше 0");
+      }
       const response = await axios.post(
         `http://studhouse.kz/api/v1/advertisement/`,
         apartmentData,
@@ -245,6 +205,7 @@ export default function PostSettlementPage() {
       console.log(response.data);
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
+      alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
     }
   };
 
@@ -299,22 +260,15 @@ export default function PostSettlementPage() {
 
   const handleButtonClick = (type: string) => {
     setSelectedType((prevType) => (prevType === type ? null : type));
-    setFormData({ ...formData, typeOfHouse: type });
   };
 
-  const increase = () => {
-    setPrice((prevprice) => Math.max(MIN_PRICE, prevprice + 5000));
-  };
-  const increase2 = () => {
-    setPrice2((prevprice) => Math.max(MIN_PRICE2, prevprice + 5000));
-  };
+  const increase = useCallback(() => {
+    setPriceCounter((prevprice) => Math.max(formData.price, prevprice + 5000));
+  }, [formData.price]);
 
-  const decrease = () => {
-    setPrice((prevPrice) => Math.max(MIN_PRICE, prevPrice - 5000));
-  };
-  const decrease2 = () => {
-    setPrice2((prevprice) => Math.max(MIN_PRICE2, prevprice - 5000));
-  };
+  const decrease = useCallback(() => {
+    setPriceCounter((prevPrice) => Math.max(formData.price, prevPrice - 5000));
+  }, [formData.price]);
 
   const handleDecrement = (index: number) => {
     setCounterState((prevCounters) => {
@@ -355,23 +309,21 @@ export default function PostSettlementPage() {
             Где расположено ваше жилье?
           </h1>
           <div className="flex items-center gap-4 mb-2.5">
-            <div className="flex items-center gap-4 mb-2.5">
-              <input
-                ref={searchInputRef}
+            <div className="py-2.5 px-4 flex bg-[#F3F3F3] rounded-[12px] items-center">
+              <Input
                 className="text-[1rem] w-full"
                 placeholder="Введите адрес"
-                value={searchInput}
-                onChange={handleSearchInputChange}
+                name="address"
+                value={formData.location}
+                onChange={(e) =>
+                  setFormData({ ...formData, location: e.target.value })
+                }
               />
-              <button onClick={searchAddress}>Найти</button>
             </div>
             <span className="text-blue font-medium text-[0.8rem] cursor-pointer">
               указать на карте
             </span>
-            <Map2GIS
-              apiKey="96f12dd1-d29d-4b0f-9f4c-0ac1a9f84ca8"
-              center={[55.752966, 37.62143]}
-            />
+            {/* <Map address={formData.location} /> */}
           </div>
           <p className="text-[16px] font-[500] mb-[15px]">
             Основная информация о жилье
@@ -441,9 +393,11 @@ export default function PostSettlementPage() {
           <div className="flex items-center gap-[13px]">
             {formData.uploaded_images.map((imageUrl, index) => (
               <div key={index} className="bg-white w-[70px] h-[49px] ">
-                <img
+                <Image
+                  width={80}
+                  height={80}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  src={imageUrl}
+                  src={`/${imageUrl}`}
                   alt={`Uploaded Image ${index}`}
                 />
               </div>
@@ -550,49 +504,11 @@ export default function PostSettlementPage() {
             </p>
             <div className="flex items-center">
               <div className="mr-5 flex gap-[5px] justify-center items-center">
-                <DropdownFilter
+                <Dropdown
                   buttonStyle="whitespace-nowrap text-[14px] font-[400]"
                   listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
                   options={options}
-                  defaultLabel="в месяц"
-                />
-                <svg
-                  className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m19 9-7 7-7-7"
-                  />
-                </svg>
-              </div>
-              <div className="mr-5 flex gap-2 items-center">
-                <button onClick={decrease2}>
-                  <Minus />
-                </button>
-                <Input
-                  className="text-[14px] w-[30%]"
-                  // onChange={handleInputChange2}
-                  value={price}
-                />
-                <button onClick={increase2}>
-                  <Plus />
-                </button>
-              </div>
-              <div className="mr-5 flex gap-[5px] justify-center items-center">
-                <DropdownFilter
-                  buttonStyle="whitespace-nowrap text-[14px] font-[400]"
-                  listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
-                  options={options}
-                  defaultLabel="в месяц"
+                  label="в месяц"
                 />
                 <svg
                   className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
@@ -620,13 +536,53 @@ export default function PostSettlementPage() {
                   className="text-[14px] w-[30%]"
                   value={formData.price}
                   onChange={(e) =>
-                    setFormData({ ...formData, price: price })
+                    setFormData({ ...formData, price: priceCounter })
                   }
                 />
                 <button onClick={increase}>
                   <Plus />
                 </button>
               </div>
+              {/* <div className="mr-5 flex gap-[5px] justify-center items-center">
+                <Dropdown
+                  buttonStyle="whitespace-nowrap text-[14px] font-[400]"
+                  listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
+                  options={options}
+                  label="в месяц"
+                />
+                <svg
+                  className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m19 9-7 7-7-7"
+                  />
+                </svg>
+              </div> */}
+              {/* <div className="mr-5 flex gap-2 items-center">
+                <button onClick={decrease}>
+                  <Minus />
+                </button>
+                <Input
+                  className="text-[14px] w-[30%]"
+                  value={formData.price}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: e.target.value })
+                  }
+                />
+                <button onClick={increase}>
+                  <Plus />
+                </button>
+              </div> */}
             </div>
           </div>
           <Button
@@ -640,7 +596,7 @@ export default function PostSettlementPage() {
         </div>
       </div>
       <div>
-        {formErrors?.map((error: any, index: any) => (
+        {formErrors.map((error, index) => (
           <p key={index} className="text-red-500">
             {error}
           </p>
@@ -648,7 +604,4 @@ export default function PostSettlementPage() {
       </div>
     </section>
   );
-}
-function setEntranceCoordinates(arg0: number[]) {
-  throw new Error("Function not implemented.");
 }

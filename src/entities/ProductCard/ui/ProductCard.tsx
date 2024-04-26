@@ -78,9 +78,6 @@ export default function ProductCard(props: ProductProps) {
           <button onClick={copyLinkToClipboard}>
             <Share />
           </button>
-          <button onClick={() => addToFavorite()}>
-            <Like className={like ? "like" : ""} />
-          </button>
         </div>
       </div>
     </div>
