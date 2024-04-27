@@ -51,7 +51,7 @@ export default function PostChoosePage() {
             onClick={() => handleSelectOption("Подселение")}
           />
         </div>
-        <Link href={"/routs/postsettlement"}>
+        <Link href={"/routs/student/posthouse/create"}>
           <Button
             className="bg-blue rounded-[5px] py-[10px] px-[20px] text-white text-[22px] font-500"
             label="Далее"

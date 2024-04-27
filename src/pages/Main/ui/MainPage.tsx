@@ -6,36 +6,10 @@ import { BASE_URL } from "@/shared/api/BASE";
 import Input from "@/shared/ui/Input/Input";
 import ProductList from "@/widgets/productList/ui/productLIst";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
-import Modal from "@/shared/ui/Modal/ui/Modal";
 import Button from "@/shared/ui/Button/Button";
 import styles from "./styles.module.scss";
 import Link from "next/link";
-import { headers } from "next/headers";
 import DropdownFilter from "@/features/DropdownFilter/ui/DropdownFilter";
-
-const dataFilter = [
-  { text: "Срок аренды", className: "mb-[42px]" },
-  { text: "Удобство", className: "mb-[70px]" },
-  { text: "Площадь, м2", className: "mb-[47px]" },
-  { text: "Санузел", className: "mb-10" },
-  { text: "Ремонт", className: "mb-[30px]" },
-  { text: "Этаж", className: "mb-7" },
-  { text: "Год постройки", className: "mb-[30px]" },
-  { text: "Тип дома", className: "mb-[67px]" },
-  { text: "До метро", className: "" },
-];
-
-const dataU = [
-  { text: "Кондиционер" },
-  { text: "Холодильник" },
-  { text: "Стиральная машина" },
-  { text: "Мебель" },
-  { text: "Кровать" },
-  { text: "Кухонная мебель" },
-  { text: "Интернет" },
-  { text: "Телевизор" },
-  { text: "Балкон" },
-];
 
 const roomsData = [
   { label: "1 -комнатная" },
@@ -47,8 +21,6 @@ const roomsData = [
 export default function LandLord() {
   const [data, setData] = useState([]);
   const [current, setCurrent] = useState(1);
-  const [active, setActive] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [role, setRole] = useState<1 | 2 | null>(null);
   const [hasAuth, setHasAuth] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -142,10 +114,6 @@ export default function LandLord() {
     setIsOpen(!isOpen);
   };
 
-  const onFilterClick = () => {
-    setIsModalOpen(true);
-  };
-
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -170,8 +138,7 @@ export default function LandLord() {
 
   return (
     <section className="pb-[45px]">
-      {/*-----*/}
-      {role === 1 && hasAuth && (
+      {/* {role === 1 && hasAuth && (
         <div className={`${styles.imgbg} flex`}>
           <div className=" py-[128px] flex flex-col items-start w-full">
             <div className="container flex flex-col">
@@ -191,9 +158,8 @@ export default function LandLord() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
-      {/*-----*/}
       <div className="container mt-[50px] flex items-center  gap-[100px] mb-[60px]">
         <div className="flex items-center gap-2">
           <Image src={"/Search.png"} width={29} height={29} alt="search" />
@@ -258,12 +224,6 @@ export default function LandLord() {
               <Arrow />
             </span>
           </div>
-          <h3
-            className="text-md font-medium cursor-pointer text-black"
-            onClick={onFilterClick}
-          >
-            Фильтр
-          </h3>
         </div>
       </div>
       <div className="container grid grid-cols-2 gap-[92px] mb-12">
@@ -282,163 +242,6 @@ export default function LandLord() {
           </div>
         ))}
       </div>
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <div className="flex justify-center gap-[90px]">
-            <div className="flex flex-col gap-[0.8rem]">
-              {dataFilter.map(({ text, className }, index) => (
-                <h1
-                  className={className}
-                  style={{ fontSize: "20px", fontWeight: "500" }}
-                  key={index}
-                >
-                  {text}
-                </h1>
-              ))}
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2.5 mb-[38px]">
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Неважно
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  На несколько месяцев
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  От года
-                </Button>
-              </div>
-              <div className="grid grid-cols-3 mb-[25px]">
-                {dataU.map(({ text }, index) => (
-                  <label className="flex items-center gap-[5px]" key={index}>
-                    <Input type="checkbox" className="w-3 h-3" />
-                    <span className="text-md">{text}</span>
-                  </label>
-                ))}
-              </div>
-              <div className="flex gap-8 mb-[38px]">
-                <div className="flex gap-3 items-center">
-                  <span className="text-md">Общая</span>
-                  <div className="rounded-[5px] flex flex-nowrap w-full border-[0.2px] border-solid border-black">
-                    <Input
-                      placeholder="от"
-                      className="border-r-[0.1px] py-[6px] px-3 w-12 text-center border-black border-solid"
-                    />
-                    <Input
-                      placeholder="до"
-                      className="text-center py-[6px] px-3 w-12"
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-3 items-center">
-                  <span className="text-md">Кухня</span>
-                  <div className="rounded-[5px] flex flex-nowrap w-full border-[0.2px] border-solid border-black">
-                    <Input
-                      placeholder="от"
-                      className="border-r-[0.1px] py-[6px] px-3 w-12 text-center border-black border-solid"
-                    />
-                    <Input
-                      placeholder="до"
-                      className="text-center py-[6px] px-3 w-12"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-2.5 mb-[31px]">
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Неважно
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Совмещенный
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Раздельный
-                </Button>
-              </div>
-              <div className="flex items-center gap-2.5 mb-[31px]">
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Неважно
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Евроремонт
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Дизайнерский
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Космический
-                </Button>
-              </div>
-              <div className="flex gap-8 mb-[19px]">
-                <div className="rounded-[5px] flex-nowrap w-[15%] border-[0.2px] border-solid border-black">
-                  <Input
-                    placeholder="от"
-                    className="border-r-[0.1px] py-[6px] px-3 w-12 text-center border-black border-solid"
-                  />
-                  <Input
-                    placeholder="до"
-                    className="text-center py-[6px] px-3 w-12"
-                  />
-                </div>
-                <label className="flex items-center gap-[5px]">
-                  <Input type="checkbox" className="w-3 h-3" />
-                  <span className="whitespace-nowrap text-md">Не первый</span>
-                </label>
-                <label className="flex items-center gap-[5px]">
-                  <Input type="checkbox" className="w-3 h-3" />
-                  <span className="whitespace-nowrap text-md">
-                    Не последний
-                  </span>
-                </label>
-              </div>
-              <div className="mb-[21px]">
-                <div className="rounded-[5px] flex-nowrap w-[15%] border-[0.2px] border-solid border-black">
-                  <Input
-                    placeholder="от"
-                    className="border-r-[0.1px] py-[6px] px-3 w-12 text-center border-black border-solid"
-                  />
-                  <Input
-                    placeholder="до"
-                    className="text-center py-[6px] px-3 w-12"
-                  />
-                </div>
-              </div>
-              <div className="flex items-center gap-2.5 mb-3">
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Неважно
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Евроремонт
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Дизайнерский
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Космический
-                </Button>
-              </div>
-              <div className="flex items-center gap-2.5 mb-[22px]">
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Неважно
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Евроремонт
-                </Button>
-                <Button className="text-md whitespace-nowrap bg-white border-[0.2px] border-solid border-black rounded-[5px] p-2">
-                  Дизайнерский
-                </Button>
-              </div>
-              <div className="flex items-center gap-3">
-                <span>Не более</span>
-                <div className="border-[0.2px] rounded-[5px] p-2 w-[9%] border-black border-solud">
-                  <Input className="w-full text-center" />
-                </div>
-                <span>минут</span>
-              </div>
-            </div>
-          </div>
-        </Modal>
-      )}
     </section>
   );
 }
