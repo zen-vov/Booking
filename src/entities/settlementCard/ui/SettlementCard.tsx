@@ -15,7 +15,7 @@ export type ProductProps = {
   location?: string;
   price: string;
   typeOfHouse?: string;
-  advertisement_images: string[];
+  relocation_images: string[];
   creationDate: string;
 };
 
@@ -26,7 +26,7 @@ export default function SettlementCard(props: ProductProps) {
     price,
     description,
     typeOfHouse,
-    advertisement_images,
+    relocation_images,
     location,
     creationDate,
   } = props;
@@ -63,10 +63,10 @@ export default function SettlementCard(props: ProductProps) {
 
   return (
     <div key={id} className="bg-white rounded-[12px] pb-[30px]">
-      <Link href={`/routs/product/${id}`}>
+      <Link href={`/routs/settlement/${id}`}>
         <Carousel leftControl="" rightControl="">
           <Image
-            src={advertisement_images[0]}
+            src={relocation_images[0]}
             width={618}
             height={476}
             className="bg-no-repeat relative"

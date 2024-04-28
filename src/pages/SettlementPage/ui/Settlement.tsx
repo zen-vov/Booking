@@ -121,7 +121,6 @@ export default function LandLord() {
       "1 -комнатная": 1,
       "2 -комнатная": 2,
       "3 -комнатная": 3,
-      "4 и более комнат": 4,
     };
 
     setNumberOfRooms(roomMapping[selectedOption]);

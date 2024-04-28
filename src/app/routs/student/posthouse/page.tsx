@@ -1,11 +1,11 @@
-import PostHousePage from "@/pages/PostHousing/ui/PostHousingPage";
+import StudentPostHouse from "@/pages/PostHousing/ui/student/StudentPostHouse";
 import Layout from "@/widgets/Layout/Layout";
 
 export default function Home() {
   return (
     <Layout>
       <main className="container">
-        <PostHousePage />
+        <StudentPostHouse />
       </main>
     </Layout>
   );

@@ -18,7 +18,7 @@ export default function SettlementList({ records }: ProductListI) {
           price,
           creationDate,
           typeOfHouse,
-          advertisement_images,
+          relocation_images,
         }) => (
           <Link href={`/routs/product/${id}`} key={id} passHref>
             <SettlementCard
@@ -27,7 +27,7 @@ export default function SettlementList({ records }: ProductListI) {
               location={location}
               price={price}
               creationDate={creationDate}
-              advertisement_images={advertisement_images}
+              relocation_images={relocation_images}
             />
           </Link>
         )
