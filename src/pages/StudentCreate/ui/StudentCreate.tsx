@@ -108,7 +108,7 @@ export default function StudentCreate() {
     author: 0,
     title: "",
     description: "",
-    typeOfHouse: "string", // Изменено на пустую строку, так как тип дома не указан
+    typeOfHouse: "Для парней", // Изменено на пустую строку, так как тип дома не указан
     price: 0,
     numberOfRooms: 1, // Изменено на 0, так как количество комнат может быть любым
     paymentTime: "daily",
