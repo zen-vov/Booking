@@ -1,4 +1,3 @@
-"use client";
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState, useRef, useCallback } from "react";
@@ -21,6 +20,7 @@ import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import ProductList from "@/widgets/productList/ui/productLIst";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import axios from "axios";
+import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 // import Map from "@/features/Map/ui/Map";
@@ -46,6 +46,8 @@ interface FormData {
   paymentTime: "daily" | "monthly" | "yearly"; // Время оплаты: ежедневно, ежегодно, раз в полгода
   floor: number; // Этаж
   square: number; // Площадь квартиры
+  max_people_count: number;
+  current_people_count: number;
   count_bedrooms: number;
   count_bathrooms: number;
   numberOfRooms: number;
@@ -85,7 +87,7 @@ const options = [
   { label: "полгода" },
 ];
 
-export default function PostSettlementPage() {
+export default function StudentCreate() {
   const [counterState, setCounterState] = useState<Counter[]>([
     { name: "Максимальное количество жителей", count: 0 },
     { name: "Количество комнат", count: 0 },
@@ -103,16 +105,18 @@ export default function PostSettlementPage() {
   const [formData, setFormData] = useState<FormData>({
     location: "",
     uploaded_images: [],
-    author: 1,
+    author: 0,
     title: "",
     description: "",
-    typeOfHouse: "string", // Изменено на пустую строку, так как тип дома не указан
+    typeOfHouse: "Для парней", // Изменено на пустую строку, так как тип дома не указан
     price: 0,
     numberOfRooms: 1, // Изменено на 0, так как количество комнат может быть любым
     paymentTime: "daily",
     floor: 5,
     square: 5,
     haveWifi: false,
+    max_people_count: 5,
+    current_people_count: 2,
     count_bedrooms: 2,
     count_bathrooms: 2,
     haveTV: false,
@@ -199,7 +203,7 @@ export default function PostSettlementPage() {
         throw new Error("Цена не может быть меньше 0");
       }
       const response = await axios.post(
-        `http://studhouse.kz/api/v1/advertisement/`,
+        `http://studhouse.kz/api/v1/relocation/`,
         apartmentData,
         {
           headers: {
@@ -221,12 +225,14 @@ export default function PostSettlementPage() {
         location: formData.location,
         uploaded_images: formData.uploaded_images.map((image) => image), // Предполагая, что вы хотите отправить только имена файлов
         title: formData.title,
-        author: formData.author,
+        auhtor: formData.author,
         description: formData.description,
         typeOfHouse: formData.typeOfHouse || "", // Если тип дома не указан, используем пустую строку
         price: formData.price,
         numberOfRooms: formData.numberOfRooms || 0, // Если количество комнат не указано, используем 0
         paymentTime: formData.paymentTime,
+        max_people_count: formData.max_people_count,
+        current_people_count: formData.current_people_count,
         count_bedrooms: formData.count_bedrooms,
         count_bathrooms: formData.count_bathrooms,
         floor: formData.floor,
@@ -456,7 +462,7 @@ export default function PostSettlementPage() {
               }
             />
           </div>
-          {/* <div className="">
+          <div className="">
             <h1 className="text-[1rem] font-medium mb-0.5">О подселении</h1>
             <p className="text-[#767272] text-[0.8rem] mb-[6px]">
               Расскажите, о соседях
@@ -505,7 +511,7 @@ export default function PostSettlementPage() {
                 </div>
               </div>
             </div>
-          </div> */}
+          </div>
           <div className="mb-[46px] mt-[1rem]">
             <p className="text-[16px] text-black font-[500]">Установите цену</p>
             <p className="text-[12px] mb-[6px]">
@@ -541,14 +547,13 @@ export default function PostSettlementPage() {
                 <button onClick={decrease}>
                   <Minus />
                 </button>
-                <h1
-                  className="text-[14px]"
+                <Input
+                  className="text-[14px] w-[30%]"
+                  value={formData.price}
                   onChange={(e) =>
                     setFormData({ ...formData, price: priceCounter })
                   }
-                >
-                  {priceCounter}
-                </h1>
+                />
                 <button onClick={increase}>
                   <Plus />
                 </button>
