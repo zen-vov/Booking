@@ -15,7 +15,6 @@ interface Message {
   author: number;
   text: "string";
   creationDate: string | any;
-  // author_detail: string;
   author_detail: {
     author_type: string;
     author: {
@@ -54,7 +53,6 @@ export default function ChatPage() {
           },
         }
       );
-      console.log("sdfsfdsfdsfdsfsdfsdf", data);
       setMessages(data.Today);
       if (data.length >= 0) {
         setMessages((prev) => [...data, ...prev]);
@@ -84,10 +82,7 @@ export default function ChatPage() {
         }
       );
 
-      // После успешной отправки сообщения загружаем обновленный список сообщений
       fetchMessages();
-
-      // Очищаем поле ввода после успешной отправки
       setNewMessage("");
 
       if (messagesContainerRef.current) {
@@ -115,32 +110,20 @@ export default function ChatPage() {
     }
   };
 
-  // const sendMessage = async () => {
-  //   try {
-  //     await axios.post(
-  //       `${BASE_URL}/chat/chats/${params.id}/messages/`,
-  //       {
-  //         text: newMessage,
-  //         creationDate: new Date().toISOString(),
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `JWT ${token}`,
-  //         },
-  //       }
-  //     );
-  //   } catch (error) {
-  //     console.error("Error sending message:", error);
-  //   }
-  // };
+  const handleBack = () => {
+    window.history.back();
+  };
+
   return (
     <section className="pb-20 pt-5 h-full">
       <div className="flex items-center gap-[6px] mb-[25px]">
         <Arrow />
-        <h2 className="text-lg font-[400]">Назад к объявлению</h2>
+        <h2 onClick={handleBack} className="text-lg cursor-pointer font-[400]">
+          Назад
+        </h2>
       </div>
       <div className="flex justify-between  gap-10">
-        <div className="bg-white max-h-[600px] overflow-y-auto w-[1100px] rounded-[12px] flex flex-col justify-between">
+        <div className="bg-white min-h-[600px] max-h-[600px] overflow-y-auto w-[1100px] rounded-[12px] flex flex-col justify-between">
           <div className="static pt-6 pl-[37px] pr-6 flex items-center pb-6 justify-between border-b-[1px] border-[#534949]">
             <div className="flex items-center gap-6">
               <Image
@@ -194,9 +177,7 @@ export default function ChatPage() {
           <h1 className="whitespace-nowrap text-md font-medium mb-0.5">
             Все сообщение{" "}
           </h1>
-          <div className="flex flex-col gap-[22px]">
-            {/* Список всех чатов */}
-          </div>
+          <div className="flex flex-col gap-[22px]"></div>
         </div>
       </div>
     </section>
@@ -214,8 +195,6 @@ function Message({
   currentUserType: string | null;
 }) {
   const isCurrentUser = currentUserType === "me";
-  console.log("currentUserType", currentUserType);
-  console.log("isCurrentUser", isCurrentUser);
 
   return (
     <div

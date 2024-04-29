@@ -12,8 +12,8 @@ export default function ChatIdPage() {
   const [userId, setUserId] = useState(null);
   const [personalChats, setPersonalChats] = useState([]);
   const [incomingChats, setIncomingChats] = useState([]);
-  // const [authorName, setAuthorName] = useState("");
-  // const [interlocutor, setInterlocutor] = useState("");
+  const [authorName, setAuthorName] = useState("");
+  const [interlocutor, setInterlocutor] = useState("");
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -101,11 +101,12 @@ export default function ChatIdPage() {
                         г. Алматы, Бостандыкский район · 3-х комнатная квартира
                       </h1>
                       <div className="flex items-center gap-[16px]">
-                        {interlocutor}:<p>это чат {id}</p>
+                        {interlocutor}:
                         <p className="text-md font-light">
                           Здравствуйте! Хотели бы снять эту квартиру
                         </p>
                       </div>
+                      <p>это чат {id}</p>
                       <p>{creationDate}</p>
                     </div>
                   </Link>
@@ -136,11 +137,12 @@ export default function ChatIdPage() {
                         г. Алматы, Бостандыкский район · 3-х комнатная квартира
                       </h1>
                       <div className="flex items-center gap-[16px]">
-                        {author}:<p>это чат {id}</p>
+                        {author}:
                         <p className="text-md font-light">
                           Здравствуйте! Хотели бы снять эту квартиру
                         </p>
                       </div>
+                      <p>это чат {id}</p>
                       <p>{creationDate}</p>
                     </div>
                   </Link>
