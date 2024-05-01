@@ -75,13 +75,6 @@ export default function HeaderLandlord() {
           <Link href={"/"}>
             <Logo />
           </Link>
-          <div className="flex gap-[2px]">
-            <Search />
-            <Input
-              className="text-md text-primary border-primary border-b-[2px] py-[2px] px-[4px]"
-              placeholder="Поиск квартиры"
-            />
-          </div>
 
           <div className="flex items-center gap-[40px]">
             <div className="flex gap-[40px] items-center">
