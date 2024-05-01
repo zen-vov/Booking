@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { BASE_URL } from "@/shared/api/BASE";
 import { useParams } from "next/navigation";
@@ -12,27 +12,36 @@ import "./styles.scss";
 interface Message {
   id: number;
   chat: number;
-  text: string;
-  creationDate: string | any;
   author: number;
+  text: "string";
+  creationDate: string | any;
   author_detail: {
     author_type: string;
     author: {
       id: number;
-      username: string | null;
+      username: string;
     };
   };
 }
 
 export default function ChatPage() {
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [chatsId, setChatsId] = useState<number[]>();
   const [newMessage, setNewMessage] = useState("");
   const params = useParams() as { id: string | number };
   const token = localStorage.getItem("accessToken");
+  const [isSubscribed, setIsSubscribed] = useState(true);
 
   useEffect(() => {
-    subscribe();
-  }, []);
+    if (isSubscribed) {
+      subscribe();
+    }
+
+    return () => {
+      setIsSubscribed(false);
+    };
+  }, [isSubscribed]);
 
   const subscribe = async () => {
     try {
@@ -44,22 +53,24 @@ export default function ChatPage() {
           },
         }
       );
-      if (data.length > 0) {
+      setMessages(data.Today);
+      if (data.length >= 0) {
         setMessages((prev) => [...data, ...prev]);
       }
-      await subscribe();
+      setTimeout(() => {
+        subscribe();
+      }, 1000);
     } catch (err) {
       console.error("Error in long polling:", err);
       setTimeout(() => {
         subscribe();
-      }, 500);
+      }, 1000);
     }
   };
-
   const sendMessage = async () => {
     try {
       await axios.post(
-        `${BASE_URL}/chat/chats/${params.id}}/messages/`,
+        `${BASE_URL}/chat/chats/${params.id}/messages/`,
         {
           text: newMessage,
           creationDate: new Date().toISOString(),
@@ -70,19 +81,49 @@ export default function ChatPage() {
           },
         }
       );
+
+      fetchMessages();
+      setNewMessage("");
+
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop =
+          messagesContainerRef.current.scrollHeight;
+      }
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
 
+  const fetchMessages = async () => {
+    try {
+      const { data } = await axios.get(
+        `${BASE_URL}/chat/chats/${params.id}/messages/`,
+        {
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        }
+      );
+      setMessages(data.Today);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  };
+
+  const handleBack = () => {
+    window.history.back();
+  };
+
   return (
-    <section className="pb-20 pt-5">
+    <section className="pb-20 pt-5 h-full">
       <div className="flex items-center gap-[6px] mb-[25px]">
         <Arrow />
-        <h2 className="text-lg font-[400]">Назад к объявлению</h2>
+        <h2 onClick={handleBack} className="text-lg cursor-pointer font-[400]">
+          Назад
+        </h2>
       </div>
-      <div className="flex justify-between gap-10">
-        <div className="bg-white h-[100%] w-[1100px] rounded-[12px] flex flex-col justify-between">
+      <div className="flex justify-between  gap-10">
+        <div className="bg-white min-h-[600px] max-h-[600px] overflow-y-auto w-[1100px] rounded-[12px] flex flex-col justify-between">
           <div className="static pt-6 pl-[37px] pr-6 flex items-center pb-6 justify-between border-b-[1px] border-[#534949]">
             <div className="flex items-center gap-6">
               <Image
@@ -97,7 +138,10 @@ export default function ChatPage() {
             </div>
             <Dots />
           </div>
-          <div className="px-6 overflow-y-auto flex flex-col items-end py-4">
+          <div
+            ref={messagesContainerRef}
+            className="px-6 overflow-y-auto flex flex-col items-end py-4"
+          >
             {messages?.map((message) => (
               <Message
                 key={message.id}
@@ -106,15 +150,9 @@ export default function ChatPage() {
                 chat={0}
                 creationDate={undefined}
                 author={0}
-                author_detail={{
-                  author_type: "",
-                  author: {
-                    id: 0,
-                    username: null,
-                  },
-                }}
+                author_detail={message.author_detail}
                 fullName={null}
-                currentUserType={null}
+                currentUserType={message.author_detail.author_type}
               />
             ))}
           </div>
@@ -139,9 +177,7 @@ export default function ChatPage() {
           <h1 className="whitespace-nowrap text-md font-medium mb-0.5">
             Все сообщение{" "}
           </h1>
-          <div className="flex flex-col gap-[22px]">
-            {/* Список всех чатов */}
-          </div>
+          <div className="flex flex-col gap-[22px]"></div>
         </div>
       </div>
     </section>
@@ -163,7 +199,9 @@ function Message({
   return (
     <div
       className={`rounded-lg flex flex-col justify-end bg-background w-[30%] mb-5 p-3 ${
-        isCurrentUser ? `self-end bg-blue-100` : `bg-gray-100`
+        isCurrentUser
+          ? `self-end bg-blue text-white`
+          : `bg-red text-white mr-auto`
       }`}
     >
       <p className="text-sm overflow-hidden overflow-ellipsis break-words">

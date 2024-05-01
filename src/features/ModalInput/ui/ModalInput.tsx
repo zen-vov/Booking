@@ -11,7 +11,7 @@ interface ModalInputFieldProps {
   fieldName: string;
   buttonField: string;
   children: React.ReactNode;
-  // errorMessage: string;
+  errorMessage?: string;
 }
 
 const ModalInputField: React.FC<ModalInputFieldProps> = ({
@@ -21,7 +21,7 @@ const ModalInputField: React.FC<ModalInputFieldProps> = ({
   buttonField,
   fieldName,
   children,
-  // errorMessage,
+  errorMessage,
 }) => {
   const [value, setValue] = useState(initialValue);
 

@@ -78,6 +78,35 @@ const Profile = () => {
     updateField(field, value);
   };
 
+  const updatePhoneNumber = async (value: string) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
+    if (!accessToken) return;
+    const decodedToken: any = jwt.decode(accessToken);
+    const userId = decodedToken?.user_id;
+    try {
+      const response = await fetch(
+        `http://studhouse.kz/api/v1/auth/user/${userId}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contacts: phoneNumber,
+          }),
+        }
+      );
+      if (response.ok) {
+        console.log(`Данные успешно обновлены для поля ТЕЛЕФОН`);
+      } else {
+        console.error("Ошибка при обновлении данных");
+      }
+    } catch (error) {
+      console.error("Ошибка при отправке запроса: ", error);
+    }
+  };
+
   const updateField = async (field: keyof Fields, value: string) => {
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
@@ -243,7 +272,7 @@ const Profile = () => {
         <div className="flex flex-col gap-[16px]">
           <div className="text-16 font-[600] mb-30">Личная информация</div>
           {renderField("full_name")}
-          {renderField("contacts")}
+          {/* {renderField("contacts")} */}
           {renderField("email")}
           {renderField("birthDate")}
           {renderField("identification")}

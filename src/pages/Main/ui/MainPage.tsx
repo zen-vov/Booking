@@ -225,7 +225,7 @@ export default function LandLord() {
                         className="p-2"
                         placeholder="Напишите сумму"
                         onChange={handleMaxPayment}
-                        onKeyPress={(event: any) => {
+                        onKeyDown={(event: any) => {
                           const regex = new RegExp("^[0-9]+$");
                           if (!regex.test(event.key)) {
                             event.preventDefault();
@@ -245,11 +245,7 @@ export default function LandLord() {
             </div>
           </div>
           <div className="flex gap-[15px]">
-<<<<<<< HEAD
-            {/* <Dropdown
-=======
             <DropdownFilter
->>>>>>> dev
               options={roomsData}
               buttonStyle="text-[20px] font-medium "
               listStyle="bg-white gap-3 py-3 px-10"
@@ -257,7 +253,7 @@ export default function LandLord() {
               onSelect={(selectedOption: any) =>
                 handleRoomSelect(selectedOption)
               }
-            /> */}
+            />
             <span className="-rotate-90">
               <Arrow />
             </span>

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Facebook from "@/shared/ui/Icons/Facebook/Facebook";
 import Twitter from "@/shared/ui/Icons/Twitter/Twitter";
@@ -6,6 +7,14 @@ import Instagram from "@/shared/ui/Icons/Instagram/Instagram";
 import Link from "next/link";
 
 export default function Footer() {
+  const [footerTab, setFooterTab] = React.useState("");
+
+  const handleFooterTab = (tab: any) => {
+    setFooterTab(tab);
+    localStorage.setItem("footerTab", tab);
+    // window.location.reload();
+  };
+
   return (
     <>
       <footer className="pt-[45px] pb-[75px] bg-second text-white">
@@ -22,26 +31,57 @@ export default function Footer() {
                   <p className="cursor-pointer">Компания</p>
                 </Link>
                 <Link href={"/routs/about"}>
-                  <p className="cursor-pointer">Кто мы</p>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => handleFooterTab("about")}
+                  >
+                    О нас
+                  </p>
                 </Link>
                 <Link href={"/routs/about"}>
-                  <p className="cursor-pointer">Контакты</p>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => handleFooterTab("contacts")}
+                  >
+                    Контакты
+                  </p>
                 </Link>
                 <Link href={"/routs/about"}>
-                  <p className="cursor-pointer">Корпоративным клиентам</p>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => handleFooterTab("faq")}
+                  >
+                    F.A.Q
+                  </p>
                 </Link>
                 <Link href={"/routs/about"}>
-                  <p className="cursor-pointer">Благотворительность</p>
-                </Link>
-                <Link href={"/routs/about"}>
-                  <p className="cursor-pointer">Адреса сервисных центров</p>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => handleFooterTab("rateus")}
+                  >
+                    Оцените нас
+                  </p>
                 </Link>
               </div>
               <div className="text-left flex flex-col gap-[5px]">
                 <p className="cursor-pointer">Помощь арендатору</p>
-                <p className="cursor-pointer">Обратная связь</p>
-                <p className="cursor-pointer">История</p>
-                <p className="cursor-pointer">Дополнительные услуги</p>
+                <Link href={"/routs/about"}>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => handleFooterTab("rateus")}
+                  >
+                    Обратная связь
+                  </p>
+                </Link>
+
+                <Link href={"/routs/about"}>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => handleFooterTab("problem")}
+                  >
+                    Сообщить о проблеме
+                  </p>
+                </Link>
               </div>
               <div className="text-left flex flex-col gap-[12px]">
                 <p>Наши социальные сети</p>

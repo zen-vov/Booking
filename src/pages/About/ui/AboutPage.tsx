@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import AboutUs from "@/widgets/AboutUs/ui/aboutus";
 import Contacts from "@/widgets/Contacts/ui/contacts";
 import RateUs from "@/widgets/RateUs/ui/RateUs";
@@ -12,6 +12,11 @@ export default function AboutPage() {
   const handleTabClick = (tab: any) => {
     setActiveTab(tab);
   };
+
+  React.useEffect(() => {
+    const footerTab = localStorage.getItem("footerTab");
+    setActiveTab(String(footerTab));
+  }, []);
 
   return (
     <section className="flex gap-[56px]">

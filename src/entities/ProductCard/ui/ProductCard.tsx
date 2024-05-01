@@ -38,7 +38,7 @@ export default function ProductCard(props: ProductProps) {
   // };
 
   const copyLinkToClipboard = () => {
-    const url = `http://localhost:3000/routs/product/${id}`;
+    const url = `http://localhost:3000/routs/product/${params.id}`;
     navigator.clipboard
       .writeText(url)
       .then(() => {
@@ -77,9 +77,6 @@ export default function ProductCard(props: ProductProps) {
         <div className="flex items-start gap-[1rem]">
           <button onClick={copyLinkToClipboard}>
             <Share />
-          </button>
-          <button onClick={() => addToFavorite()}>
-            <Like className={like ? "like" : ""} />
           </button>
         </div>
       </div>
