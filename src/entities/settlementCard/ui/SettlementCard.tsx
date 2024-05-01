@@ -34,7 +34,7 @@ export default function SettlementCard(props: ProductProps) {
   const params = useParams() as { id: string | number };
   const [hasToken, setHasToken] = useState(false);
   const accessToken = localStorage.getItem("accessToken");
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>("");
   const jwt = require("jsonwebtoken");
 
   const decodedToken = jwt.decode(accessToken);

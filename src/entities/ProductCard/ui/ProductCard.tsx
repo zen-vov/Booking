@@ -1,12 +1,11 @@
-"use client";
+'use client'
 import { useState } from "react";
 import { Carousel } from "flowbite-react";
 import Like from "@/shared/ui/Icons/Like/Like";
 import Share from "@/shared/ui/Icons/Share/Share";
-import Image from "next/image";
 import Link from "next/link";
 import "./styles.scss";
-import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export type ProductProps = {
   id: number;
@@ -14,7 +13,7 @@ export type ProductProps = {
   description?: string;
   location?: string;
   price: string;
-  advertisement_images: string[];
+  advertisement_images: { image: string }[];
   creationDate: string;
 };
 
@@ -29,16 +28,10 @@ export default function ProductCard(props: ProductProps) {
     creationDate,
   } = props;
   const [like, setLike] = useState<boolean>(false);
-  const params = useParams() as { id: string | number };
-
-  // const [currentSlide, setCurrentSlide] = useState(0);
-
-  // const handleSlideChange = (newSlide: number) => {
-  //   setCurrentSlide(newSlide);
-  // };
+  const router = useRouter();
 
   const copyLinkToClipboard = () => {
-    const url = `http://localhost:3000/routs/product/${params.id}`;
+    const url = `http://localhost:3000/routs/product/${id}`;
     navigator.clipboard
       .writeText(url)
       .then(() => {
@@ -49,22 +42,15 @@ export default function ProductCard(props: ProductProps) {
       });
   };
 
-  const addToFavorite = () => {
-    setLike(!like);
-    alert("Добавлено в избранные!");
-  };
-
   return (
     <div key={id} className="bg-white rounded-[12px] pb-[30px]">
       <Link href={`/routs/product/${id}`}>
         <Carousel leftControl="" rightControl="">
-          <Image
-            src={advertisement_images[0]}
-            width={618}
-            height={476}
-            className="bg-no-repeat relative"
-            alt="photo"
-          />
+          {advertisement_images.map((item, index) => (
+            <div key={index} className="carousel-item">
+              <img src={item.image} alt="Product" />
+            </div>
+          ))}
         </Carousel>
       </Link>
 
@@ -83,3 +69,4 @@ export default function ProductCard(props: ProductProps) {
     </div>
   );
 }
+
