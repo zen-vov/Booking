@@ -335,9 +335,9 @@ export default function StudentCreate() {
                 }
               />
             </div>
-            <span className="text-blue font-medium text-[0.8rem] cursor-pointer">
+            {/* <span className="text-blue font-medium text-[0.8rem] cursor-pointer">
               указать на карте
-            </span>
+            </span> */}
             {/* <Map address={formData.location} /> */}
           </div>
           <p className="text-[16px] font-[500] mb-[15px]">
