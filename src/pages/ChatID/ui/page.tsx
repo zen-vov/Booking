@@ -89,13 +89,13 @@ export default function ChatIdPage() {
                     className="flex gap-9"
                     key={id}
                   >
-                    <Image
+                    {/* <Image
                       src={"/"}
                       className="rounded-[12px]"
                       width={247}
                       height={123}
                       alt="chat"
-                    />
+                    /> */}
                     <div className="flex flex-col gap-8">
                       <h1 className="text-lg font-medium white-space">
                         г. Алматы, Бостандыкский район · 3-х комнатная квартира
@@ -125,13 +125,13 @@ export default function ChatIdPage() {
                     className="flex gap-9"
                     key={id}
                   >
-                    <Image
+                    {/* <Image
                       src={"/"}
                       className="rounded-[12px]"
                       width={247}
                       height={123}
                       alt="chat"
-                    />
+                    /> */}
                     <div className="flex flex-col gap-8">
                       <h1 className="text-lg font-medium white-space">
                         г. Алматы, Бостандыкский район · 3-х комнатная квартира
