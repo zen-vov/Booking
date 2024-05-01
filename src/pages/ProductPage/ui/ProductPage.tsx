@@ -121,7 +121,7 @@ export default function ProductPage() {
     };
 
     fetchRole();
-  }, []);
+  }, [role]);
 
   useEffect(() => {
     if (params.id) {
