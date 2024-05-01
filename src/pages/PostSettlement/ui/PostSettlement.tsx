@@ -23,6 +23,7 @@ import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Updock } from "next/font/google";
 // import Map from "@/features/Map/ui/Map";
 
 interface Counter {
@@ -37,7 +38,7 @@ interface IconButton {
 
 interface FormData {
   location: string;
-  uploaded_images: FileList | null;
+  uploaded_images: File[] | null;
   title: string;
   author: number;
   description: string;
@@ -94,15 +95,15 @@ export default function PostSettlementPage() {
   ]);
   const MIN_PRICE2 = 0;
   const [price2, setPrice2] = useState<number>(MIN_PRICE2);
-  const [uploadedImages] = useState<File[] | null>([]);
+  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const [selectedType, setSelectedType] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState<FormData>({
     location: "Almaty",
-    uploaded_images: null,
+    uploaded_images: [],
     author: 1,
     title: "The best flat",
     description: "In center of city",
@@ -263,8 +264,13 @@ export default function PostSettlementPage() {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) {
-      setFormData({ ...formData, uploaded_images: files });
+    if (files && files.length > 0) {
+      if (fileInputRef.current) {
+        const newFiles = Array.from(files);
+        setUploadedImages((prevImages) => [...prevImages, ...newFiles]);
+
+        setFormData({ ...formData, uploaded_images: uploadedImages });
+      }
     }
   };
 
@@ -340,7 +346,10 @@ export default function PostSettlementPage() {
 
   const handlePriceChange = (e: { target: { value: string } }) => {
     const newPrice = parseInt(e.target.value, 10);
+    // const newPrice = e.target.value;
+    // if (!NaN(newPrice)) {
     setFormData({ ...formData, price: newPrice });
+    // }
   };
 
   return (
@@ -371,9 +380,9 @@ export default function PostSettlementPage() {
                 }
               />
             </div>
-            <span className="text-blue font-medium text-[0.8rem] cursor-pointer">
+            {/* <span className="text-blue font-medium text-[0.8rem] cursor-pointer">
               указать на карте
-            </span>
+            </span> */}
             {/* <Map address={formData.location} /> */}
           </div>
           <p className="text-[16px] font-[500] mb-[15px]">
@@ -459,13 +468,15 @@ export default function PostSettlementPage() {
                 </div>
               ))}
           </div>
-          <p className="text-[12px] font-[400] cursor-pointer mt-[6px]">
+          <p
+            className="text-[12px] font-[400] cursor-pointer mt-[6px]"
+            onClick={() => fileInputRef.current?.click()}
+          >
             <input
               type="file"
               accept="image/*"
               multiple
               onChange={handleImageUpload}
-              // style={{ display: "none" }}
               ref={fileInputRef}
             />
           </p>
@@ -586,7 +597,10 @@ export default function PostSettlementPage() {
                   type="number"
                   className="text-[14px] border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:border-blue-500"
                   value={formData.price}
-                  onChange={handlePriceChange}
+                  // onChange={handlePriceChange}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: Number(e.target.value) })
+                  }
                 />
               </div>
             </div>
