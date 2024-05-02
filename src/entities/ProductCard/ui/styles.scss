@@ -1,6 +1,40 @@
 .like {
-
   path {
     fill: red;
   }
+}
+
+.product-card {
+  width: 100%;
+  max-width: 300px; /* Примерное значение */
+  height: 400px; /* Примерное значение */
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.product-card .carousel-container {
+  height: 60%;
+}
+
+.product-card .carousel-container .slick-slide {
+  height: 100%;
+}
+
+.product-card .details {
+  padding: 10px;
+}
+
+.product-card .details h1 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.product-card .details h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.product-card .details h5 {
+  font-size: 12px;
 }

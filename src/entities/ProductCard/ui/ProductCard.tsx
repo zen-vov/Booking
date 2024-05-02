@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 import { Carousel } from "flowbite-react";
-import Like from "@/shared/ui/Icons/Like/Like";
 import Share from "@/shared/ui/Icons/Share/Share";
 import Link from "next/link";
 import "./styles.scss";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export type ProductProps = {
   id: number;
@@ -13,7 +13,7 @@ export type ProductProps = {
   description?: string;
   location?: string;
   price: string;
-  advertisement_images: { image: string }[];
+  advertisement_images: { image: string | any | null }[];
   creationDate: string;
 };
 
@@ -42,18 +42,29 @@ export default function ProductCard(props: ProductProps) {
       });
   };
 
+  const settings = {
+    infinite: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: false,
+  };
+
   return (
     <div key={id} className="bg-white rounded-[12px] pb-[30px]">
       <Link href={`/routs/product/${id}`}>
+<<<<<<< HEAD
         <Carousel leftControl="" rightControl="">
+=======
+        <Carousel leftControl=" " rightControl=" ">
+>>>>>>> dev
           {advertisement_images.map((image, index) => (
             <Image
-              src={`http://studhouse.kz${image.image}`}
               key={index}
+              src={`http://studhouse.kz${image.image}`}
               width={611}
               height={380}
               alt="photo"
-              className="bg-no-repeat w-full relative"
+              className="flex bg-no-repeat relative"
             />
           ))}
         </Carousel>
