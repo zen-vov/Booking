@@ -14,7 +14,7 @@ export type ProductProps = {
   description?: string;
   location?: string;
   price: string;
-  advertisement_images: string[];
+  advertisement_images: { image: string }[];
   creationDate: string;
 };
 
@@ -58,13 +58,16 @@ export default function ProductCard(props: ProductProps) {
     <div key={id} className="bg-white rounded-[12px] pb-[30px]">
       <Link href={`/routs/product/${id}`}>
         <Carousel leftControl="" rightControl="">
-          <Image
-            src={advertisement_images[0]}
-            width={618}
-            height={476}
-            className="bg-no-repeat relative"
-            alt="photo"
-          />
+          {advertisement_images.map((image, index) => (
+            <Image
+              src={`http://studhouse.kz${image.image}`}
+              key={index}
+              width={611}
+              height={380}
+              alt="photo"
+              className="bg-no-repeat w-full relative"
+            />
+          ))}
         </Carousel>
       </Link>
 

@@ -267,6 +267,7 @@ export default function StudentCreate() {
       );
 
       console.log(response.data);
+      return response.data;
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
@@ -312,11 +313,9 @@ export default function StudentCreate() {
       );
 
       console.log(response.data);
+      // return router.push("/routs/congru");
     } catch (error) {
-      console.error(
-        "Ошибка при сохранении данных и отправке на сервер:",
-        error
-      );
+      console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
     }
   };
@@ -606,7 +605,8 @@ export default function StudentCreate() {
               </div>
               <div className="mr-5 flex gap-2 items-center">
                 <input
-                  type="number"
+                  type="text"
+                  name="price"
                   className="text-[14px] border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:border-blue-500"
                   value={formData.price}
                   // onChange={handlePriceChange}
