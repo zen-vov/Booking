@@ -104,10 +104,10 @@ export default function PostSettlementPage() {
     location: "Almaty",
     uploaded_images: [],
     author: 1,
-    title: "The best flat",
-    description: "In center of city",
+    title: "",
+    description: "",
     typeOfHouse: "Flat",
-    price: 100000,
+    price: 0,
     numberOfRooms: 1,
     paymentTime: "daily",
     floor: 5,
@@ -593,7 +593,8 @@ export default function PostSettlementPage() {
               </div>
               <div className="mr-5 flex gap-2 items-center">
                 <input
-                  type="number"
+                  type="text"
+                  name="price"
                   className="text-[14px] border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:border-blue-500"
                   value={formData.price}
                   // onChange={handlePriceChange}

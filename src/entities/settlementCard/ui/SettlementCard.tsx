@@ -15,7 +15,7 @@ export type ProductProps = {
   location?: string;
   price: string;
   typeOfHouse?: string;
-  relocation_images: string[];
+  relocation_images: { image: string | undefined | null }[];
   creationDate: string;
 };
 
@@ -93,14 +93,17 @@ export default function SettlementCard(props: ProductProps) {
   return (
     <div key={id} className="bg-white rounded-[12px] pb-[30px]">
       <Link href={`/routs/settlement/${id}`}>
-        <Carousel leftControl="" rightControl="">
-          <Image
-            src={relocation_images[0]}
-            width={618}
-            height={476}
-            className="bg-no-repeat relative"
-            alt="photo"
-          />
+        <Carousel leftControl=" " rightControl=" ">
+          {relocation_images.map((image, index) => (
+            <Image
+              key={index}
+              src={`http://studhouse.kz${image.image}`}
+              width={618}
+              height={476}
+              className="bg-no-repeat flex relative"
+              alt="photo"
+            />
+          ))}
         </Carousel>
       </Link>
 

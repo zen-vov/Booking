@@ -18,7 +18,7 @@ const roomsData = [
   { label: "4 и более комнат" },
 ];
 
-export default function LandLord() {
+export default function   LandLord() {
   const [data, setData] = useState([]);
   const [current, setCurrent] = useState(1);
   const [active, setActive] = useState(false);

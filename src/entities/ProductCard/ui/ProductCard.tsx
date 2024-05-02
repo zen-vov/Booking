@@ -42,13 +42,6 @@ export default function ProductCard(props: ProductProps) {
       });
   };
 
-  const settings = {
-    infinite: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: false,
-  };
-
   return (
     <div key={id} className="bg-white rounded-[12px] pb-[30px]">
       <Link href={`/routs/product/${id}`}>

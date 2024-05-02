@@ -108,7 +108,7 @@ export default function StudentCreate() {
     author: 0,
     title: "",
     description: "",
-    typeOfHouse: "Для парней", // Изменено на пустую строку, так как тип дома не указан
+    typeOfHouse: "", // Изменено на пустую строку, так как тип дома не указан
     price: 0,
     numberOfRooms: 1, // Изменено на 0, так как количество комнат может быть любым
     paymentTime: "daily",
@@ -332,7 +332,7 @@ export default function StudentCreate() {
   };
 
   const handleButtonClick = (type: string) => {
-    setSelectedType((prevType) => (prevType === type ? null : type));
+    setFormData({ ...formData, typeOfHouse: type });
   };
 
   const increase = useCallback(() => {
@@ -531,19 +531,19 @@ export default function StudentCreate() {
               <Button
                 onClick={() => handleButtonClick("Для девушек")}
                 label={"Для девушек"}
-                className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
-                  selectedType === "Для девушек"
+                className={`py-2 border-[1px] px-4 text-sm rounded-md ${
+                  formData.typeOfHouse === "Для девушек"
                     ? "bg-blue text-white"
-                    : "bg-[#f1f1f1]"
+                    : "border-black"
                 }`}
               />
               <Button
                 onClick={() => handleButtonClick("Для парней")}
                 label={"Для парней"}
-                className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
-                  selectedType === "Для парней"
+                className={`py-2 px-4 border-[1px] text-sm rounded-md ${
+                  formData.typeOfHouse === "Для парней"
                     ? "bg-blue text-white"
-                    : "bg-[#f1f1f1]"
+                    : "border-black"
                 }`}
               />
             </div>
