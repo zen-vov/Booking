@@ -255,6 +255,7 @@ export default function PostSettlementPage() {
       );
 
       console.log(response.data);
+      return router.push("/routs/congru");
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
@@ -300,6 +301,7 @@ export default function PostSettlementPage() {
       );
 
       console.log(response.data);
+      return router.push("/routs/congru");
     } catch (error) {
       console.error(
         "Ошибка при сохранении данных и отправке на сервер:",

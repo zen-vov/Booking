@@ -108,9 +108,9 @@ export default function StudentCreate() {
     author: 0,
     title: "",
     description: "",
-    typeOfHouse: "", // Изменено на пустую строку, так как тип дома не указан
+    typeOfHouse: "",
     price: 0,
-    numberOfRooms: 1, // Изменено на 0, так как количество комнат может быть любым
+    numberOfRooms: 1,
     paymentTime: "daily",
     floor: 5,
     square: 5,
@@ -267,7 +267,7 @@ export default function StudentCreate() {
       );
 
       console.log(response.data);
-      return response.data;
+      // router.push("/routs/coungru");
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
@@ -313,7 +313,7 @@ export default function StudentCreate() {
       );
 
       console.log(response.data);
-      // return router.push("/routs/congru");
+      // router.push("/routs/congru");
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
