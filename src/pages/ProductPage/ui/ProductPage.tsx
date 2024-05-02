@@ -17,7 +17,7 @@ interface Advertisement {
   description: string;
   location: string;
   paymentTime: string;
-  advertisement_images: File[];
+  advertisement_images: { image: string | undefined | null }[];
   price: string;
   creationDate: string;
   floor: number;
@@ -57,6 +57,7 @@ export default function ProductPage() {
   );
   const [people, setPeople] = useState<number | any>(1);
   const [user, setUser] = useState<User | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showPhoneNumber, setShowPhoneNumber] = useState<boolean>(false);
   const router = useRouter();
   const params = useParams() as { id: number | string };
@@ -89,6 +90,10 @@ export default function ProductPage() {
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
+  };
+
+  const handleImageClick = (index: any) => {
+    setCurrentImageIndex(index);
   };
 
   useEffect(() => {
@@ -287,17 +292,27 @@ export default function ProductPage() {
             <div className="flex gap-[60px]">
               <div className="w-[110%] h-[376px]">
                 <div className="flex flex-col gap-[22px] mb-12">
-                  <div
-                    style={{ backgroundImage: `url(${"/Image1.png"})` }}
-                    className="w-[558px] h-[376px] bg-cover rounded-[12px]"
+                  <Image
+                    src={`http://studhouse.kz${advertisement.advertisement_images[currentImageIndex]?.image}`}
+                    width={558}
+                    height={376}
+                    alt="photo"
+                    className="bg-cover rounded-xl"
                   />
                   <div className="flex gap-4">
-                    <div
-                      style={{
-                        backgroundImage: `url(${advertisement.advertisement_images[0]})`,
-                      }}
-                      className="rounded-[6px] bg-cover w-[30%] h-[93px] object-cover"
-                    />
+                    {advertisement.advertisement_images.map((image, index) => (
+                      <div key={index} onClick={() => handleImageClick(index)}>
+                        {image.image && (
+                          <Image
+                            src={`http://studhouse.kz${image.image}`}
+                            width={122}
+                            height={93}
+                            alt={`photo-${index}`}
+                            className="rounded-md cursor-pointer"
+                          />
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
                 {role == "Landlord" ? (

@@ -37,7 +37,7 @@ interface IconButton {
 
 interface FormData {
   location: string;
-  uploaded_images: string[]; // Массив файлов изображений
+  uploaded_images: File[] | null; // Массив файлов изображений
   title: string;
   author: number;
   description: string;
@@ -96,7 +96,7 @@ export default function StudentCreate() {
   ]);
   const MIN_PRICE2 = 0;
   const [price2, setPrice2] = useState<number>(MIN_PRICE2);
-  const [uploadedImages] = useState<File[] | null>([]);
+  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -199,6 +199,60 @@ export default function StudentCreate() {
   const createApartment = async (apartmentData: any) => {
     try {
       const token = localStorage.getItem("accessToken");
+
+      const formDataToSend = new FormData();
+
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("author", String(formData.author));
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("price", String(formData.price));
+      formDataToSend.append("location", formData.location);
+      formDataToSend.append("paymentTime", formData.paymentTime);
+      formDataToSend.append("floor", String(formData.floor));
+      formDataToSend.append("typeOfHouse", formData.typeOfHouse);
+      formDataToSend.append("count_bedrooms", String(formData.count_bedrooms));
+      formDataToSend.append(
+        "count_bathrooms",
+        String(formData.count_bathrooms)
+      );
+      formDataToSend.append(
+        "max_people_count",
+        String(formData.max_people_count)
+      );
+      formDataToSend.append(
+        "current_people_count",
+        String(formData.current_people_count)
+      );
+      formDataToSend.append("numberOfRooms", String(formData.numberOfRooms));
+      formDataToSend.append("square", String(formData.square));
+      formDataToSend.append("isSold", String(formData.isSold));
+      formDataToSend.append("isArchived", String(formData.isArchived));
+      formDataToSend.append("haveWifi", String(formData.haveWifi));
+      formDataToSend.append("haveTV", String(formData.haveTV));
+      formDataToSend.append(
+        "haveWashingMachine",
+        String(formData.haveWashingMachine)
+      );
+      formDataToSend.append("haveParking", String(formData.haveParking));
+      formDataToSend.append(
+        "haveConditioner",
+        String(formData.haveConditioner)
+      );
+      formDataToSend.append(
+        "nearbyTradeCenter",
+        String(formData.nearbyTradeCenter)
+      );
+      formDataToSend.append("nearbyHospital", String(formData.nearbyHospital));
+      formDataToSend.append("nearbySchool", String(formData.nearbySchool));
+      formDataToSend.append("nearbyGym", String(formData.nearbyGym));
+
+      if (formData.uploaded_images) {
+        const uploadedImages = formData.uploaded_images;
+        for (let i = 0; i < uploadedImages.length; i++) {
+          formDataToSend.append("uploaded_images", uploadedImages[i]);
+        }
+      }
+
       if (apartmentData.price < 0) {
         throw new Error("Цена не может быть меньше 0");
       }
@@ -213,51 +267,55 @@ export default function StudentCreate() {
       );
 
       console.log(response.data);
+      return response.data;
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
     }
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      if (fileInputRef.current) {
+        const newFiles = Array.from(files);
+        setUploadedImages((prevImages) => [...prevImages, ...newFiles]);
+
+        setFormData({ ...formData, uploaded_images: uploadedImages });
+      }
+    }
+  };
+
   const saveToLocalStorageAndSend = async () => {
     try {
-      const apartmentData = {
-        location: formData.location,
-        uploaded_images: formData.uploaded_images.map((image) => image), // Предполагая, что вы хотите отправить только имена файлов
-        title: formData.title,
-        auhtor: formData.author,
-        description: formData.description,
-        typeOfHouse: formData.typeOfHouse || "", // Если тип дома не указан, используем пустую строку
-        price: formData.price,
-        numberOfRooms: formData.numberOfRooms || 0, // Если количество комнат не указано, используем 0
-        paymentTime: formData.paymentTime,
-        max_people_count: formData.max_people_count,
-        current_people_count: formData.current_people_count,
-        count_bedrooms: formData.count_bedrooms,
-        count_bathrooms: formData.count_bathrooms,
-        floor: formData.floor,
-        square: formData.square,
-        haveWifi: formData.haveWifi,
-        haveTV: formData.haveTV,
-        haveWashingMachine: formData.haveWashingMachine,
-        haveParking: formData.haveParking,
-        haveConditioner: formData.haveConditioner,
-        nearbyTradeCenter: formData.nearbyTradeCenter,
-        nearbyHospital: formData.nearbyHospital,
-        nearbySchool: formData.nearbySchool,
-        nearbyGym: formData.nearbyGym,
-        isSold: formData.isSold,
-        isArchived: formData.isArchived,
-      };
+      const formDataToSend = new FormData();
 
-      await createApartment(apartmentData);
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "uploaded_images") {
+          const filesArray = Array.from(value as FileList);
+          filesArray.forEach((file, index) => {
+            formDataToSend.append(`uploaded_images[${index}]`, file);
+          });
+        } else {
+          formDataToSend.append(key, value.toString());
+        }
+      });
 
-      router.push("/routs/congru");
-    } catch (error) {
-      console.error(
-        "Ошибка при сохранении данных и отправке на сервер:",
-        error
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.post(
+        "http://studhouse.kz/api/v1/relocation/",
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        }
       );
+
+      console.log(response.data);
+      // return router.push("/routs/congru");
+    } catch (error) {
+      console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
     }
   };
@@ -296,15 +354,12 @@ export default function StudentCreate() {
     });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const fileNames = Array.from(files).map((file) => file.name);
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        uploaded_images: [...prevFormData.uploaded_images, ...fileNames],
-      }));
-    }
+  const handlePriceChange = (e: { target: { value: string } }) => {
+    const newPrice = parseInt(e.target.value, 10);
+    // const newPrice = e.target.value;
+    // if (!NaN(newPrice)) {
+    setFormData({ ...formData, price: newPrice });
+    // }
   };
 
   return (
@@ -406,17 +461,22 @@ export default function StudentCreate() {
             внести изменения.
           </p>
           <div className="flex items-center gap-[13px]">
-            {formData.uploaded_images.map((imageUrl, index) => (
-              <div key={index} className="bg-white w-[70px] h-[49px] ">
-                <Image
-                  width={80}
-                  height={80}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  src={`/${imageUrl}`}
-                  alt={`Uploaded Image ${index}`}
-                />
-              </div>
-            ))}
+            {formData.uploaded_images &&
+              Array.from(formData.uploaded_images).map((file, index) => (
+                <div key={index} className="bg-white w-[70px] h-[49px]">
+                  <img
+                    width={80}
+                    height={80}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                    src={URL.createObjectURL(file)}
+                    alt={`Uploaded Image ${index}`}
+                  />
+                </div>
+              ))}
           </div>
           <p className="text-[12px] font-[400] cursor-pointer mt-[6px]">
             <button onClick={() => fileInputRef.current?.click()}>
@@ -544,60 +604,17 @@ export default function StudentCreate() {
                 </svg>
               </div>
               <div className="mr-5 flex gap-2 items-center">
-                <button onClick={decrease}>
-                  <Minus />
-                </button>
-                <Input
-                  className="text-[14px] w-[30%]"
+                <input
+                  type="text"
+                  name="price"
+                  className="text-[14px] border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:border-blue-500"
                   value={formData.price}
+                  // onChange={handlePriceChange}
                   onChange={(e) =>
-                    setFormData({ ...formData, price: priceCounter })
+                    setFormData({ ...formData, price: Number(e.target.value) })
                   }
                 />
-                <button onClick={increase}>
-                  <Plus />
-                </button>
               </div>
-              {/* <div className="mr-5 flex gap-[5px] justify-center items-center">
-                <Dropdown
-                  buttonStyle="whitespace-nowrap text-[14px] font-[400]"
-                  listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
-                  options={options}
-                  label="в месяц"
-                />
-                <svg
-                  className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m19 9-7 7-7-7"
-                  />
-                </svg>
-              </div> */}
-              {/* <div className="mr-5 flex gap-2 items-center">
-                <button onClick={decrease}>
-                  <Minus />
-                </button>
-                <Input
-                  className="text-[14px] w-[30%]"
-                  value={formData.price}
-                  onChange={(e) =>
-                    setFormData({ ...formData, price: e.target.value })
-                  }
-                />
-                <button onClick={increase}>
-                  <Plus />
-                </button>
-              </div> */}
             </div>
           </div>
           <Button
