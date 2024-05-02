@@ -297,7 +297,7 @@ export default function ProductPage() {
                     width={558}
                     height={376}
                     alt="photo"
-                    className="bg-cover rounded-xl"
+                    className="object-fill w-full h-[376px] rounded-xl"
                   />
                   <div className="flex gap-4">
                     {advertisement.advertisement_images.map((image, index) => (
@@ -308,7 +308,7 @@ export default function ProductPage() {
                             width={122}
                             height={93}
                             alt={`photo-${index}`}
-                            className="rounded-md cursor-pointer"
+                            className="rounded-md h-[93px] cursor-pointer"
                           />
                         )}
                       </div>

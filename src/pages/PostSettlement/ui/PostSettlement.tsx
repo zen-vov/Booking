@@ -106,9 +106,15 @@ export default function PostSettlementPage() {
     author: 1,
     title: "",
     description: "",
+<<<<<<< HEAD
     typeOfHouse: "",
     price: 0,
     numberOfRooms: 0,
+=======
+    typeOfHouse: "Flat",
+    price: 0,
+    numberOfRooms: 1,
+>>>>>>> dev
     paymentTime: "daily",
     floor: 0,
     square: 0,
@@ -255,6 +261,7 @@ export default function PostSettlementPage() {
       );
 
       console.log(response.data);
+      return router.push("/routs/congru");
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
@@ -276,8 +283,41 @@ export default function PostSettlementPage() {
   const validateForm = () => {
     let errors: string[] = [];
 
+<<<<<<< HEAD
     if (formData.uploaded_images && formData.uploaded_images.length === 0) {
       errors.push("Необходимо загрузить как минимум одну фотографию.");
+=======
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "uploaded_images") {
+          const filesArray = Array.from(value as FileList);
+          filesArray.forEach((file, index) => {
+            formDataToSend.append(`uploaded_images[${index}]`, file);
+          });
+        } else {
+          formDataToSend.append(key, value.toString());
+        }
+      });
+
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.post(
+        "http://studhouse.kz/api/v1/advertisement/",
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+      return router.push("/routs/congru");
+    } catch (error) {
+      console.error(
+        "Ошибка при сохранении данных и отправке на сервер:",
+        error
+      );
+      alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
+>>>>>>> dev
     }
 
     setFormErrors(errors);
@@ -595,7 +635,8 @@ export default function PostSettlementPage() {
               </div>
               <div className="mr-5 flex gap-2 items-center">
                 <input
-                  type="number"
+                  type="text"
+                  name="price"
                   className="text-[14px] border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:border-blue-500"
                   value={formData.price === 0 ? "" : formData.price}
                   // onChange={handlePriceChange}

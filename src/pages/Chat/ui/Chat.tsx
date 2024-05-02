@@ -28,6 +28,7 @@ export default function ChatPage() {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatsId, setChatsId] = useState<number[]>();
+  const [name, setName] = useState<string>("");
   const [newMessage, setNewMessage] = useState("");
   const params = useParams() as { id: string | number };
   const token = localStorage.getItem("accessToken");
@@ -114,6 +115,24 @@ export default function ChatPage() {
     window.history.back();
   };
 
+  useEffect(() => {
+    const fetchName = async () => {
+      const token = localStorage.getItem("accessToken");
+      const jwt = require("jsonwebtoken");
+
+      const decodedToken = jwt.decode(token);
+      const userId = decodedToken?.user_id;
+      const res = await axios.get(`${BASE_URL}/auth/user/${userId}`, {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      });
+      setName(res.data.full_name);
+    };
+
+    fetchName();
+  }, []);
+
   return (
     <section className="pb-20 pt-5 h-full">
       <div className="flex items-center gap-[6px] mb-[25px]">
@@ -148,10 +167,10 @@ export default function ChatPage() {
                 text={message.text}
                 id={message.id}
                 chat={0}
-                creationDate={undefined}
+                creationDate={message.creationDate}
                 author={0}
                 author_detail={message.author_detail}
-                fullName={null}
+                fullName={message.author_detail.author.username}
                 currentUserType={message.author_detail.author_type}
               />
             ))}
