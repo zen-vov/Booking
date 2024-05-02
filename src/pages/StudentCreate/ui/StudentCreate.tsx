@@ -616,11 +616,13 @@ export default function StudentCreate() {
               </div>
             </div>
           </div>
-          <Button
-            label="Сохранить и отправить на проверку"
-            className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
-            onClick={saveToLocalStorageAndSend}
-          />
+          <Link href={"/routs/congru"}>
+            <Button
+              label="Сохранить и отправить на проверку"
+              className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
+              onClick={saveToLocalStorageAndSend}
+            />
+          </Link>
         </div>
         <div className="right">
           <ProductList />
