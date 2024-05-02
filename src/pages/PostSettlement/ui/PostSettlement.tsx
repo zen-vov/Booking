@@ -106,21 +106,15 @@ export default function PostSettlementPage() {
     author: 1,
     title: "",
     description: "",
-<<<<<<< HEAD
     typeOfHouse: "",
-    price: 0,
-    numberOfRooms: 0,
-=======
-    typeOfHouse: "Flat",
-    price: 0,
-    numberOfRooms: 1,
->>>>>>> dev
+    price: 1000,
+    numberOfRooms: 5,
     paymentTime: "daily",
-    floor: 0,
-    square: 0,
+    floor: 5,
+    square: 5,
     haveWifi: false,
-    count_bedrooms: 0,
-    count_bathrooms: 0,
+    count_bedrooms: 5,
+    count_bathrooms: 5,
     haveTV: false,
     haveWashingMachine: false,
     haveParking: false,
@@ -281,47 +275,15 @@ export default function PostSettlementPage() {
   };
 
   const validateForm = () => {
-    let errors: string[] = [];
+    // let errors: string[] = [];
 
-<<<<<<< HEAD
-    if (formData.uploaded_images && formData.uploaded_images.length === 0) {
-      errors.push("Необходимо загрузить как минимум одну фотографию.");
-=======
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key === "uploaded_images") {
-          const filesArray = Array.from(value as FileList);
-          filesArray.forEach((file, index) => {
-            formDataToSend.append(`uploaded_images[${index}]`, file);
-          });
-        } else {
-          formDataToSend.append(key, value.toString());
-        }
-      });
+    // if (formData.uploaded_images && formData.uploaded_images.length === 0) {
+    //   errors.push("Необходимо загрузить как минимум одну фотографию.");
+    // }
 
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.post(
-        "http://studhouse.kz/api/v1/advertisement/",
-        formDataToSend,
-        {
-          headers: {
-            Authorization: `JWT ${token}`,
-          },
-        }
-      );
-
-      console.log(response.data);
-      return router.push("/routs/congru");
-    } catch (error) {
-      console.error(
-        "Ошибка при сохранении данных и отправке на сервер:",
-        error
-      );
-      alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
->>>>>>> dev
-    }
-
-    setFormErrors(errors);
-    return errors.length === 0;
+    // setFormErrors(errors);
+    // return errors.length === 0;
+    return true;
   };
 
   const saveToLocalStorageAndSend = async () => {
@@ -638,6 +600,16 @@ export default function PostSettlementPage() {
                   type="text"
                   name="price"
                   className="text-[14px] border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:border-blue-500"
+                  value={formData.price}
+                  // onChange={handlePriceChange}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: Number(e.target.value) })
+                  }
+                />
+                {/* <input
+                  type="text"
+                  name="price"
+                  className="text-[14px] border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:border-blue-500"
                   value={formData.price === 0 ? "" : formData.price}
                   // onChange={handlePriceChange}
                   style={{
@@ -649,7 +621,7 @@ export default function PostSettlementPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, price: Number(e.target.value) })
                   }
-                />
+                /> */}
               </div>
             </div>
           </div>
