@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { Carousel } from "flowbite-react";
 import Like from "@/shared/ui/Icons/Like/Like";
@@ -46,10 +46,15 @@ export default function ProductCard(props: ProductProps) {
     <div key={id} className="bg-white rounded-[12px] pb-[30px]">
       <Link href={`/routs/product/${id}`}>
         <Carousel leftControl="" rightControl="">
-          {advertisement_images.map((item, index) => (
-            <div key={index} className="carousel-item">
-              <img src={item.image} alt="Product" />
-            </div>
+          {advertisement_images.map((image, index) => (
+            <Image
+              src={`http://studhouse.kz${image.image}`}
+              key={index}
+              width={611}
+              height={380}
+              alt="photo"
+              className="bg-no-repeat w-full relative"
+            />
           ))}
         </Carousel>
       </Link>
@@ -69,4 +74,3 @@ export default function ProductCard(props: ProductProps) {
     </div>
   );
 }
-
