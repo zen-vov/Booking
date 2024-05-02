@@ -20,7 +20,7 @@ export default function SettlementList({ records }: ProductListI) {
           typeOfHouse,
           relocation_images,
         }) => (
-          <Link href={`/routs/product/${id}`} key={id} passHref>
+          <Link href={`/routs/settlement/${id}`} key={id} passHref>
             <SettlementCard
               id={id}
               typeOfHouse={typeOfHouse}

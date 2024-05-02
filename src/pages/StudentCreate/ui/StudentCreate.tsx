@@ -108,9 +108,9 @@ export default function StudentCreate() {
     author: 0,
     title: "",
     description: "",
-    typeOfHouse: "Для парней", // Изменено на пустую строку, так как тип дома не указан
+    typeOfHouse: "",
     price: 0,
-    numberOfRooms: 1, // Изменено на 0, так как количество комнат может быть любым
+    numberOfRooms: 1,
     paymentTime: "daily",
     floor: 5,
     square: 5,
@@ -267,7 +267,6 @@ export default function StudentCreate() {
       );
 
       console.log(response.data);
-      return response.data;
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
@@ -313,7 +312,6 @@ export default function StudentCreate() {
       );
 
       console.log(response.data);
-      // return router.push("/routs/congru");
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
@@ -332,7 +330,7 @@ export default function StudentCreate() {
   };
 
   const handleButtonClick = (type: string) => {
-    setSelectedType((prevType) => (prevType === type ? null : type));
+    setFormData({ ...formData, typeOfHouse: type });
   };
 
   const increase = useCallback(() => {
@@ -530,19 +528,19 @@ export default function StudentCreate() {
               <Button
                 onClick={() => handleButtonClick("Для девушек")}
                 label={"Для девушек"}
-                className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
-                  selectedType === "Для девушек"
+                className={`py-2 border-[1px] px-4 text-sm rounded-md ${
+                  formData.typeOfHouse === "Для девушек"
                     ? "bg-blue text-white"
-                    : "bg-[#f1f1f1]"
+                    : "border-black"
                 }`}
               />
               <Button
                 onClick={() => handleButtonClick("Для парней")}
                 label={"Для парней"}
-                className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
-                  selectedType === "Для парней"
+                className={`py-2 px-4 border-[1px] text-sm rounded-md ${
+                  formData.typeOfHouse === "Для парней"
                     ? "bg-blue text-white"
-                    : "bg-[#f1f1f1]"
+                    : "border-black"
                 }`}
               />
             </div>
@@ -616,11 +614,13 @@ export default function StudentCreate() {
               </div>
             </div>
           </div>
-          <Button
-            label="Сохранить и отправить на проверку"
-            className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
-            onClick={saveToLocalStorageAndSend}
-          />
+          <Link href={"/routs/congru"}>
+            <Button
+              label="Сохранить и отправить на проверку"
+              className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
+              onClick={saveToLocalStorageAndSend}
+            />
+          </Link>
         </div>
         <div className="right">
           <ProductList />
