@@ -478,16 +478,15 @@ export default function StudentCreate() {
                 </div>
               ))}
           </div>
-          <p className="text-[12px] font-[400] cursor-pointer mt-[6px]">
-            <button onClick={() => fileInputRef.current?.click()}>
-              Загрузить еще
-            </button>
+          <p
+            className="text-[12px] font-[400] cursor-pointer mt-[6px]"
+            // onClick={() => fileInputRef.current?.click()}
+          >
             <input
               type="file"
               accept="image/*"
               multiple
               onChange={handleImageUpload}
-              style={{ display: "none" }}
               ref={fileInputRef}
             />
           </p>
