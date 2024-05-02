@@ -101,22 +101,22 @@ export default function PostSettlementPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState<FormData>({
-    location: "Almaty",
+    location: "",
     uploaded_images: [],
     author: 1,
-    title: "The best flat",
-    description: "In center of city",
-    typeOfHouse: "Flat",
-    price: 100000,
-    numberOfRooms: 1,
+    title: "",
+    description: "",
+    typeOfHouse: "",
+    price: 0,
+    numberOfRooms: 0,
     paymentTime: "daily",
-    floor: 5,
-    square: 5,
+    floor: 0,
+    square: 0,
     haveWifi: false,
-    count_bedrooms: 2,
-    count_bathrooms: 2,
+    count_bedrooms: 0,
+    count_bathrooms: 0,
     haveTV: false,
-    haveWashingMachine: true,
+    haveWashingMachine: false,
     haveParking: false,
     haveConditioner: false,
     nearbyTradeCenter: false,
@@ -273,40 +273,92 @@ export default function PostSettlementPage() {
     }
   };
 
-  const saveToLocalStorageAndSend = async () => {
-    try {
-      const formDataToSend = new FormData();
+  const validateForm = () => {
+    let errors: string[] = [];
 
-      Object.entries(formData).forEach(([key, value]) => {
-        if (key === "uploaded_images") {
-          const filesArray = Array.from(value as FileList);
-          filesArray.forEach((file, index) => {
-            formDataToSend.append(`uploaded_images[${index}]`, file);
-          });
-        } else {
-          formDataToSend.append(key, value.toString());
-        }
-      });
-
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.post(
-        "http://studhouse.kz/api/v1/advertisement/",
-        formDataToSend,
-        {
-          headers: {
-            Authorization: `JWT ${token}`,
-          },
-        }
-      );
-
-      console.log(response.data);
-    } catch (error) {
-      console.error(
-        "Ошибка при сохранении данных и отправке на сервер:",
-        error
-      );
-      alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
+    if (formData.uploaded_images && formData.uploaded_images.length === 0) {
+      errors.push("Необходимо загрузить как минимум одну фотографию.");
     }
+
+    setFormErrors(errors);
+    return errors.length === 0;
+  };
+
+  const saveToLocalStorageAndSend = async () => {
+    const isFormValid = validateForm();
+
+    if (isFormValid) {
+      try {
+        const formDataToSend = new FormData();
+
+        Object.entries(formData).forEach(([key, value]) => {
+          if (key === "uploaded_images") {
+            const filesArray = Array.from(value as FileList);
+            filesArray.forEach((file, index) => {
+              formDataToSend.append(`uploaded_images[${index}]`, file);
+            });
+          } else {
+            formDataToSend.append(key, value.toString());
+          }
+        });
+
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.post(
+          "http://studhouse.kz/api/v1/advertisement/",
+          formDataToSend,
+          {
+            headers: {
+              Authorization: `JWT ${token}`,
+            },
+          }
+        );
+
+        console.log(response.data);
+      } catch (error) {
+        console.error(
+          "Ошибка при сохранении данных и отправке на сервер:",
+          error
+        );
+        alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
+      }
+    } else {
+      console.error("Форма содержит ошибки валидации");
+      alert("Пожалуйста, загрузите хотя бы одну фотографию.");
+    }
+
+    // try {
+    //   const formDataToSend = new FormData();
+
+    //   Object.entries(formData).forEach(([key, value]) => {
+    //     if (key === "uploaded_images") {
+    //       const filesArray = Array.from(value as FileList);
+    //       filesArray.forEach((file, index) => {
+    //         formDataToSend.append(`uploaded_images[${index}]`, file);
+    //       });
+    //     } else {
+    //       formDataToSend.append(key, value.toString());
+    //     }
+    //   });
+
+    //   const token = localStorage.getItem("accessToken");
+    //   const response = await axios.post(
+    //     "http://studhouse.kz/api/v1/advertisement/",
+    //     formDataToSend,
+    //     {
+    //       headers: {
+    //         Authorization: `JWT ${token}`,
+    //       },
+    //     }
+    //   );
+
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.error(
+    //     "Ошибка при сохранении данных и отправке на сервер:",
+    //     error
+    //   );
+    //   alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
+    // }
   };
 
   const handleIncrement = (index: number) => {
@@ -346,9 +398,9 @@ export default function PostSettlementPage() {
   const handlePriceChange = (e: { target: { value: string } }) => {
     const newPrice = parseInt(e.target.value, 10);
     // const newPrice = e.target.value;
-    // if (!NaN(newPrice)) {
-    setFormData({ ...formData, price: newPrice });
-    // }
+    if (!isNaN(newPrice)) {
+      setFormData({ ...formData, price: newPrice });
+    }
   };
 
   return (
@@ -469,7 +521,7 @@ export default function PostSettlementPage() {
           </div>
           <p
             className="text-[12px] font-[400] cursor-pointer mt-[6px]"
-            onClick={() => fileInputRef.current?.click()}
+            // onClick={() => fileInputRef.current?.click()}
           >
             <input
               type="file"
@@ -510,56 +562,6 @@ export default function PostSettlementPage() {
               }
             />
           </div>
-          {/* <div className="">
-            <h1 className="text-[1rem] font-medium mb-0.5">О подселении</h1>
-            <p className="text-[#767272] text-[0.8rem] mb-[6px]">
-              Расскажите, о соседях
-            </p>
-            <div className="flex items-center gap-[35px]">
-              <Button
-                onClick={() => handleButtonClick("Для девушек")}
-                label={"Для девушек"}
-                className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
-                  selectedType === "Для девушек"
-                    ? "bg-blue text-white"
-                    : "bg-[#f1f1f1]"
-                }`}
-              />
-              <Button
-                onClick={() => handleButtonClick("Для парней")}
-                label={"Для парней"}
-                className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
-                  selectedType === "Для парней"
-                    ? "bg-blue text-white"
-                    : "bg-[#f1f1f1]"
-                }`}
-              />
-            </div>
-            <div className="flex gap-[26px] mt-2.5">
-              <div>
-                <h3 className="text-[#767272] text-[0.8rem] mb-[6px]">
-                  Университет
-                </h3>
-                <div className="py-[0.3rem] px-4 bg-[#F1F1F1] rounded-[10px]">
-                  <Input className="text-[0.7rem]" />
-                </div>
-              </div>
-              <div>
-                <h3 className="text-[#767272] text-[0.8rem] mb-[6px]">Курс</h3>
-                <div className="py-[0.3rem] px-4 bg-[#F1F1F1] rounded-[10px]">
-                  <Input className="text-[0.7rem]" />
-                </div>
-              </div>
-              <div>
-                <h3 className="text-[#767272] text-[0.8rem] mb-[6px]">
-                  Профессия
-                </h3>
-                <div className="py-[0.3rem] px-4 bg-[#F1F1F1] rounded-[10px]">
-                  <Input className="text-[0.7rem]" />
-                </div>
-              </div>
-            </div>
-          </div> */}
           <div className="mb-[46px] mt-[1rem]">
             <p className="text-[16px] text-black font-[500]">Установите цену</p>
             <p className="text-[12px] mb-[6px]">
@@ -595,8 +597,14 @@ export default function PostSettlementPage() {
                 <input
                   type="number"
                   className="text-[14px] border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:border-blue-500"
-                  value={formData.price}
+                  value={formData.price === 0 ? "" : formData.price}
                   // onChange={handlePriceChange}
+                  style={{
+                    MozAppearance: "textfield",
+                    WebkitAppearance: "none",
+                    margin: 0,
+                  }}
+                  onWheel={(e) => e.preventDefault()}
                   onChange={(e) =>
                     setFormData({ ...formData, price: Number(e.target.value) })
                   }
