@@ -522,6 +522,7 @@ export default function SettlementId() {
             <h1 className="text-md font-medium mt-[111px] mb-6">
               Похожие запросы
             </h1>
+            <div></div>
             <div className="grid grid-cols-2 gap-10">
               <ProductList />
             </div>
