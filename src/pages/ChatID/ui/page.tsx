@@ -86,7 +86,7 @@ export default function ChatIdPage() {
                 {personalChats.map(({ id, creationDate, interlocutor }) => (
                   <Link
                     href={`/routs/chat/${id}`}
-                    className="flex gap-9"
+                    className="flex gap-9 border-b border-b-primary py-[10px] hover:bg-[#ddd] rounded-[10px] my-[16px]"
                     key={id}
                   >
                     {/* <Image
@@ -106,7 +106,7 @@ export default function ChatIdPage() {
                           Здравствуйте! Хотели бы снять эту квартиру
                         </p>
                       </div>
-                      <p>это чат {id}</p>
+                      <p className="text-md">это чат {id}</p>
                       <p>{creationDate}</p>
                     </div>
                   </Link>
@@ -122,7 +122,7 @@ export default function ChatIdPage() {
                 {incomingChats.map(({ id, creationDate, author }) => (
                   <Link
                     href={`/routs/chat/${id}`}
-                    className="flex gap-9"
+                    className="flex gap-9 border-b border-b-primary py-[10px] hover:bg-[#ddd] rounded-[10px] my-[16px]"
                     key={id}
                   >
                     {/* <Image
@@ -142,7 +142,7 @@ export default function ChatIdPage() {
                           Здравствуйте! Хотели бы снять эту квартиру
                         </p>
                       </div>
-                      <p>это чат {id}</p>
+                      <p className="text-md">это чат {id}</p>
                       <p>{creationDate}</p>
                     </div>
                   </Link>
