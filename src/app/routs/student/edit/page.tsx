@@ -8,5 +8,5 @@ export default function Home() {
         <EditRelocation />
       </main>
     </Layout>
-  )
+  );
 }

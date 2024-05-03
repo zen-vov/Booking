@@ -272,7 +272,6 @@ export default function StudentCreate() {
       );
 
       console.log(response.data);
-      // router.push("/routs/coungru");
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
@@ -318,7 +317,6 @@ export default function StudentCreate() {
       );
 
       console.log(response.data);
-      // router.push("/routs/congru");
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
@@ -395,9 +393,9 @@ export default function StudentCreate() {
                 }
               />
             </div>
-            <span className="text-blue font-medium text-[0.8rem] cursor-pointer">
+            {/* <span className="text-blue font-medium text-[0.8rem] cursor-pointer">
               указать на карте
-            </span>
+            </span> */}
             {/* <Map address={formData.location} /> */}
           </div>
           <p className="text-[16px] font-[500] mb-[15px]">
@@ -485,7 +483,7 @@ export default function StudentCreate() {
           </div>
           <p
             className="text-[12px] font-[400] cursor-pointer mt-[6px]"
-            onClick={() => fileInputRef.current?.click()}
+            // onClick={() => fileInputRef.current?.click()}
           >
             <input
               type="file"

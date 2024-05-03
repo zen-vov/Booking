@@ -53,7 +53,7 @@ export default function ProductCard(props: ProductProps) {
               width={611}
               height={380}
               alt="photo"
-              className="flex bg-no-repeat relative"
+              className="flex relative"
             />
           ))}
         </Carousel>

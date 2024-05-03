@@ -86,16 +86,16 @@ export default function ChatIdPage() {
                 {personalChats.map(({ id, creationDate, interlocutor }) => (
                   <Link
                     href={`/routs/chat/${id}`}
-                    className="flex gap-9"
+                    className="flex gap-9 border-b border-b-primary py-[10px] hover:bg-[#ddd] rounded-[10px] my-[16px]"
                     key={id}
                   >
-                    <Image
+                    {/* <Image
                       src={"/"}
                       className="rounded-[12px]"
                       width={247}
                       height={123}
                       alt="chat"
-                    />
+                    /> */}
                     <div className="flex flex-col gap-8">
                       <h1 className="text-lg font-medium white-space">
                         г. Алматы, Бостандыкский район · 3-х комнатная квартира
@@ -106,7 +106,7 @@ export default function ChatIdPage() {
                           Здравствуйте! Хотели бы снять эту квартиру
                         </p>
                       </div>
-                      <p>это чат {id}</p>
+                      <p className="text-md">это чат {id}</p>
                       <p>{creationDate}</p>
                     </div>
                   </Link>
@@ -122,16 +122,16 @@ export default function ChatIdPage() {
                 {incomingChats.map(({ id, creationDate, author }) => (
                   <Link
                     href={`/routs/chat/${id}`}
-                    className="flex gap-9"
+                    className="flex gap-9 border-b border-b-primary py-[10px] hover:bg-[#ddd] rounded-[10px] my-[16px]"
                     key={id}
                   >
-                    <Image
+                    {/* <Image
                       src={"/"}
                       className="rounded-[12px]"
                       width={247}
                       height={123}
                       alt="chat"
-                    />
+                    /> */}
                     <div className="flex flex-col gap-8">
                       <h1 className="text-lg font-medium white-space">
                         г. Алматы, Бостандыкский район · 3-х комнатная квартира
@@ -142,7 +142,7 @@ export default function ChatIdPage() {
                           Здравствуйте! Хотели бы снять эту квартиру
                         </p>
                       </div>
-                      <p>это чат {id}</p>
+                      <p className="text-md">это чат {id}</p>
                       <p>{creationDate}</p>
                     </div>
                   </Link>
