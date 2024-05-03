@@ -29,6 +29,8 @@ interface Fields {
   floor: number;
   typeOfHouse: string;
   numberOfRooms: number;
+  count_bedrooms: number;
+  count_bathrooms: number;
   square: number;
   isSold: boolean;
   isArchived: boolean;
@@ -99,6 +101,8 @@ export default function EditPage() {
     floor: 0,
     typeOfHouse: "",
     numberOfRooms: 0,
+    count_bathrooms: 3,
+    count_bedrooms: 3,
     square: 0,
     isSold: true,
     isArchived: true,

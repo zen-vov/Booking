@@ -55,9 +55,17 @@ export default function SettlementId() {
   const [advertisement, setAdvertisement] = useState<Relocation | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [user, setUser] = useState<User | null>(null);
+  const [name, setName] = useState<string>("");
+  const [author, setAuthor] = useState<number>();
+  const [phone, setPhone] = useState<string>("");
   const [showPhoneNumber, setShowPhoneNumber] = useState<boolean>(false);
   const router = useRouter();
   const params = useParams() as { id: number | string };
+  const accessToken = localStorage.getItem("accessToken");
+  const jwt = require("jsonwebtoken");
+
+  const decodedToken = jwt.decode(accessToken);
+  const userId = decodedToken?.user_id;
 
   const fetchData = async () => {
     try {
@@ -70,6 +78,7 @@ export default function SettlementId() {
           },
         }
       );
+      setAuthor(response.data.author);
       localStorage.setItem("productId", String(response.data.id));
       return response.data;
     } catch (error) {
@@ -87,6 +96,7 @@ export default function SettlementId() {
       const response = await axios.get(
         `http://studhouse.kz/api/v1/auth/user/${userId}/`
       );
+      setName(response.data.full_name);
       setUser(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -117,6 +127,8 @@ export default function SettlementId() {
         const user = await userResponse.json();
         console.log("owner: ", advertisement?.owner);
         setRole(user.role.role_name);
+        setName(user.full_name);
+        setPhone(user.user_info.contacts);
       } catch (error) {
         console.error("Error fetching user role: ", error);
       }
@@ -300,7 +312,7 @@ export default function SettlementId() {
                     ))}
                   </div>
                 </div>
-                {role == "Student" ? (
+                {role == "Student" && author === userId ? (
                   <div className="flex flex-col gap-7">
                     <Button
                       label="Удалить объявление"
@@ -311,7 +323,7 @@ export default function SettlementId() {
                 ) : (
                   ""
                 )}
-                {role == "Landlord" ? (
+                {role == "Student" && author !== userId ? (
                   <div className="bg-white rounded-xl py-6 px-11">
                     <div className="mb-[1rem] flex justify-between items-center">
                       <div className="flex items-center gap-2">
@@ -321,15 +333,17 @@ export default function SettlementId() {
                           height={27}
                           alt="user"
                         />
-                        <span className="text-[1rem]">{user?.full_name}</span>
+                        <span className="text-[1rem]">
+                          {name && author === userId}
+                        </span>
                       </div>
                       <h3 className="text-[0.8rem]">Хозяин квартиры</h3>
                     </div>
                     <div className="mb-[1rem] flex items-center justify-between">
                       <h1 className="text-[1rem]">
-                        {showPhoneNumber
-                          ? user?.user_info.contacts
-                          : "****-***-**-" + user?.user_info.contacts.slice(-2)}
+                        {showPhoneNumber && author === userId
+                          ? phone
+                          : "****-***-**-" + phone?.slice(-2)}
                       </h1>
                       <span
                         onClick={handleShowPhoneNumber}
