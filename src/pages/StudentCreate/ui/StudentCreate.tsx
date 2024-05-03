@@ -312,10 +312,6 @@ export default function StudentCreate() {
       );
 
       console.log(response.data);
-<<<<<<< HEAD
-=======
-      router.push("/routs/congru");
->>>>>>> 62eadcf7cf3631248fb3d19ee2c086a9b49124a5
     } catch (error) {
       console.error("Ошибка при создании квартиры:", error);
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
