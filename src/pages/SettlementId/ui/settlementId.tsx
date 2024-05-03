@@ -334,15 +334,15 @@ export default function SettlementId() {
                           alt="user"
                         />
                         <span className="text-[1rem]">
-                          {name && author === userId}
+                          {name}
                         </span>
                       </div>
                       <h3 className="text-[0.8rem]">Хозяин квартиры</h3>
                     </div>
                     <div className="mb-[1rem] flex items-center justify-between">
                       <h1 className="text-[1rem]">
-                        {showPhoneNumber && author === userId
-                          ? phone
+                        {showPhoneNumber
+                          ? phone && author !== userId
                           : "****-***-**-" + phone?.slice(-2)}
                       </h1>
                       <span

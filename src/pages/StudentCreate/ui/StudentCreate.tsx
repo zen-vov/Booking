@@ -101,11 +101,16 @@ export default function StudentCreate() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const accessToken = localStorage.getItem("accessToken");
+  const jwt = require("jsonwebtoken");
+
+  const decodedToken = jwt.decode(accessToken);
+  const userId = decodedToken?.user_id;
 
   const [formData, setFormData] = useState<FormData>({
     location: "",
     uploaded_images: [],
-    author: 0,
+    author: userId,
     title: "",
     description: "",
     typeOfHouse: "",

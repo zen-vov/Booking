@@ -1,5 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
-import React from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import Button from "@/shared/ui/Button/Button";
 import Input from "@/shared/ui/Input/Input";
@@ -18,45 +19,49 @@ import Dumbell from "@/shared/ui/Icons/Dumbell/Dumbell";
 import Dropdown from "@/shared/ui/Dropdown/Dropdown";
 import ProductList from "@/widgets/productList/ui/productLIst";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
-
-interface Fields {
-  title: string;
-  author: number;
-  description: string;
-  price: string;
-  location: string;
-  paymentTime: string;
-  floor: number;
-  typeOfHouse: string;
-  numberOfRooms: number;
-  count_bedrooms: number;
-  count_bathrooms: number;
-  current_people_count: number;
-  max_people_count: number;
-  square: number;
-  isSold: boolean;
-  isArchived: boolean;
-  haveWifi: boolean;
-  haveTV: boolean;
-  haveWashingMachine: boolean;
-  haveParking: boolean;
-  haveConditioner: boolean;
-  nearbyTradeCenter: boolean;
-  nearbyHospital: boolean;
-  nearbySchool: boolean;
-  nearbyGym: boolean;
-  uploaded_images: string[];
-}
+import axios from "axios";
+import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+// import Map from "@/features/Map/ui/Map";
 
 interface Counter {
   name: string;
-  title: string;
   count: number;
 }
 
 interface IconButton {
   icon: JSX.Element;
   label: string;
+}
+
+interface FormData {
+  location: string;
+  uploaded_images: File[] | null; // Массив файлов изображений
+  title: string;
+  author: number;
+  description: string;
+  typeOfHouse: string; // Тип дома: например, "апартаменты", "дом", "квартира" и т. д.
+  price: number; // Цена за жилье (может быть строкой, если нужно учитывать валюту и т. д.)
+  paymentTime: "daily" | "monthly" | "yearly"; // Время оплаты: ежедневно, ежегодно, раз в полгода
+  floor: number; // Этаж
+  square: number; // Площадь квартиры
+  max_people_count: number;
+  current_people_count: number;
+  count_bedrooms: number;
+  count_bathrooms: number;
+  numberOfRooms: number;
+  haveWifi: boolean; // Наличие Wi-Fi
+  haveTV: boolean; // Наличие телевизора
+  haveWashingMachine: boolean; // Наличие стиральной машины
+  haveParking: boolean; // Наличие парковки
+  haveConditioner: boolean; // Наличие кондиционера
+  nearbyTradeCenter: boolean; // Рядом есть торговый центр
+  nearbyHospital: boolean; // Рядом есть больница
+  nearbySchool: boolean; // Рядом есть школа
+  nearbyGym: boolean; // Рядом есть тренажерный зал
+  isSold: boolean; // Жилье продано
+  isArchived: boolean; // Жилье в архиве
 }
 
 const icons: IconButton[] = [
@@ -66,6 +71,7 @@ const icons: IconButton[] = [
   { icon: <Parking className="bg-[#f1f1f1]" />, label: "Parking" },
   { icon: <Conditioner className="bg-[#f1f1f1]" />, label: "Conditioner" },
 ];
+
 const iconsNear: IconButton[] = [
   { icon: <Shop className="bg-[#f1f1f1]" />, label: "Shop" },
   { icon: <Hospital className="bg-[#f1f1f1]" />, label: "Hospital" },
@@ -73,66 +79,222 @@ const iconsNear: IconButton[] = [
   { icon: <Dumbell className="bg-[#f1f1f1]" />, label: "Dumbell" },
 ];
 
+const NearButton = ["Торговый центр", "Больница", "Школа", "Тренажорный зал"];
+
 const options = [
-  { label: "в год", path: "/year" },
-  { label: "на день", path: "/day" },
-  { label: "полгода", path: "/half-year" },
+  { label: "в год" },
+  { label: "на день" },
+  { label: "полгода" },
 ];
 
 export default function EditRelocation() {
   const id = localStorage.getItem("productId");
-  const [selectedIcons, setSelectedIcons] = React.useState<boolean[]>(
-    icons.map(() => false)
-  );
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const MIN_PRICE = "0";
-  const MIN_PRICE2 = "0";
-  const [price, setPrice] = React.useState<string>(MIN_PRICE);
-  const [price2, setPrice2] = React.useState<string>(MIN_PRICE2);
-  const [uploadedImages] = React.useState<File[] | null>([]);
-  const [selectedType, setSelectedType] = React.useState<string | null>(null);
-  const [formErrors, setFormErrors] = React.useState<string[]>([]);
-  const token = localStorage.getItem("accessToken");
+  const [counterState, setCounterState] = useState<Counter[]>([
+    { name: "Максимальное количество жителей", count: 0 },
+    { name: "Количество комнат", count: 0 },
+    { name: "Спальни", count: 0 },
+    { name: "Ванные, душ", count: 0 },
+  ]);
+  const MIN_PRICE2 = 0;
+  const [price2, setPrice2] = useState<number>(MIN_PRICE2);
+  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const accessToken = localStorage.getItem("accessToken");
   const jwt = require("jsonwebtoken");
-  const decodedToken = jwt.decode(token);
+
+  const decodedToken = jwt.decode(accessToken);
   const userId = decodedToken?.user_id;
 
-  const [fields, setFields] = React.useState<Fields>({
-    title: "",
-    author: userId,
-    description: "",
-    price: "0",
+  const [formData, setFormData] = useState<FormData>({
     location: "",
-    paymentTime: "daily",
-    floor: 0,
-    typeOfHouse: "",
-    numberOfRooms: 0,
-    max_people_count: 5,
-    current_people_count: 3,
-    count_bathrooms: 3,
-    count_bedrooms: 3,
-    square: 0,
-    isSold: true,
-    isArchived: true,
-    haveWifi: false,
-    haveTV: true,
-    haveWashingMachine: true,
-    haveParking: true,
-    haveConditioner: true,
-    nearbyTradeCenter: true,
-    nearbyHospital: true,
-    nearbySchool: true,
-    nearbyGym: true,
     uploaded_images: [],
+    author: userId,
+    title: "",
+    description: "",
+    typeOfHouse: "",
+    price: 0,
+    numberOfRooms: 1,
+    paymentTime: "daily",
+    floor: 5,
+    square: 5,
+    haveWifi: false,
+    max_people_count: 5,
+    current_people_count: 2,
+    count_bedrooms: 2,
+    count_bathrooms: 2,
+    haveTV: false,
+    haveWashingMachine: false,
+    haveParking: false,
+    haveConditioner: false,
+    nearbyTradeCenter: false,
+    nearbyHospital: false,
+    nearbySchool: false,
+    nearbyGym: false,
+    isSold: false,
+    isArchived: false,
   });
+  const [priceCounter, setPriceCounter] = useState<number>(formData.price);
 
-  const [counterState, setCounterState] = React.useState<Counter[]>([
-    { name: "Максимальное количество жителей", title: "", count: 0 },
-    { name: "Количество комнат", title: "numberOfRooms", count: 0 },
-    { name: "Спальни", title: "", count: 0 },
-    { name: "Ванные, душ", title: "", count: 0 },
-  ]);
-// 
+  const [selectedIcons, setSelectedIcons] = useState<boolean[]>(
+    icons.map(() => false)
+  );
+
+  const handleIconClick = (index: number) => {
+    setSelectedIcons((prevSelectedIcons) => {
+      const newSelectedIcons = [...prevSelectedIcons];
+      newSelectedIcons[index] = !newSelectedIcons[index];
+
+      if (index < icons.length) {
+        switch (index) {
+          case 0:
+            setFormData({ ...formData, haveWifi: newSelectedIcons[index] });
+            break;
+          case 1:
+            setFormData({ ...formData, haveTV: newSelectedIcons[index] });
+            break;
+          case 2:
+            setFormData({
+              ...formData,
+              haveWashingMachine: newSelectedIcons[index],
+            });
+            break;
+          case 3:
+            setFormData({ ...formData, haveParking: newSelectedIcons[index] });
+            break;
+          case 4:
+            setFormData({
+              ...formData,
+              haveConditioner: newSelectedIcons[index],
+            });
+            break;
+          default:
+            break;
+        }
+      } else {
+        switch (index - icons.length) {
+          case 0:
+            setFormData({
+              ...formData,
+              nearbyTradeCenter: newSelectedIcons[index],
+            });
+            break;
+          case 1:
+            setFormData({
+              ...formData,
+              nearbyHospital: newSelectedIcons[index],
+            });
+            break;
+          case 2:
+            setFormData({ ...formData, nearbySchool: newSelectedIcons[index] });
+            break;
+          case 3:
+            setFormData({ ...formData, nearbyGym: newSelectedIcons[index] });
+            break;
+          default:
+            break;
+        }
+      }
+
+      return newSelectedIcons;
+    });
+  };
+
+  const createApartment = async (apartmentData: any) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+
+      const formDataToSend = new FormData();
+
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("author", String(formData.author));
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("price", String(formData.price));
+      formDataToSend.append("location", formData.location);
+      formDataToSend.append("paymentTime", formData.paymentTime);
+      formDataToSend.append("floor", String(formData.floor));
+      formDataToSend.append("typeOfHouse", formData.typeOfHouse);
+      formDataToSend.append("count_bedrooms", String(formData.count_bedrooms));
+      formDataToSend.append(
+        "count_bathrooms",
+        String(formData.count_bathrooms)
+      );
+      formDataToSend.append(
+        "max_people_count",
+        String(formData.max_people_count)
+      );
+      formDataToSend.append(
+        "current_people_count",
+        String(formData.current_people_count)
+      );
+      formDataToSend.append("numberOfRooms", String(formData.numberOfRooms));
+      formDataToSend.append("square", String(formData.square));
+      formDataToSend.append("isSold", String(formData.isSold));
+      formDataToSend.append("isArchived", String(formData.isArchived));
+      formDataToSend.append("haveWifi", String(formData.haveWifi));
+      formDataToSend.append("haveTV", String(formData.haveTV));
+      formDataToSend.append(
+        "haveWashingMachine",
+        String(formData.haveWashingMachine)
+      );
+      formDataToSend.append("haveParking", String(formData.haveParking));
+      formDataToSend.append(
+        "haveConditioner",
+        String(formData.haveConditioner)
+      );
+      formDataToSend.append(
+        "nearbyTradeCenter",
+        String(formData.nearbyTradeCenter)
+      );
+      formDataToSend.append("nearbyHospital", String(formData.nearbyHospital));
+      formDataToSend.append("nearbySchool", String(formData.nearbySchool));
+      formDataToSend.append("nearbyGym", String(formData.nearbyGym));
+
+      if (formData.uploaded_images) {
+        const uploadedImages = formData.uploaded_images;
+        for (let i = 0; i < uploadedImages.length; i++) {
+          formDataToSend.append("uploaded_images", uploadedImages[i]);
+        }
+      }
+
+      if (apartmentData.price < 0) {
+        throw new Error("Цена не может быть меньше 0");
+      }
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await fetch(
+        `http://studhouse.kz/api/v1/relocation/${id}/`,
+        {
+          headers: {
+            Authorization: `JWT ${accessToken}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch advertisement");
+      }
+      const data: FormData = await response.json();
+      console.log("dattta", apartmentData);
+      setFormData(apartmentData);
+    } catch (error) {
+      console.error("Ошибка при создании квартиры:", error);
+      alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
+    }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      if (fileInputRef.current) {
+        const newFiles = Array.from(files);
+        setUploadedImages((prevImages) => [...prevImages, ...newFiles]);
+
+        setFormData({ ...formData, uploaded_images: uploadedImages });
+      }
+    }
+  };
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -148,9 +310,9 @@ export default function EditRelocation() {
         if (!response.ok) {
           throw new Error("Failed to fetch advertisement");
         }
-        const data: Fields = await response.json();
+        const data: FormData = await response.json();
         console.log("dattta", data);
-        setFields(data);
+        setFormData(data);
       } catch (error) {
         console.error("Error fetching advertisement:", error);
         throw error;
@@ -160,31 +322,21 @@ export default function EditRelocation() {
     fetchData();
   }, []);
 
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = event.target;
-    setFields((prevFields) => ({
-      ...prevFields,
-      [name]: value,
-    }));
-  };
-
   const updateAdvertisement = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
       const response = await fetch(
-        `http://studhouse.kz/api/v1/advertisement/${id}/`,
+        `http://studhouse.kz/api/v1/relocation/${id}/`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `JWT ${accessToken}`,
           },
-          body: JSON.stringify(fields),
+          body: JSON.stringify(formData),
         }
       );
-      console.log("----> ", fields);
+      console.log("----> ", formData);
       if (!response.ok) {
         throw new Error("Failed to update advertisement");
       }
@@ -194,20 +346,40 @@ export default function EditRelocation() {
     }
   };
 
-  const handleGoBack = () => {
-    window.history.back();
+  const saveToLocalStorageAndSend = async () => {
+    try {
+      const formDataToSend = new FormData();
+
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "uploaded_images") {
+          const filesArray = Array.from(value as FileList);
+          filesArray.forEach((file, index) => {
+            formDataToSend.append(`uploaded_images[${index}]`, file);
+          });
+        } else {
+          formDataToSend.append(key, value.toString());
+        }
+      });
+
+      const token = localStorage.getItem("accessToken");
+      const response = await axios.put(
+        `http://studhouse.kz/api/v1/relocation/${id}`,
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+      // router.push("/routs/congru");
+    } catch (error) {
+      console.error("Ошибка при создании квартиры:", error);
+      alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
+    }
   };
 
-  const handleDecrement = (index: number) => {
-    setCounterState((prevCounters) => {
-      const updatedCounters = [...prevCounters];
-      updatedCounters[index] = {
-        ...updatedCounters[index],
-        count: Math.max(0, updatedCounters[index].count - 1),
-      };
-      return updatedCounters;
-    });
-  };
   const handleIncrement = (index: number) => {
     setCounterState((prevCounters) => {
       const updatedCounters = [...prevCounters];
@@ -219,151 +391,44 @@ export default function EditRelocation() {
     });
   };
 
-  const handleIconClick = (index: number) => {
-    setSelectedIcons((prevSelectedIcons) => {
-      const newSelectedIcons = [...prevSelectedIcons];
-      newSelectedIcons[index] = !newSelectedIcons[index];
+  const handleButtonClick = (type: string) => {
+    setFormData({ ...formData, typeOfHouse: type });
+  };
 
-      // Обработка выбора иконок в соответствии с индексом
-      if (index < icons.length) {
-        switch (index) {
-          case 0:
-            setFields({ ...fields, haveWifi: newSelectedIcons[index] });
-            break;
-          case 1:
-            setFields({ ...fields, haveTV: newSelectedIcons[index] });
-            break;
-          case 2:
-            setFields({
-              ...fields,
-              haveWashingMachine: newSelectedIcons[index],
-            });
-            break;
-          case 3:
-            setFields({ ...fields, haveParking: newSelectedIcons[index] });
-            break;
-          case 4:
-            setFields({
-              ...fields,
-              haveConditioner: newSelectedIcons[index],
-            });
-            break;
-          default:
-            break;
-        }
-      } else {
-        switch (index - icons.length) {
-          case 0:
-            setFields({
-              ...fields,
-              nearbyTradeCenter: newSelectedIcons[index],
-            });
-            break;
-          case 1:
-            setFields({
-              ...fields,
-              nearbyHospital: newSelectedIcons[index],
-            });
-            break;
-          case 2:
-            setFields({ ...fields, nearbySchool: newSelectedIcons[index] });
-            break;
-          case 3:
-            setFields({ ...fields, nearbyGym: newSelectedIcons[index] });
-            break;
-          default:
-            break;
-        }
-      }
+  const increase = useCallback(() => {
+    setPriceCounter((prevprice) => Math.max(formData.price, prevprice + 5000));
+  }, [formData.price]);
 
-      return newSelectedIcons;
+  const decrease = useCallback(() => {
+    setPriceCounter((prevPrice) => Math.max(formData.price, prevPrice - 5000));
+  }, [formData.price]);
+
+  const handleDecrement = (index: number) => {
+    setCounterState((prevCounters) => {
+      const updatedCounters = [...prevCounters];
+      updatedCounters[index] = {
+        ...updatedCounters[index],
+        count: Math.max(0, updatedCounters[index].count - 1),
+      };
+      return updatedCounters;
     });
   };
 
-  const handleButtonClick = (type: string) => {
-    setSelectedType((prevType) => (prevType === type ? null : type));
-  };
-
-  const increase = () => {
-    setPrice((prevprice) =>
-      String(Math.max(Number(MIN_PRICE), Number(prevprice) + 5000))
-    );
-    setFields({ ...fields, price: price });
-  };
-  const increase2 = () => {
-    setPrice2((prevprice) =>
-      String(Math.max(Number(MIN_PRICE2), Number(prevprice) + 5000))
-    );
-  };
-
-  const decrease = () => {
-    setPrice((prevPrice) =>
-      String(Math.max(Number(MIN_PRICE), Number(prevPrice) - 5000))
-    );
-    setFields({ ...fields, price: price });
-  };
-  const decrease2 = () => {
-    setPrice2((prevprice) =>
-      String(Math.max(Number(MIN_PRICE2), Number(prevprice) - 5000))
-    );
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const fileNames = Array.from(files).map((file) => file.name);
-      setFields((prev) => ({
-        ...prev,
-        uploaded_images: [...prev.uploaded_images, ...fileNames],
-      }));
-    }
-  };
-
-  const saveToLocalStorageAndSend = async () => {
-    try {
-      const apartmentData = {
-        location: fields.location,
-        uploaded_images: fields.uploaded_images.map((image) => image), // Предполагая, что вы хотите отправить только имена файлов
-        title: fields.title,
-        description: fields.description,
-        typeOfHouse: fields.typeOfHouse || "", // Если тип дома не указан, используем пустую строку
-        price: fields.price,
-        numberOfRooms: fields.numberOfRooms || 0, // Если количество комнат не указано, используем 0
-        paymentTime: fields.paymentTime,
-        floor: fields.floor,
-        square: fields.square,
-        haveWifi: fields.haveWifi,
-        haveTV: fields.haveTV,
-        haveWashingMachine: fields.haveWashingMachine,
-        haveParking: fields.haveParking,
-        haveConditioner: fields.haveConditioner,
-        nearbyTradeCenter: fields.nearbyTradeCenter,
-        nearbyHospital: fields.nearbyHospital,
-        nearbySchool: fields.nearbySchool,
-        nearbyGym: fields.nearbyGym,
-        isSold: fields.isSold,
-        isArchived: fields.isArchived,
-      };
-    } catch (error) {
-      console.error(
-        "Ошибка при сохранении данных и отправке на сервер:",
-        error
-      );
-      alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
-    }
+  const handlePriceChange = (e: { target: { value: string } }) => {
+    const newPrice = parseInt(e.target.value, 10);
+    // const newPrice = e.target.value;
+    // if (!NaN(newPrice)) {
+    setFormData({ ...formData, price: newPrice });
+    // }
   };
 
   return (
     <section className="pt-[30px] pb-[200px]">
       <div>
-        <div
-          className="flex items-center gap-[8px] cursor-pointer"
-          onClick={handleGoBack}
-        >
+        <Link href={"/"} className="flex gap-[5px] items-center ">
           <Arrow />
           <p className="text-[16px] font-[500]">Вернуться на главное меню</p>
-        </div>
-
+        </Link>
         <h1 className="text-[24px] mt-[20px] mb-[55px] font-[500]">
           Информация о жилье
         </h1>
@@ -373,27 +438,15 @@ export default function EditRelocation() {
           <h1 className="font-medium text-[1rem] pb-2.5">
             Где расположено ваше жилье?
           </h1>
-          <div className="flex flex-col items-start gap-4 mb-2.5">
-            {/* <div className="py-2.5 px-4 flex bg-[#F3F3F3] rounded-[12px] items-center">
-              <Input
-                className="text-[1rem] w-full"
-                placeholder="Введите название"
-                name="address"
-                value={fields.title}
-                onChange={(e) =>
-                  setFields({ ...fields, title: e.target.value })
-                }
-                // onChange={handleInputChange}
-              />
-            </div> */}
+          <div className="flex items-center gap-4 mb-2.5">
             <div className="py-2.5 px-4 flex bg-[#F3F3F3] rounded-[12px] items-center">
               <Input
                 className="text-[1rem] w-full"
                 placeholder="Введите адрес"
                 name="address"
-                value={fields.location}
+                value={formData.location}
                 onChange={(e) =>
-                  setFields({ ...fields, location: e.target.value })
+                  setFormData({ ...formData, location: e.target.value })
                 }
               />
             </div>
@@ -413,12 +466,7 @@ export default function EditRelocation() {
               >
                 <p className="text-[14px] font-[400]">{counter.name}</p>
                 <div className="flex items-center gap-[5px]">
-                  <button
-                    onClick={() => handleDecrement(index)}
-                    onChange={() =>
-                      setFields({ ...fields, numberOfRooms: counter.count })
-                    }
-                  >
+                  <button onClick={() => handleDecrement(index)}>
                     <Minus />
                   </button>
                   <p className="text-[14px] font-[400]">{counter.count}</p>
@@ -473,26 +521,32 @@ export default function EditRelocation() {
             внести изменения.
           </p>
           <div className="flex items-center gap-[13px]">
-            {fields.uploaded_images?.map((imageUrl, index) => (
-              <div key={index} className="bg-white w-[70px] h-[49px] ">
-                <img
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  src={imageUrl}
-                  alt={`Uploaded Image ${index}`}
-                />
-              </div>
-            ))}
+            {formData.uploaded_images &&
+              Array.from(formData.uploaded_images).map((file, index) => (
+                <div key={index} className="bg-white w-[70px] h-[49px]">
+                  <img
+                    width={80}
+                    height={80}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                    src={URL.createObjectURL(file)}
+                    alt={`Uploaded Image ${index}`}
+                  />
+                </div>
+              ))}
           </div>
-          <p className="text-[12px] font-[400] cursor-pointer mt-[6px]">
-            <button onClick={() => fileInputRef.current?.click()}>
-              Загрузить еще
-            </button>
+          <p
+            className="text-[12px] font-[400] cursor-pointer mt-[6px]"
+            onClick={() => fileInputRef.current?.click()}
+          >
             <input
               type="file"
               accept="image/*"
               multiple
               onChange={handleImageUpload}
-              style={{ display: "none" }}
               ref={fileInputRef}
             />
           </p>
@@ -506,8 +560,10 @@ export default function EditRelocation() {
             </p>
             <textarea
               className="w-[380px] h-[50px] py-[10px] px-[20px] border-none bg-[#F1F1F1] rounded-[12px] focus:outline-none"
-              value={fields.title}
-              onChange={(e) => setFields({ ...fields, title: e.target.value })}
+              value={formData.title}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
             />
           </div>
           <div className="mb-[16px]">
@@ -519,9 +575,9 @@ export default function EditRelocation() {
             </p>
             <textarea
               className="w-[380px] h-[100px] py-[10px] px-[20px] border-none bg-[#F1F1F1] rounded-[12px] focus:outline-none"
-              value={fields.description}
+              value={formData.description}
               onChange={(e) =>
-                setFields({ ...fields, description: e.target.value })
+                setFormData({ ...formData, description: e.target.value })
               }
             />
           </div>
@@ -534,19 +590,19 @@ export default function EditRelocation() {
               <Button
                 onClick={() => handleButtonClick("Для девушек")}
                 label={"Для девушек"}
-                className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
-                  selectedType === "Для девушек"
+                className={`py-2 border-[1px] px-4 text-sm rounded-md ${
+                  formData.typeOfHouse === "Для девушек"
                     ? "bg-blue text-white"
-                    : "bg-[#f1f1f1]"
+                    : "border-black"
                 }`}
               />
               <Button
                 onClick={() => handleButtonClick("Для парней")}
                 label={"Для парней"}
-                className={`py-2 px-[50px] text-[0.7rem] rounded-[10px] ${
-                  selectedType === "Для парней"
+                className={`py-2 px-4 border-[1px] text-sm rounded-md ${
+                  formData.typeOfHouse === "Для парней"
                     ? "bg-blue text-white"
-                    : "bg-[#f1f1f1]"
+                    : "border-black"
                 }`}
               />
             </div>
@@ -586,7 +642,7 @@ export default function EditRelocation() {
                   buttonStyle="whitespace-nowrap text-[14px] font-[400]"
                   listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
                   options={options}
-                  label="В месяц"
+                  label="в месяц"
                 />
                 <svg
                   className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
@@ -607,60 +663,16 @@ export default function EditRelocation() {
                 </svg>
               </div>
               <div className="mr-5 flex gap-2 items-center">
-                <button onClick={decrease}>
-                  <Minus />
-                </button>
-                <Input
-                  className="text-[14px] w-[40%]"
-                  value={fields.price}
-                  // onChange={handleInputChange2}
-                  // onChange={(e) =>
-                  //   setFields({ ...fields, price: e.target.value })
-                  // }
-                />
-                <button onClick={increase}>
-                  <Plus />
-                </button>
-              </div>
-              <div className="mr-5 flex gap-[5px] justify-center items-center">
-                <Dropdown
-                  buttonStyle="whitespace-nowrap text-[14px] font-[400]"
-                  listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
-                  options={options}
-                  label="Депозит"
-                />
-                <svg
-                  className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m19 9-7 7-7-7"
-                  />
-                </svg>
-              </div>
-              <div className="mr-5 flex gap-2 items-center">
-                <button onClick={decrease2}>
-                  <Minus />
-                </button>
-                <Input
-                  className="text-[14px] w-[40%]"
-                  value={price2}
+                <input
+                  type="text"
+                  name="price"
+                  className="text-[14px] border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:border-blue-500"
+                  value={formData.price}
+                  // onChange={handlePriceChange}
                   onChange={(e) =>
-                    setFields({ ...fields, price: e.target.value })
+                    setFormData({ ...formData, price: Number(e.target.value) })
                   }
                 />
-                <button onClick={increase2}>
-                  <Plus />
-                </button>
               </div>
             </div>
           </div>
@@ -670,11 +682,12 @@ export default function EditRelocation() {
               className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
               onClick={updateAdvertisement}
             />
-            <Button
-              label="Назад"
-              className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
-              onClick={handleGoBack}
-            />
+            <Link href={`/routs/settlement`}>
+              <Button
+                label="Назад"
+                className="px-[35px] py-[13px] font-[500] text-[16px] bg-[#000080] text-white rounded-[6px]"
+              />
+            </Link>
           </div>
         </div>
         <div className="right">

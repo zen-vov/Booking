@@ -49,7 +49,7 @@ export default function LandLord() {
   const [current, setCurrent] = useState(1);
   const [active, setActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [role, setRole] = useState<1 | 2 | null>(null);
+  const [role, setRole] = useState<string>("");
   const [hasAuth, setHasAuth] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [numberOfRooms, setNumberOfRooms] = useState("");
@@ -111,7 +111,7 @@ export default function LandLord() {
           `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
-        setRole(user.role.id);
+        setRole(user.role.role_name);
         console.log("user role asdasd", user.role.id);
       } catch (error) {
         console.log("Error fetching user role: ", error);
@@ -171,7 +171,7 @@ export default function LandLord() {
   return (
     <section className="pb-[45px]">
       {/*-----*/}
-      {role === 1 && hasAuth && (
+      {role === "Landlord" && hasAuth && (
         <div className={`${styles.imgbg} flex`}>
           <div className=" py-[128px] flex flex-col items-start w-full">
             <div className="container flex flex-col">
