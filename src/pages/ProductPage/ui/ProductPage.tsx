@@ -55,6 +55,8 @@ export default function ProductPage() {
   const [advertisement, setAdvertisement] = useState<Advertisement | null>(
     null
   );
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [people, setPeople] = useState<number | any>(1);
   const [user, setUser] = useState<User | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -199,6 +201,25 @@ export default function ProductPage() {
       console.error("Error adding to favorites:", error);
     }
   };
+
+  const fetchRepeat = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const res = await axios.get(`${BASE_URL}/advertisement/`, {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      });
+      setData(res.data);
+      setFilteredData(res.data.slice(0, 4));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchRepeat();
+  }, []);
 
   useEffect(() => {
     const checkFavoriteStatus = async () => {
@@ -532,7 +553,7 @@ export default function ProductPage() {
               Похожие запросы
             </h1>
             <div className="grid grid-cols-2 gap-10">
-              <ProductList />
+              <ProductList records={filteredData} />
             </div>
           </>
         </>

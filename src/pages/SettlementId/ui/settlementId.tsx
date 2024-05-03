@@ -9,6 +9,8 @@ import Image from "next/image";
 import Edit from "@/shared/ui/Icons/Edit/Edit";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import SettlementCard from "@/entities/settlementCard/ui/SettlementCard";
+import SettlementList from "@/widgets/SettlementList/ui/Settlement";
 
 interface Relocation {
   id: number;
@@ -51,6 +53,8 @@ interface User {
 
 export default function SettlementId() {
   const [role, setRole] = useState<"Student" | "Landlord" | null>(null);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [advertisement, setAdvertisement] = useState<Relocation | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -86,6 +90,25 @@ export default function SettlementId() {
       throw error;
     }
   };
+
+  const fetchRepeat = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const res = await axios.get(`${BASE_URL}/relocation/`, {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      });
+      setData(res.data);
+      setFilteredData(res.data.slice(0, 4));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchRepeat();
+  }, []);
 
   const handleImageClick = (index: any) => {
     setCurrentImageIndex(index);
@@ -297,7 +320,7 @@ export default function SettlementId() {
                     className="object-fill w-full h-[376px] rounded-xl"
                   />
                   <div className="flex gap-4">
-                    {advertisement.relocation_images.map((image, index) => (
+                    {advertisement?.relocation_images?.map((image, index) => (
                       <div key={index} onClick={() => handleImageClick(index)}>
                         {image.image && (
                           <Image
@@ -333,9 +356,7 @@ export default function SettlementId() {
                           height={27}
                           alt="user"
                         />
-                        <span className="text-[1rem]">
-                          {name}
-                        </span>
+                        <span className="text-[1rem]">{name}</span>
                       </div>
                       <h3 className="text-[0.8rem]">Хозяин квартиры</h3>
                     </div>
@@ -522,7 +543,7 @@ export default function SettlementId() {
               Похожие запросы
             </h1>
             <div className="grid grid-cols-2 gap-10">
-              <ProductList />
+              <SettlementList records={filteredData} />
             </div>
           </>
         </>

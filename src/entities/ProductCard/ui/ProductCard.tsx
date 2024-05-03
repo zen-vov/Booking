@@ -46,7 +46,7 @@ export default function ProductCard(props: ProductProps) {
     <div key={id} className="bg-white rounded-[12px] pb-[30px]">
       <Link href={`/routs/product/${id}`}>
         <Carousel leftControl=" " rightControl=" ">
-          {advertisement_images.map((image, index) => (
+          {advertisement_images?.map((image, index) => (
             <Image
               key={index}
               src={`http://studhouse.kz${image.image}`}

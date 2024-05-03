@@ -94,7 +94,7 @@ export default function SettlementCard(props: ProductProps) {
     <div key={id} className="bg-white rounded-[12px] pb-[30px]">
       <Link href={`/routs/settlement/${id}`}>
         <Carousel leftControl=" " rightControl=" ">
-          {relocation_images.map((image, index) => (
+          {relocation_images?.map((image, index) => (
             <Image
               key={index}
               src={`http://studhouse.kz${image.image}`}
