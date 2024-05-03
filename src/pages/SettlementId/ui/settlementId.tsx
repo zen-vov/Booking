@@ -49,6 +49,12 @@ interface User {
   };
 }
 
+const initialChatData = {
+  creationDate: "",
+  author: 0,
+  interlocutor: 0,
+};
+
 export default function SettlementId() {
   const [role, setRole] = useState<"Student" | "Landlord" | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
@@ -58,6 +64,7 @@ export default function SettlementId() {
   const [showPhoneNumber, setShowPhoneNumber] = useState<boolean>(false);
   const router = useRouter();
   const params = useParams() as { id: number | string };
+  const [message, setMessage] = useState("");
 
   const fetchData = async () => {
     try {
@@ -222,31 +229,18 @@ export default function SettlementId() {
   const createChat = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-      const jwt = require("jsonwebtoken");
+      const userId = localStorage.getItem("userId");
 
-      const decodedToken = jwt.decode(accessToken);
-      const userId = decodedToken?.user_id;
-
-      if (userId) {
-        localStorage.setItem("userId", userId);
-      }
-
-      let interlocutor;
-
-      if (userId === 1) {
-        interlocutor = 2;
-      } else if (userId === 2) {
-        interlocutor = 1;
-      } else {
-        console.error("Invalid userId:", userId);
-        return;
-      }
+      const currentDate = new Date().toISOString();
+      const authorId = userId;
+      const interlocutorId = advertisement?.author;
 
       const chatData = {
-        creationDate: new Date().toISOString(),
-        author: userId,
-        interlocutor: interlocutor,
+        creationDate: currentDate,
+        author: authorId,
+        interlocutor: interlocutorId,
       };
+
       const res = await axios.post(
         "http://studhouse.kz/api/v1/chat/chats/",
         chatData,
@@ -256,10 +250,15 @@ export default function SettlementId() {
           },
         }
       );
-      console.log("Chat created successfully:", res.data);
+
+      console.log("Chat created: ", res.data);
     } catch (error) {
-      console.error("Error creating chat:", error);
+      console.error("Error creating chat: ", error);
     }
+  };
+
+  const handleMessageSend = () => {
+    console.log("Message sent: ", message);
   };
 
   return (
@@ -311,8 +310,8 @@ export default function SettlementId() {
                 ) : (
                   ""
                 )}
-                {role == "Landlord" ? (
-                  <div className="bg-white rounded-xl py-6 px-11">
+                {role == "Student" ? (
+                  <div className="bg-white rounded-xl py-6 px-11 mt-[36px]">
                     <div className="mb-[1rem] flex justify-between items-center">
                       <div className="flex items-center gap-2">
                         <Image
@@ -352,20 +351,36 @@ export default function SettlementId() {
                     <p className="text-[0.8rem] mt-[0.5rem]">
                       Арендодатель предоставил документы собственности на жильё
                     </p>
-                    <div className="bg-[#f1f1f1] w-full rounded-[6px] flex justify-between relative mt-6 ">
+                    <div>
+                      <Link href={"/routs/chat"}>
+                        <Button
+                          onClick={() => {
+                            handleMessageSend();
+                            createChat();
+                          }}
+                          className="bg-blue w-[200px] text-white rounded-[6px] text-[0.9rem] font-medium text-center p-2.5 mt-[16px]"
+                        >
+                          Начать чат
+                        </Button>
+                      </Link>
+                    </div>
+                    {/* <div className="bg-[#f1f1f1] w-full rounded-[6px] flex justify-between relative mt-6 ">
                       <Input
                         placeholder="Отправить сообщение..."
                         className="text-[0.9rem] font-medium w-full text-[#A8A2A2] py-[11px] px-5"
                       />
                       <Link href={"/routs/chat"}>
                         <Button
-                          onClick={createChat}
+                          onClick={() => {
+                            handleMessageSend();
+                            createChat();
+                          }}
                           className="bg-blue text-white rounded-[6px] text-[0.9rem] font-medium text-center p-2.5"
                         >
                           Отправить
                         </Button>
                       </Link>
-                    </div>
+                    </div> */}
                   </div>
                 ) : (
                   ""
