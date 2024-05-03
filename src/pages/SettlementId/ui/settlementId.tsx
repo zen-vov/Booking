@@ -273,7 +273,7 @@ export default function SettlementId() {
       console.error("Error creating chat:", error);
     }
   };
-// 
+  //
   return (
     <section className="py-[75px]">
       {advertisement && (
@@ -416,7 +416,11 @@ export default function SettlementId() {
                               fill="black"
                             />
                           </svg>
-                          {role == "Student" ? (
+                          {role == "Student" && author === userId ? (
+                            <Link href={"/routs/student/edit"}>
+                              <Edit />
+                            </Link>
+                          ) : (
                             <svg
                               className="cursor-pointer"
                               onClick={addToFavorites}
@@ -431,10 +435,6 @@ export default function SettlementId() {
                                 fill={`${isFavorite ? "red" : "black"}`}
                               />
                             </svg>
-                          ) : (
-                            <Link href={"/routs/edit"}>
-                              <Edit />
-                            </Link>
                           )}
                         </div>
                         <span className="whitespace-nowrap text-[16px]">
