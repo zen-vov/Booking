@@ -273,7 +273,7 @@ export default function SettlementId() {
       console.error("Error creating chat:", error);
     }
   };
-
+// 
   return (
     <section className="py-[75px]">
       {advertisement && (

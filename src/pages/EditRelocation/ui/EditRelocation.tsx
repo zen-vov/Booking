@@ -132,7 +132,7 @@ export default function EditRelocation() {
     { name: "Спальни", title: "", count: 0 },
     { name: "Ванные, душ", title: "", count: 0 },
   ]);
-
+// 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
