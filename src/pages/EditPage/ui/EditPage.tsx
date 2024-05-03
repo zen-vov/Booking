@@ -124,7 +124,7 @@ export default function EditPage() {
     { name: "Спальни", title: "", count: 0 },
     { name: "Ванные, душ", title: "", count: 0 },
   ]);
-
+  const pepsi = 5
   React.useEffect(() => {
     const fetchData = async () => {
       try {

@@ -282,7 +282,7 @@ export default function EditRelocation() {
       alert("Произошла ошибка. Пожалуйста, попробуйте еще раз.");
     }
   };
-
+  const cola = 0.5 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
