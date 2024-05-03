@@ -59,10 +59,18 @@ export default function ProductPage() {
   const [filteredData, setFilteredData] = useState([]);
   const [people, setPeople] = useState<number | any>(1);
   const [user, setUser] = useState<User | null>(null);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [author, setAuthor] = useState()
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showPhoneNumber, setShowPhoneNumber] = useState<boolean>(false);
   const router = useRouter();
   const params = useParams() as { id: number | string };
+  const accessToken = localStorage.getItem("accessToken");
+  const jwt = require("jsonwebtoken");
+
+  const decodedToken = jwt.decode(accessToken);
+  const userId = decodedToken?.user_id;
 
   const fetchData = async () => {
     try {
@@ -89,6 +97,7 @@ export default function ProductPage() {
         `http://studhouse.kz/api/v1/auth/user/${userId}/`
       );
       setUser(response.data);
+      setPhone(response.data.user_info.contacts);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -121,6 +130,7 @@ export default function ProductPage() {
         );
         const user = await userResponse.json();
         console.log("owner: ", advertisement?.owner);
+        setName(user.full_name);
         setRole(user.role.role_name);
       } catch (error) {
         console.error("Error fetching user role: ", error);
@@ -362,15 +372,15 @@ export default function ProductPage() {
                           height={27}
                           alt="user"
                         />
-                        <span className="text-[1rem]">{user?.full_name}</span>
+                        <span className="text-[1rem]">{name}</span>
                       </div>
                       <h3 className="text-[0.8rem]">Хозяин квартиры</h3>
                     </div>
                     <div className="mb-[1rem] flex items-center justify-between">
                       <h1 className="text-[1rem]">
                         {showPhoneNumber
-                          ? user?.user_info.contacts
-                          : "****-***-**-" + user?.user_info.contacts.slice(-2)}
+                          ? phone
+                          : "****-***-**-" + phone.slice(-2)}
                       </h1>
                       <span
                         onClick={handleShowPhoneNumber}
