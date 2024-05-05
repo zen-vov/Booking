@@ -64,6 +64,26 @@ const AuthModal = ({ onClose, active }: ModalI) => {
           const errorData = await registerResponse.json();
           console.log("Registration error data:", errorData);
 
+          // const activeCheck = await fetch(
+          //   "http://studhouse.kz/api/v1/auth/user/activate_user/",
+          //   {
+          //     method: "POST",
+          //     headers: {
+          //       "Content-Type": "application/json",
+          //     },
+          //     body: JSON.stringify({
+          //       login: username,
+          //       code: activate,
+          //     }),
+          //   }
+          // );
+          // console.log("active check:", activeCheck)
+
+          // if (!activeCheck.ok) {
+          //   setShowActivation(true);
+          //   return;
+          // }
+
           if (errorData && errorData.error && errorData.error.login) {
             const errorMessage = errorData.error.login[0].string;
             setErrorMessage(errorMessage);
@@ -156,6 +176,8 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         }
       );
 
+      console.log(activateResponse);
+
       if (activateResponse.ok) {
         const loginResponse = await fetch(
           "http://studhouse.kz/api/v1/jwt/create/",
@@ -183,7 +205,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         throw new Error("Failed to activate user");
       }
     } catch (error: any) {
-      setErrorMessage(error.message || "Произошла ошибка");
+      // setErrorMessage(error.message || "Произошла ошибка");
     }
   };
   const handleActiveForm = () => {
@@ -387,27 +409,37 @@ const AuthModal = ({ onClose, active }: ModalI) => {
               />
             )}
             {!showActivation && isRegistering && (
-              <Button
-                className={`bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500 ${
-                  !isFormValid ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                type="submit"
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                  handleSubmit(e)
-                }
-                disabled={!isFormValid}
-                label={"Зарегистрироваться"}
-              />
+              <>
+                <Button
+                  className={`bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500 ${
+                    !isFormValid ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  type="submit"
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                    handleSubmit(e)
+                  }
+                  disabled={!isFormValid}
+                  label={"Зарегистрироваться"}
+                />
+                {/* <Button
+                  onClick={() => handleActiveForm()}
+                  className="mt-[16px]"
+                >
+                  Активировать аккаунт
+                </Button> */}
+              </>
             )}
             {!showActivation && !isRegistering && (
-              <Button
-                className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
-                type="submit"
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                  handleSubmit(e)
-                }
-                label={"Войти"}
-              />
+              <>
+                <Button
+                  className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
+                  type="submit"
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                    handleSubmit(e)
+                  }
+                  label={"Войти"}
+                />
+              </>
             )}
           </form>
         </div>
