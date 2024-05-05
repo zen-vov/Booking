@@ -31,7 +31,8 @@ export default function LandLord() {
   const [numberOfRooms, setNumberOfRooms] = useState("");
   const [maxPayment, setMaxPayment] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [inputPrice, setInputPrice] = useState(""); // Добавлено состояние для ввода цены
+  const [inputPrice, setInputPrice] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
 
   useEffect(() => {
     const pageNumber = new URLSearchParams(window.location.search).get("page");
@@ -97,13 +98,24 @@ export default function LandLord() {
 
     fetchRole();
     fetchData();
-  }, [numberOfRooms, maxPayment]);
+
+    if (searchQuery) {
+      const searchResults = data.filter((item) =>
+        item.location.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setSearchResult(searchResults);
+    } else {
+      setSearchResult([]);
+    }
+  }, [numberOfRooms, maxPayment, searchQuery]);
 
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = data.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(data.length / recordsPerPage);
+  const records = searchResult.length
+    ? searchResult.slice(firstIndex, lastIndex)
+    : data.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(searchResult.length / recordsPerPage);
   const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
 
   const changeCurrentPage = (page: number) => {
