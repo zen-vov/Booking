@@ -31,6 +31,7 @@ export default function LandLord() {
   const [numberOfRooms, setNumberOfRooms] = useState("");
   const [maxPayment, setMaxPayment] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [inputPrice, setInputPrice] = useState(""); // Добавлено состояние для ввода цены
 
   useEffect(() => {
     const pageNumber = new URLSearchParams(window.location.search).get("page");
@@ -98,10 +99,6 @@ export default function LandLord() {
     fetchData();
   }, [numberOfRooms, maxPayment]);
 
-  // const filteredData = data.filter((item: any) =>
-  //   item.address?.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
-
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
@@ -116,7 +113,7 @@ export default function LandLord() {
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-  };;
+  };
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -136,8 +133,19 @@ export default function LandLord() {
   };
 
   const handleMaxPayment = (event: string | any) => {
-    const numericValue = event.target.value.replace(/\D/g, "");
+    const numericValue = event.target?.value.replace(/\D/g, "");
     setMaxPayment(numericValue);
+  };
+
+  const handleInputPriceChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setInputPrice(event.target.value);
+  };
+
+  const handleOkButtonClick = () => {
+    handleMaxPayment(inputPrice);
+    setIsOpen(false);
   };
 
   return (
@@ -206,7 +214,7 @@ export default function LandLord() {
                       />
                     </div>
                     <Button
-                      onClick={() => handleMaxPayment(maxPayment)}
+                      onClick={handleOkButtonClick}
                       className="rounded-[10px] py-[5px] px-[15px] text-white bg-blue text-[16px] font-medium"
                     >
                       ок
