@@ -18,7 +18,7 @@ const roomsData = [
   { label: "4 и более комнат" },
 ];
 
-export default function   LandLord() {
+export default function LandLord() {
   const [data, setData] = useState([]);
   const [current, setCurrent] = useState(1);
   const [active, setActive] = useState(false);
@@ -27,7 +27,9 @@ export default function   LandLord() {
   const [maxPayment, setMaxPayment] = useState<string>("");
   const [numberOfRooms, setNumberOfRooms] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [inputPrice, setInputPrice] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -87,7 +89,16 @@ export default function   LandLord() {
 
     fetchRole();
     fetchData();
-  }, [numberOfRooms, maxPayment]);
+
+    if (searchQuery) {
+      const searchResults = data.filter((item) =>
+        item.location.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setSearchResult(searchResults);
+    } else {
+      setSearchResult([]);
+    }
+  }, [numberOfRooms, maxPayment, searchQuery]);
 
   // const filteredData = data.filter((item: any) =>
   //   item.address?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -96,8 +107,10 @@ export default function   LandLord() {
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = data.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(data.length / recordsPerPage);
+  const records = searchResult.length
+    ? searchResult.slice(firstIndex, lastIndex)
+    : data.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(searchResult.length / recordsPerPage);
   const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
 
   const changeCurrentPage = (page: number) => {
@@ -127,8 +140,19 @@ export default function   LandLord() {
   };
 
   const handleMaxPayment = (event: string | any) => {
-    const numericValue = event.target.value.replace(/\D/g, "");
+    const numericValue = event.target?.value.replace(/\D/g, "");
     setMaxPayment(numericValue);
+  };
+
+  const handleInputPriceChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setInputPrice(event.target.value);
+  };
+
+  const handleOkButtonClick = () => {
+    handleMaxPayment(inputPrice);
+    setIsOpen(false);
   };
 
   return (
@@ -193,7 +217,7 @@ export default function   LandLord() {
                       />
                     </div>
                     <Button
-                      onClick={() => handleMaxPayment(maxPayment)}
+                      onClick={handleOkButtonClick}
                       className="rounded-[10px] py-[5px] px-[15px] text-white bg-blue text-[16px] font-medium"
                     >
                       ок

@@ -10,7 +10,6 @@ import Modal from "@/shared/ui/Modal/ui/Modal";
 import Button from "@/shared/ui/Button/Button";
 import styles from "./styles.module.scss";
 import Link from "next/link";
-import { headers } from "next/headers";
 import DropdownFilter from "@/features/DropdownFilter/ui/DropdownFilter";
 
 const roomsData = [
@@ -138,7 +137,6 @@ export default function LandLord() {
       "1 -комнатная": 1,
       "2 -комнатная": 2,
       "3 -комнатная": 3,
-      "4 и более комнат": 4,
     };
 
     setNumberOfRooms(roomMapping[selectedOption]);
@@ -147,12 +145,6 @@ export default function LandLord() {
   const handleMaxPayment = (event: string | any) => {
     const numericValue = event.target?.value.replace(/\D/g, "");
     setMaxPayment(numericValue);
-  };
-
-  const handleInputPriceChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setInputPrice(event.target.value);
   };
 
   const handleOkButtonClick = () => {
