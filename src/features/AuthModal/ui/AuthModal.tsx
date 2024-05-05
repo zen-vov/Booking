@@ -61,18 +61,14 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         if (registerResponse.ok) {
           setShowActivation(true);
         } else {
-          const errorData = await registerResponse.clone().json();
+          const errorData = await registerResponse.json();
           console.log("Registration error data:", errorData);
 
-          if (
-            errorData &&
-            errorData.detail === "Введенный логин или пароль не верен!"
-          ) {
-            setErrorMessage("Введенный логин или пароль неверен!");
-          } else if (errorData && errorData.error && errorData.error.login) {
-            setErrorMessage("Такой аккаунт уже существует");
+          if (errorData && errorData.error && errorData.error.login) {
+            const errorMessage = errorData.error.login[0].string;
+            setErrorMessage(errorMessage);
           } else {
-            setErrorMessage("Произошла ошибка при регистрации");
+            setErrorMessage("Такой пользователь уже сущесвует");
             throw new Error("Registration failed");
           }
         }
@@ -97,7 +93,16 @@ const AuthModal = ({ onClose, active }: ModalI) => {
       );
 
       if (!loginResponse.ok) {
-        throw new Error("Login failed");
+        const errorData = await loginResponse.json();
+        console.log("Registration error data:", errorData);
+
+        if (errorData && errorData.error && errorData.error.login) {
+          const errorMessage = errorData.error.login[0].string;
+          setErrorMessage(errorMessage);
+        } else {
+          setErrorMessage("Неправильный логин или пароль");
+          throw new Error("Registration failed");
+        }
       }
 
       const loginData = await loginResponse.json();
@@ -110,8 +115,8 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         handleActiveForm();
       }
     } catch (error: any) {
-      console.log("asdkdfds;klfl;kfsd;kf", error.message);
-      setErrorMessage(error.message || "Произошла ошибка");
+      console.log("a-", errorMessage);
+      // setErrorMessage(error.message || "Произошла ошибка");
     }
   };
 
