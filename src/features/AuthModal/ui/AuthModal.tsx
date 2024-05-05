@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cn from "classnames";
 import axios from "axios";
 import Button from "@/shared/ui/Button/Button";
@@ -115,14 +115,22 @@ const AuthModal = ({ onClose, active }: ModalI) => {
     }
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      onClose();
-      // window.location.reload();
-    }
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    };
 
-    setErrorMessage("");
-  };
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [onClose]);
 
   const handleActivationSubmit = async (event: any) => {
     console.log("activation code: ", activate);
