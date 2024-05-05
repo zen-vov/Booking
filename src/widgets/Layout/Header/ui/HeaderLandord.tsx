@@ -78,6 +78,9 @@ export default function HeaderLandlord() {
 
           <div className="flex items-center gap-[40px]">
             <div className="flex gap-[40px] items-center">
+              <Link href={"/routs/product"}>
+                <Button className="text-md font-[500]" label="Квартиры" />
+              </Link>
               <Link href={"/routs/chat"}>
                 <Button className="text-md font-[500]" label="Сообщение" />
               </Link>
