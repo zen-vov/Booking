@@ -573,29 +573,7 @@ export default function PostSettlementPage() {
             </p>
             <div className="flex items-center">
               <div className="mr-5 flex gap-[5px] justify-center items-center">
-                <Dropdown
-                  buttonStyle="whitespace-nowrap text-[14px] font-[400]"
-                  listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
-                  options={options}
-                  label="в месяц"
-                />
-                <svg
-                  className="relative top-[2px] w-5 h-5 text-gray-800 dark:text-black"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m19 9-7 7-7-7"
-                  />
-                </svg>
+                <p>в месяц</p>
               </div>
               <div className="mr-5 flex gap-2 items-center">
                 <input

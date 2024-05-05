@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cn from "classnames";
 import axios from "axios";
 import Button from "@/shared/ui/Button/Button";
@@ -61,18 +61,34 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         if (registerResponse.ok) {
           setShowActivation(true);
         } else {
-          const errorData = await registerResponse.clone().json();
+          const errorData = await registerResponse.json();
           console.log("Registration error data:", errorData);
 
-          if (
-            errorData &&
-            errorData.detail === "Введенный логин или пароль не верен!"
-          ) {
-            setErrorMessage("Введенный логин или пароль неверен!");
-          } else if (errorData && errorData.error && errorData.error.login) {
-            setErrorMessage("Такой аккаунт уже существует");
+          // const activeCheck = await fetch(
+          //   "http://studhouse.kz/api/v1/auth/user/activate_user/",
+          //   {
+          //     method: "POST",
+          //     headers: {
+          //       "Content-Type": "application/json",
+          //     },
+          //     body: JSON.stringify({
+          //       login: username,
+          //       code: activate,
+          //     }),
+          //   }
+          // );
+          // console.log("active check:", activeCheck)
+
+          // if (!activeCheck.ok) {
+          //   setShowActivation(true);
+          //   return;
+          // }
+
+          if (errorData && errorData.error && errorData.error.login) {
+            const errorMessage = errorData.error.login[0].string;
+            setErrorMessage(errorMessage);
           } else {
-            setErrorMessage("Произошла ошибка при регистрации");
+            setErrorMessage("Такой пользователь уже сущесвует");
             throw new Error("Registration failed");
           }
         }
@@ -97,7 +113,16 @@ const AuthModal = ({ onClose, active }: ModalI) => {
       );
 
       if (!loginResponse.ok) {
-        throw new Error("Login failed");
+        const errorData = await loginResponse.json();
+        console.log("Registration error data:", errorData);
+
+        if (errorData && errorData.error && errorData.error.login) {
+          const errorMessage = errorData.error.login[0].string;
+          setErrorMessage(errorMessage);
+        } else {
+          setErrorMessage("Неправильный логин или пароль");
+          throw new Error("Registration failed");
+        }
       }
 
       const loginData = await loginResponse.json();
@@ -110,19 +135,27 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         handleActiveForm();
       }
     } catch (error: any) {
-      console.log("asdkdfds;klfl;kfsd;kf", error.message);
-      setErrorMessage(error.message || "Произошла ошибка");
+      console.log("a-", errorMessage);
+      // setErrorMessage(error.message || "Произошла ошибка");
     }
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      onClose();
-      // window.location.reload();
-    }
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    };
 
-    setErrorMessage("");
-  };
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [onClose]);
 
   const handleActivationSubmit = async (event: any) => {
     console.log("activation code: ", activate);
@@ -142,6 +175,8 @@ const AuthModal = ({ onClose, active }: ModalI) => {
           }),
         }
       );
+
+      console.log(activateResponse);
 
       if (activateResponse.ok) {
         const loginResponse = await fetch(
@@ -170,7 +205,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
         throw new Error("Failed to activate user");
       }
     } catch (error: any) {
-      setErrorMessage(error.message || "Произошла ошибка");
+      // setErrorMessage(error.message || "Произошла ошибка");
     }
   };
   const handleActiveForm = () => {
@@ -374,27 +409,37 @@ const AuthModal = ({ onClose, active }: ModalI) => {
               />
             )}
             {!showActivation && isRegistering && (
-              <Button
-                className={`bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500 ${
-                  !isFormValid ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                type="submit"
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                  handleSubmit(e)
-                }
-                disabled={!isFormValid}
-                label={"Зарегистрироваться"}
-              />
+              <>
+                <Button
+                  className={`bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500 ${
+                    !isFormValid ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  type="submit"
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                    handleSubmit(e)
+                  }
+                  disabled={!isFormValid}
+                  label={"Зарегистрироваться"}
+                />
+                {/* <Button
+                  onClick={() => handleActiveForm()}
+                  className="mt-[16px]"
+                >
+                  Активировать аккаунт
+                </Button> */}
+              </>
             )}
             {!showActivation && !isRegistering && (
-              <Button
-                className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
-                type="submit"
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                  handleSubmit(e)
-                }
-                label={"Войти"}
-              />
+              <>
+                <Button
+                  className="bg-blue rounded-[5px] py-[10px] text-white text-[22px] font-500"
+                  type="submit"
+                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                    handleSubmit(e)
+                  }
+                  label={"Войти"}
+                />
+              </>
             )}
           </form>
         </div>
