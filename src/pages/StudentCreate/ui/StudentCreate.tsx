@@ -581,7 +581,8 @@ export default function StudentCreate() {
             </p>
             <div className="flex items-center">
               <div className="mr-5 flex gap-[5px] justify-center items-center">
-                <Dropdown
+                <p>в месяц</p>
+                {/* <Dropdown
                   buttonStyle="whitespace-nowrap text-[14px] font-[400]"
                   listStyle="bg-white text-base py-[2px] px-[4px] left-[8px] flex flex-col border border-black rounded-[6px] gap-[13px] w-fit h-fit"
                   options={options}
@@ -603,7 +604,7 @@ export default function StudentCreate() {
                     strokeWidth="2"
                     d="m19 9-7 7-7-7"
                   />
-                </svg>
+                </svg> */}
               </div>
               <div className="mr-5 flex gap-2 items-center">
                 <input
