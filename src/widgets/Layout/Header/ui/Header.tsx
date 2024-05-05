@@ -55,13 +55,6 @@ export default function Header() {
           </Link>
 
           <div className="flex gap-[40px]">
-            <Link href={"/routs/product"}>
-              <Button className="text-md font-[500]" label="Квартиры" />
-            </Link>
-
-            <Link href={"/routs/posthouse"}>
-              <Button className="text-md font-[500]" label="Подселение" />
-            </Link>
             <Button
               className="text-md font-[500]"
               label="Войти"
