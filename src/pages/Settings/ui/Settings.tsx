@@ -47,21 +47,24 @@ const Profile = () => {
           `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
+
         setFields({
-          full_name: user.full_name,
-          contacts: user.user_info.contacts,
-          email: user.user_info.email,
-          birthDate: user.user_info.birthDate,
-          identification: user.user_info.frontIDCard,
-          additional_user: user.additional_user,
-          university_data: user.university_data,
-          student_hobbies: user.student_hobbies,
+          full_name: user.full_name || "",
+          contacts: user.contacts || "",
+          email: user.email || "",
+          birthDate: user.birthDate || "",
+          identification: user.frontIDCard || "",
+          additional_user: user.additional_user || "",
+          university_data: user.university_data || "",
+          student_hobbies: user.student_hobbies || "",
         });
+
         setUserRole(user?.role?.role_name || "");
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
       }
     };
+
     fetchUser();
   }, []);
 
@@ -205,10 +208,10 @@ const Profile = () => {
   const renderStudentFields = () => {
     if (userRole === "Student") {
       return (
-        <>
+        <div>
           {renderField("university_data")}
           {renderField("student_hobbies")}
-        </>
+        </div>
       );
     }
     return null;
@@ -231,7 +234,7 @@ const Profile = () => {
             "Content-Type": "application/json",
             "X-CSRFTOKEN":
               "d2yg9dlTCExrPKRqz122a6fD3uA7FPNGgI3PXyfJ77HSCJhY7lE82It17s8bTefc",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `JWT ${accessToken}`,
           },
           body: JSON.stringify({}),
         }
@@ -275,7 +278,6 @@ const Profile = () => {
           {renderField("contacts")}
           {renderField("email")}
           {renderField("birthDate")}
-          {/* {renderField("identification")} */}
           {renderField("additional_user")}
           {renderStudentFields()}
         </div>
