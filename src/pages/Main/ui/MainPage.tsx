@@ -111,10 +111,10 @@ export default function LandLord() {
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = searchResult.length
-    ? searchResult.slice(firstIndex, lastIndex)
+  const records = data.length
+    ? data.slice(firstIndex, lastIndex)
     : data.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(searchResult.length / recordsPerPage);
+  const npage = Math.ceil(data.length / recordsPerPage);
   const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
 
   const changeCurrentPage = (page: number) => {

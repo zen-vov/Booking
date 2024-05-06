@@ -352,11 +352,6 @@ export default function ProductPage() {
                 {role == "Landlord" ? (
                   <div className="flex flex-col gap-7">
                     <Button
-                      label="Добавить людей"
-                      onClick={handleAddPeople}
-                      className="w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
-                    />
-                    <Button
                       label="Удалить объявление"
                       onClick={handleDeleteAdvertisement}
                       className="w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
