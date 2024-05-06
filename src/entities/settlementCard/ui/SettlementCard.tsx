@@ -7,9 +7,11 @@ import Image from "next/image";
 import Link from "next/link";
 import "./styles.scss";
 import { useParams } from "next/navigation";
+import axios from "axios";
 
 export type ProductProps = {
   id: number;
+  author: number;
   title?: string;
   description?: string;
   location?: string;
@@ -19,9 +21,19 @@ export type ProductProps = {
   creationDate: string;
 };
 
+interface Author {
+  full_name: string;
+  user_info: {
+    contacts: string;
+  };
+  login: string;
+  id: number;
+}
+
 export default function SettlementCard(props: ProductProps) {
   const {
     id,
+    author,
     title,
     price,
     description,
@@ -35,16 +47,29 @@ export default function SettlementCard(props: ProductProps) {
   const [hasToken, setHasToken] = useState(false);
   const accessToken = localStorage.getItem("accessToken");
   const [name, setName] = useState<string>("");
+  const [authorData, setAuthorData] = useState<Author | null>(null);
   const jwt = require("jsonwebtoken");
 
   const decodedToken = jwt.decode(accessToken);
   const full_name = decodedToken?.full_name;
 
-  // const [currentSlide, setCurrentSlide] = useState(0);
+  const fetchUserData = async (userId: number) => {
+    try {
+      const response = await axios.get(
+        `http://studhouse.kz/api/v1/auth/user/${userId}/`
+      );
+      setAuthorData(response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
-  // const handleSlideChange = (newSlide: number) => {
-  //   setCurrentSlide(newSlide);
-  // };
+  useEffect(() => {
+    const authorId = author;
+    if (authorId !== undefined) {
+      fetchUserData(authorId);
+    }
+  }, []);
 
   const copyLinkToClipboard = () => {
     const url = `http://localhost:3000/routs/settlement/${id}`;
@@ -110,7 +135,9 @@ export default function SettlementCard(props: ProductProps) {
       <div className="flex justify-between px-7 pt-6">
         <div className="flex flex-col">
           <h1 className="text-[20px] font-medium mb-5">{typeOfHouse}</h1>
-          <span className="text-[20px] font-medium mb-1">{name}</span>
+          <span className="text-[20px] font-medium mb-1">
+            {authorData?.login}
+          </span>
           <h1 className="text-md font-medium mb-[14px]">{location}</h1>
           <h3 className="text-md mb-6">{price} т/мес.</h3>
           <h5 className="text-sm">Опубликовано в {creationDate}</h5>
