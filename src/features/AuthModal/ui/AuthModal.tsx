@@ -395,7 +395,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
               </div>
             )}
 
-            {errorMessage && (
+            {errorMessage && !showActivation && (
               <p className="text-red text-lg font-semibold">{errorMessage}</p>
             )}
             {showActivation && (
