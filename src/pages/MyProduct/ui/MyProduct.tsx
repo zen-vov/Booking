@@ -227,7 +227,7 @@ export default function MyProduct() {
         </div>
       </div>
       <div className="container grid grid-cols-2 gap-[92px] mb-12">
-        <ProductList records={searchResult} />
+        <ProductList records={records} />
       </div>
       <div className="container flex gap-4 items-center justify-center">
         {numbers.map((n, i) => (
