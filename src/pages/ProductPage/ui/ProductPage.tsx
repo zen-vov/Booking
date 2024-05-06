@@ -47,6 +47,7 @@ interface User {
   user_info: {
     contacts: string;
   };
+  login: string;
 }
 
 const initialChatData = {
@@ -105,6 +106,7 @@ export default function ProductPage() {
       );
       setUser(response.data);
       setPhone(response.data.user_info.contacts);
+      console.log(user?.login);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -115,9 +117,11 @@ export default function ProductPage() {
   };
 
   useEffect(() => {
-    const userId = 2;
-    fetchUserData(userId);
-  }, []);
+    const authorId = advertisement?.author;
+    if (authorId !== undefined) {
+      fetchUserData(authorId);
+    }
+  }, [advertisement]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -371,22 +375,11 @@ export default function ProductPage() {
                           height={27}
                           alt="user"
                         />
-                        <span className="text-[1rem]">{name}</span>
+                        <span className="text-[1rem]">
+                          {user?.login || user?.full_name}
+                        </span>
                       </div>
                       <h3 className="text-[0.8rem]">Хозяин квартиры</h3>
-                    </div>
-                    <div className="mb-[1rem] flex items-center justify-between">
-                      <h1 className="text-[1rem]">
-                        {showPhoneNumber
-                          ? phone
-                          : "****-***-**-" + phone.slice(-2)}
-                      </h1>
-                      <span
-                        onClick={handleShowPhoneNumber}
-                        className="text-blue text-[0.8rem] cursor-pointer"
-                      >
-                        Показать номер
-                      </span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Image
