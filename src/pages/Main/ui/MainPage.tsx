@@ -10,7 +10,6 @@ import Modal from "@/shared/ui/Modal/ui/Modal";
 import Button from "@/shared/ui/Button/Button";
 import styles from "./styles.module.scss";
 import Link from "next/link";
-import { headers } from "next/headers";
 import DropdownFilter from "@/features/DropdownFilter/ui/DropdownFilter";
 
 const roomsData = [
@@ -31,6 +30,8 @@ export default function LandLord() {
   const [numberOfRooms, setNumberOfRooms] = useState("");
   const [maxPayment, setMaxPayment] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [inputPrice, setInputPrice] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
 
   useEffect(() => {
     const pageNumber = new URLSearchParams(window.location.search).get("page");
@@ -96,17 +97,24 @@ export default function LandLord() {
 
     fetchRole();
     fetchData();
-  }, [numberOfRooms, maxPayment]);
 
-  // const filteredData = data.filter((item: any) =>
-  //   item.address?.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
+    if (searchQuery) {
+      const searchResults = data.filter((item) =>
+        item.location.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setSearchResult(searchResults);
+    } else {
+      setSearchResult([]);
+    }
+  }, [numberOfRooms, maxPayment, searchQuery]);
 
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = data.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(data.length / recordsPerPage);
+  const records = searchResult.length
+    ? searchResult.slice(firstIndex, lastIndex)
+    : data.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(searchResult.length / recordsPerPage);
   const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
 
   const changeCurrentPage = (page: number) => {
@@ -116,7 +124,7 @@ export default function LandLord() {
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-  };;
+  };
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -129,15 +137,19 @@ export default function LandLord() {
       "1 -комнатная": 1,
       "2 -комнатная": 2,
       "3 -комнатная": 3,
-      "4 и более комнат": 4,
     };
 
     setNumberOfRooms(roomMapping[selectedOption]);
   };
 
   const handleMaxPayment = (event: string | any) => {
-    const numericValue = event.target.value.replace(/\D/g, "");
+    const numericValue = event.target?.value.replace(/\D/g, "");
     setMaxPayment(numericValue);
+  };
+
+  const handleOkButtonClick = () => {
+    handleMaxPayment(inputPrice);
+    setIsOpen(false);
   };
 
   return (
@@ -206,7 +218,7 @@ export default function LandLord() {
                       />
                     </div>
                     <Button
-                      onClick={() => handleMaxPayment(maxPayment)}
+                      onClick={handleOkButtonClick}
                       className="rounded-[10px] py-[5px] px-[15px] text-white bg-blue text-[16px] font-medium"
                     >
                       ок
