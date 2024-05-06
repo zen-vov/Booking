@@ -245,7 +245,7 @@ export default function LandLord() {
           </div>
         </div>
       </div>
-      <div className="container grid grid-cols-2 gap-[92px] mb-12">
+      <div className={`grid__rel container grid gap-[92px] mb-12`}>
         <SettlementList records={records} />
       </div>
       <div className="container flex gap-4 items-center justify-center">
