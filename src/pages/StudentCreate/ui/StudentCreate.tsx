@@ -136,7 +136,7 @@ export default function StudentCreate() {
     isArchived: false,
   });
   const [priceCounter, setPriceCounter] = useState<number>(formData.price);
-
+// 
   const [selectedIcons, setSelectedIcons] = useState<boolean[]>(
     icons.map(() => false)
   );
