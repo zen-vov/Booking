@@ -2,14 +2,11 @@
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/shared/api/BASE";
 import Button from "@/shared/ui/Button/Button";
-import Input from "@/shared/ui/Input/Input";
-import ProductList from "@/widgets/productList/ui/productLIst";
 import axios from "axios";
 import Image from "next/image";
 import Edit from "@/shared/ui/Icons/Edit/Edit";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import SettlementCard from "@/entities/settlementCard/ui/SettlementCard";
 import SettlementList from "@/widgets/SettlementList/ui/Settlement";
 
 interface Relocation {
@@ -71,9 +68,7 @@ export default function SettlementId() {
   const [author, setAuthor] = useState<number>();
   const [phone, setPhone] = useState<string>("");
   const [showPhoneNumber, setShowPhoneNumber] = useState<boolean>(false);
-  const [people, setPeople] = useState<any>(
-    advertisement?.current_people_count
-  );
+  const [people, setPeople] = useState<any>(0);
   const router = useRouter();
   const params = useParams() as { id: number | string };
   const accessToken = localStorage.getItem("accessToken");
@@ -208,6 +203,27 @@ export default function SettlementId() {
     }
   };
 
+  const handleAddPeople = () => {
+    try {
+      if (people < advertisement?.max_people_count) {
+        const updatedPeople = people + 1;
+        setPeople(updatedPeople);
+        localStorage.setItem("peopleCount", String(updatedPeople));
+      } else {
+        console.log("Максимальное количество людей достигнуто.");
+      }
+    } catch (error) {
+      console.error("Ошибка при добавлении людей:", error);
+    }
+  };
+
+  useEffect(() => {
+    const storedPeopleCount = localStorage.getItem("peopleCount");
+    if (storedPeopleCount) {
+      setPeople(parseInt(storedPeopleCount));
+    }
+  }, []);
+
   useEffect(() => {
     const storedPeopleCount = localStorage.getItem("peopleCount");
     console.log("Stored people count:", storedPeopleCount);
@@ -308,16 +324,6 @@ export default function SettlementId() {
 
   const handleMessageSend = () => {
     console.log("Message sent: ", message);
-  };
-
-  const handleAddPeople = () => {
-    if (people < advertisement?.max_people_count) {
-      const updatedPeople = people + 1;
-      setPeople(updatedPeople);
-      localStorage.setItem("peopleCount", updatedPeople.toString());
-    } else {
-      console.log("Maximum people count reached.");
-    }
   };
 
   return (
@@ -502,8 +508,7 @@ export default function SettlementId() {
                           {advertisement.square} м²
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
-                          {people.current_people_count}/
-                          {advertisement.max_people_count}
+                          {people}/{advertisement.max_people_count}
                         </span>
                       </div>
                     </div>

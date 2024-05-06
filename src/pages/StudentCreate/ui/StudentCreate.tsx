@@ -35,7 +35,7 @@ interface IconButton {
   label: string;
 }
 
-interface FormData {
+export interface FormData {
   location: string;
   uploaded_images: File[] | null; // Массив файлов изображений
   title: string;
@@ -121,7 +121,7 @@ export default function StudentCreate() {
     square: 5,
     haveWifi: false,
     max_people_count: 5,
-    current_people_count: 2,
+    current_people_count: 1,
     count_bedrooms: 2,
     count_bathrooms: 2,
     haveTV: false,
