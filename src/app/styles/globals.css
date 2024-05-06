@@ -15,3 +15,11 @@
 .search-input {
   border-bottom: 1px solid #000;
 }
+
+.grid__rel {
+  grid-template-columns: repeat(2, 617px);
+}
+
+.img {
+  height: revert-layer;
+}

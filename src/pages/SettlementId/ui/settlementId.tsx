@@ -2,14 +2,11 @@
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/shared/api/BASE";
 import Button from "@/shared/ui/Button/Button";
-import Input from "@/shared/ui/Input/Input";
-import ProductList from "@/widgets/productList/ui/productLIst";
 import axios from "axios";
 import Image from "next/image";
 import Edit from "@/shared/ui/Icons/Edit/Edit";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import SettlementCard from "@/entities/settlementCard/ui/SettlementCard";
 import SettlementList from "@/widgets/SettlementList/ui/Settlement";
 
 interface Relocation {
@@ -23,6 +20,8 @@ interface Relocation {
   price: string;
   creationDate: string;
   floor: number;
+  max_people_count: number | any;
+  current_people_count: number | any;
   typeOfHouse: string;
   numberOfRooms: number;
   square: number;
@@ -70,6 +69,7 @@ export default function SettlementId() {
   const [author, setAuthor] = useState<number>();
   const [phone, setPhone] = useState<string>("");
   const [showPhoneNumber, setShowPhoneNumber] = useState<boolean>(false);
+  const [people, setPeople] = useState<any>(1);
   const router = useRouter();
   const params = useParams() as { id: number | string };
   const accessToken = localStorage.getItem("accessToken");
@@ -200,10 +200,64 @@ export default function SettlementId() {
       });
       console.log("Advertisement deleted successfully:", res.data);
       router.push("/routs/settlement");
+      localStorage.removeItem("peopleCount");
     } catch (error) {
       console.error("Error deleting advertisement:", error);
     }
   };
+
+  const handleAddPeople = () => {
+    try {
+      if (people < advertisement?.max_people_count) {
+        const updatedPeople = people + 1;
+        setPeople(updatedPeople);
+        localStorage.setItem(`peopleCount_${params.id}`, String(updatedPeople));
+      } else {
+        console.log("Максимальное количество людей достигнуто.");
+      }
+    } catch (error) {
+      console.error("Ошибка при добавлении людей:", error);
+    }
+  };
+
+  const fetchDataAndSetLocalStorage = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await axios.get<Relocation>(
+        `${BASE_URL}/relocation/${params.id}/`,
+        {
+          headers: {
+            Authorization: `JWT ${accessToken}`,
+          },
+        }
+      );
+      setAuthor(response.data.author);
+      localStorage.setItem(
+        `productId_${params.id}`,
+        JSON.stringify(response.data)
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching advertisement:", error);
+      throw error;
+    }
+  };
+
+  const fetchFromLocalStorage = () => {
+    const storedData = localStorage.getItem(`productId_${params.id}`);
+    if (storedData) {
+      setAdvertisement(JSON.parse(storedData));
+    } else {
+      fetchDataAndSetLocalStorage();
+    }
+  };
+
+  useEffect(() => {
+    const storedPeopleCount = localStorage.getItem(`peopleCount_${params.id}`); // Unique key for each product
+    if (storedPeopleCount) {
+      setPeople(parseInt(storedPeopleCount));
+    }
+  }, [params.id]);
 
   const addToFavorites = async () => {
     try {
@@ -337,8 +391,13 @@ export default function SettlementId() {
                     ))}
                   </div>
                 </div>
-                {role == "Student" && author === userId ? (
+                {role == "Student" && author !== userId ? (
                   <div className="flex flex-col gap-7">
+                    <Button
+                      label="Добавить людей"
+                      onClick={handleAddPeople}
+                      className="w-full text-white bg-blue rounded-[6px] py-2.5 text-[16px] font-medium"
+                    />
                     <Button
                       label="Удалить объявление"
                       onClick={handleDeleteAdvertisement}
@@ -348,7 +407,7 @@ export default function SettlementId() {
                 ) : (
                   ""
                 )}
-                {role == "Student" && author !== userId ? (
+                {role == "Student" && author === userId ? (
                   <div className="bg-white rounded-xl py-6 px-11">
                     <div className="mb-[1rem] flex justify-between items-center">
                       <div className="flex items-center gap-2">
@@ -391,23 +450,6 @@ export default function SettlementId() {
                         </Button>
                       </Link>
                     </div>
-                    {/* <div className="bg-[#f1f1f1] w-full rounded-[6px] flex justify-between relative mt-6 ">
-                      <Input
-                        placeholder="Отправить сообщение..."
-                        className="text-[0.9rem] font-medium w-full text-[#A8A2A2] py-[11px] px-5"
-                      />
-                      <Link href={"/routs/chat"}>
-                        <Button
-                          onClick={() => {
-                            handleMessageSend();
-                            createChat();
-                          }}
-                          className="bg-blue text-white rounded-[6px] text-[0.9rem] font-medium text-center p-2.5"
-                        >
-                          Отправить
-                        </Button>
-                      </Link>
-                    </div> */}
                   </div>
                 ) : (
                   ""
@@ -425,6 +467,7 @@ export default function SettlementId() {
                       <span className="text-[16px]">Этаж</span>
                       <span className="text-[16px]">Состояние</span>
                       <span className="text-[16px]">Площадь</span>
+                      <span className="text-[16px]">Кол.людей</span>
                     </div>
                   </div>
                   <div className="">
@@ -480,6 +523,9 @@ export default function SettlementId() {
                         <span className="text-[16px] whitespace-nowrap">
                           {advertisement.square} м²
                         </span>
+                        <span className="text-[16px] whitespace-nowrap">
+                          {people}/{advertisement.max_people_count}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -534,16 +580,6 @@ export default function SettlementId() {
                     ответственная.
                   </p>
                 </div>
-                {/* <div className="mt-10">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2908.034149153324!2d76.6670930764335!3d43.20877307112663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x388345a35db0962d%3A0xd9437541092dd062!2sSDU!5e0!3m2!1sen!2skz!4v1712296819450!5m2!1sen!2skz"
-                    width="668"
-                    height="202"
-                    style={{ border: "0", borderRadius: "5px" }}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe>
-                </div> */}
               </div>
             </div>
             <h1 className="text-md font-medium mt-[111px] mb-6">

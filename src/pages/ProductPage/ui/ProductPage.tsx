@@ -442,7 +442,6 @@ export default function ProductPage() {
                       <span className="text-[16px]">Этаж</span>
                       <span className="text-[16px]">Состояние</span>
                       <span className="text-[16px]">Площадь</span>
-                      <span className="text-[16px]">Кол.людей</span>
                     </div>
                   </div>
                   <div className="">
@@ -497,9 +496,6 @@ export default function ProductPage() {
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
                           {advertisement.square} м²
-                        </span>
-                        <span className="text-[16px] whitespace-nowrap">
-                          {people}/5
                         </span>
                       </div>
                     </div>
