@@ -48,6 +48,7 @@ interface User {
     contacts: string;
   };
   login: string;
+  id: number;
 }
 
 const initialChatData = {
@@ -66,9 +67,9 @@ export default function ProductPage() {
   const [filteredData, setFilteredData] = useState([]);
   const [people, setPeople] = useState<number | any>(1);
   const [user, setUser] = useState<User | null>(null);
+  const [author, setAuthor] = useState<User | null>(null);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [author, setAuthor] = useState();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showPhoneNumber, setShowPhoneNumber] = useState<boolean>(false);
   const router = useRouter();
@@ -104,7 +105,7 @@ export default function ProductPage() {
       const response = await axios.get(
         `http://studhouse.kz/api/v1/auth/user/${userId}/`
       );
-      setUser(response.data);
+      setAuthor(response.data);
       setPhone(response.data.user_info.contacts);
       console.log(user?.login);
     } catch (error) {
@@ -349,7 +350,7 @@ export default function ProductPage() {
                     ))}
                   </div>
                 </div>
-                {role == "Landlord" ? (
+                {author?.id == Number(localStorage.getItem("userId")) ? (
                   <div className="flex flex-col gap-7">
                     <Button
                       label="Удалить объявление"
@@ -360,7 +361,7 @@ export default function ProductPage() {
                 ) : (
                   ""
                 )}
-                {role == "Student" ? (
+                {author?.id != Number(localStorage.getItem("userId")) ? (
                   <div className="bg-white rounded-xl py-6 px-11">
                     <div className="mb-[1rem] flex justify-between items-center">
                       <div className="flex items-center gap-2">
@@ -371,7 +372,7 @@ export default function ProductPage() {
                           alt="user"
                         />
                         <span className="text-[1rem]">
-                          {user?.login || user?.full_name}
+                          {author?.login || user?.full_name}
                         </span>
                       </div>
                       <h3 className="text-[0.8rem]">Хозяин квартиры</h3>
