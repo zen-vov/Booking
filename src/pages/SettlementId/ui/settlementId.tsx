@@ -49,6 +49,7 @@ interface User {
   user_info: {
     contacts: string;
   };
+  login: string;
 }
 
 const initialChatData = {
@@ -134,9 +135,11 @@ export default function SettlementId() {
   };
 
   useEffect(() => {
-    const userId = 2;
-    fetchUserData(userId);
-  }, []);
+    const authorId = advertisement?.author;
+    if (authorId !== undefined) {
+      fetchUserData(authorId);
+    }
+  }, [advertisement]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -355,22 +358,11 @@ export default function SettlementId() {
                           height={27}
                           alt="user"
                         />
-                        <span className="text-[1rem]">{name}</span>
+                        <span className="text-[1rem]">
+                          {user?.login || user?.full_name}
+                        </span>
                       </div>
                       <h3 className="text-[0.8rem]">Хозяин квартиры</h3>
-                    </div>
-                    <div className="mb-[1rem] flex items-center justify-between">
-                      <h1 className="text-[1rem]">
-                        {showPhoneNumber
-                          ? phone && author !== userId
-                          : "****-***-**-" + phone?.slice(-2)}
-                      </h1>
-                      <span
-                        onClick={handleShowPhoneNumber}
-                        className="text-blue text-[0.8rem] cursor-pointer"
-                      >
-                        Показать номер
-                      </span>
                     </div>
                     <div className="flex items-center gap-2.5">
                       <Image
