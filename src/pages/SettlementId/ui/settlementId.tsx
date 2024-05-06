@@ -68,7 +68,7 @@ export default function SettlementId() {
   const [author, setAuthor] = useState<number>();
   const [phone, setPhone] = useState<string>("");
   const [showPhoneNumber, setShowPhoneNumber] = useState<boolean>(false);
-  const [people, setPeople] = useState<any>(0);
+  const [people, setPeople] = useState<any>(1);
   const router = useRouter();
   const params = useParams() as { id: number | string };
   const accessToken = localStorage.getItem("accessToken");
@@ -208,7 +208,7 @@ export default function SettlementId() {
       if (people < advertisement?.max_people_count) {
         const updatedPeople = people + 1;
         setPeople(updatedPeople);
-        localStorage.setItem("peopleCount", String(updatedPeople));
+        localStorage.setItem(`peopleCount_${params.id}`, String(updatedPeople));
       } else {
         console.log("Максимальное количество людей достигнуто.");
       }
@@ -217,20 +217,44 @@ export default function SettlementId() {
     }
   };
 
-  useEffect(() => {
-    const storedPeopleCount = localStorage.getItem("peopleCount");
-    if (storedPeopleCount) {
-      setPeople(parseInt(storedPeopleCount));
+  const fetchDataAndSetLocalStorage = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await axios.get<Relocation>(
+        `${BASE_URL}/relocation/${params.id}/`,
+        {
+          headers: {
+            Authorization: `JWT ${accessToken}`,
+          },
+        }
+      );
+      setAuthor(response.data.author);
+      localStorage.setItem(
+        `productId_${params.id}`,
+        JSON.stringify(response.data)
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching advertisement:", error);
+      throw error;
     }
-  }, []);
+  };
+
+  const fetchFromLocalStorage = () => {
+    const storedData = localStorage.getItem(`productId_${params.id}`);
+    if (storedData) {
+      setAdvertisement(JSON.parse(storedData));
+    } else {
+      fetchDataAndSetLocalStorage();
+    }
+  };
 
   useEffect(() => {
-    const storedPeopleCount = localStorage.getItem("peopleCount");
-    console.log("Stored people count:", storedPeopleCount);
+    const storedPeopleCount = localStorage.getItem(`peopleCount_${params.id}`); // Unique key for each product
     if (storedPeopleCount) {
       setPeople(parseInt(storedPeopleCount));
     }
-  }, []);
+  }, [params.id]);
 
   const addToFavorites = async () => {
     try {
@@ -380,7 +404,7 @@ export default function SettlementId() {
                 ) : (
                   ""
                 )}
-                {role == "Student" && author !== userId ? (
+                {role == "Student" && author === userId ? (
                   <div className="bg-white rounded-xl py-6 px-11">
                     <div className="mb-[1rem] flex justify-between items-center">
                       <div className="flex items-center gap-2">
