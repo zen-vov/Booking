@@ -64,7 +64,7 @@ export default function HeaderLandlord() {
 
   const options = [
     { label: "Личные данные", path: "/routs/settings" },
-    { label: "Мои объявления", path: "/routs/product" },
+    { label: "Мои объявления", path: "/routs/myproduct" },
     { label: "Выйти", onClick: handleLogout },
   ];
 
