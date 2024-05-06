@@ -272,10 +272,10 @@ const Profile = () => {
         <div className="flex flex-col gap-[16px]">
           <div className="text-16 font-[600] mb-30">Личная информация</div>
           {renderField("full_name")}
-          {/* {renderField("contacts")} */}
+          {renderField("contacts")}
           {renderField("email")}
           {renderField("birthDate")}
-          {renderField("identification")}
+          {/* {renderField("identification")} */}
           {renderField("additional_user")}
           {renderStudentFields()}
         </div>
