@@ -49,6 +49,7 @@ interface User {
     contacts: string;
   };
   login: string;
+  id: number;
 }
 
 const initialChatData = {
@@ -65,8 +66,8 @@ export default function SettlementId() {
   const [advertisement, setAdvertisement] = useState<Relocation | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [user, setUser] = useState<User | null>(null);
+  const [author, setAuthor] = useState<User | null>(null);
   const [name, setName] = useState<string>("");
-  const [author, setAuthor] = useState<number>();
   const [phone, setPhone] = useState<string>("");
   const [showPhoneNumber, setShowPhoneNumber] = useState<boolean>(false);
   const [people, setPeople] = useState<any>(1);
@@ -90,7 +91,7 @@ export default function SettlementId() {
           },
         }
       );
-      setAuthor(response.data.author);
+      // setAuthor(response.data.author);
       localStorage.setItem("productId", String(response.data.id));
       return response.data;
     } catch (error) {
@@ -128,7 +129,7 @@ export default function SettlementId() {
         `http://studhouse.kz/api/v1/auth/user/${userId}/`
       );
       setName(response.data.full_name);
-      setUser(response.data);
+      setAuthor(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -231,7 +232,7 @@ export default function SettlementId() {
           },
         }
       );
-      setAuthor(response.data.author);
+      // setAuthor(response.data.author);
       localStorage.setItem(
         `productId_${params.id}`,
         JSON.stringify(response.data)
@@ -391,7 +392,7 @@ export default function SettlementId() {
                     ))}
                   </div>
                 </div>
-                {role == "Student" && author !== userId ? (
+                {author?.id == Number(localStorage.getItem("userId")) ? (
                   <div className="flex flex-col gap-7">
                     <Button
                       label="Добавить людей"
@@ -407,7 +408,7 @@ export default function SettlementId() {
                 ) : (
                   ""
                 )}
-                {role == "Student" && author === userId ? (
+                {author?.id != Number(localStorage.getItem("userId")) ? (
                   <div className="bg-white rounded-xl py-6 px-11">
                     <div className="mb-[1rem] flex justify-between items-center">
                       <div className="flex items-center gap-2">

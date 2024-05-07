@@ -14,6 +14,7 @@ export default function SettlementList({ records }: ProductListI) {
       {records?.map(
         ({
           id,
+          author,
           location,
           price,
           creationDate,
@@ -23,6 +24,7 @@ export default function SettlementList({ records }: ProductListI) {
           <Link href={`/routs/settlement/${id}`} key={id} passHref>
             <SettlementCard
               id={id}
+              author={author}
               typeOfHouse={typeOfHouse}
               location={location}
               price={price}

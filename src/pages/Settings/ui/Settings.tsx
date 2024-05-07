@@ -11,10 +11,10 @@ interface Fields {
   contacts: string;
   email: string;
   birthDate: string;
-  identification: string;
-  additional_user: string;
-  university_data?: string;
-  student_hobbies?: string;
+  // identification: string;
+  // additional_user: string;
+  // university_data?: string;
+  // student_hobbies?: string;
 }
 
 const Profile = () => {
@@ -23,8 +23,8 @@ const Profile = () => {
     contacts: "",
     email: "",
     birthDate: "",
-    identification: "",
-    additional_user: "",
+    // identification: "",
+    // additional_user: "",
   });
 
   const [editingField, setEditingField] = useState<keyof Fields | null>(null);
@@ -47,21 +47,24 @@ const Profile = () => {
           `http://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
+
         setFields({
           full_name: user.full_name,
           contacts: user.user_info.contacts,
           email: user.user_info.email,
           birthDate: user.user_info.birthDate,
-          identification: user.user_info.frontIDCard,
-          additional_user: user.additional_user,
-          university_data: user.university_data,
-          student_hobbies: user.student_hobbies,
+          // identification: user.user_info.frontIDCard,
+          // additional_user: user.additional_user,
+          // university_data: user.university_data,
+          // student_hobbies: user.student_hobbies,
         });
+
         setUserRole(user?.role?.role_name || "");
       } catch (error) {
         console.error("Ошибка при загрузке данных: ", error);
       }
     };
+
     fetchUser();
   }, []);
 
@@ -146,15 +149,15 @@ const Profile = () => {
         return "Электронная почта";
       case "birthDate":
         return "Дата рождения";
-      case "identification":
-        return "Удостоверение личности";
-      case "additional_user":
-        return "Контактное лицо в чрезвычайной ситуации";
-      case "university_data":
-        return "Данные об университете";
-      case "student_hobbies":
-        return "Увлечения студента";
-      default:
+        // case "identification":
+        //   return "Удостоверение личности";
+        // case "additional_user":
+        //   return "Контактное лицо в чрезвычайной ситуации";
+        // case "university_data":
+        //   return "Данные об университете";
+        // case "student_hobbies":
+        //   return "Увлечения студента";
+        // default:
         return "";
     }
   };
@@ -162,26 +165,24 @@ const Profile = () => {
   const renderField = (field: keyof Fields) => {
     const isEditing = editingField === field;
     const fieldValue = fields[field] || "";
+
+    const validFieldKeys: Array<keyof Fields> = [
+      "full_name",
+      "contacts",
+      "email",
+      "birthDate",
+      // "identification",
+      // "additional_user",
+      // "university_data",
+      // "student_hobbies",
+    ];
+
+    if (!validFieldKeys.includes(field)) {
+      return null;
+    }
+
     return (
       <div key={field}>
-        <div>
-          <div>
-            <span>
-              {isEditing && (
-                <ModalInputField
-                  initialValue={fieldValue}
-                  onSave={(updatedValue) => handleSave(field, updatedValue)}
-                  onClose={() => setEditingField(null)}
-                  fieldName={getFieldLabel(field)}
-                  buttonField="Сохранить"
-                >
-                  <h2>{getFieldLabel(field)}</h2>
-                </ModalInputField>
-              )}
-            </span>
-          </div>
-        </div>
-
         <div className="flex justify-between items-center mb-2">
           <span className="text-16 text-black font-[500]">
             {getFieldLabel(field)}
@@ -197,7 +198,17 @@ const Profile = () => {
         </div>
         {!isEditing ? (
           <span className="text-16 font-400 text-gray">{fieldValue}</span>
-        ) : null}
+        ) : (
+          <ModalInputField
+            initialValue={fieldValue}
+            onSave={(updatedValue) => handleSave(field, updatedValue)}
+            onClose={() => setEditingField(null)}
+            fieldName={getFieldLabel(field)}
+            buttonField="Сохранить"
+          >
+            <h2>{getFieldLabel(field)}</h2>
+          </ModalInputField>
+        )}
       </div>
     );
   };
@@ -205,10 +216,10 @@ const Profile = () => {
   const renderStudentFields = () => {
     if (userRole === "Student") {
       return (
-        <>
-          {renderField("university_data")}
-          {renderField("student_hobbies")}
-        </>
+        <div>
+          {/* {renderField("university_data")} */}
+          {/* {renderField("student_hobbies")} */}
+        </div>
       );
     }
     return null;
@@ -231,7 +242,7 @@ const Profile = () => {
             "Content-Type": "application/json",
             "X-CSRFTOKEN":
               "d2yg9dlTCExrPKRqz122a6fD3uA7FPNGgI3PXyfJ77HSCJhY7lE82It17s8bTefc",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `JWT ${accessToken}`,
           },
           body: JSON.stringify({}),
         }

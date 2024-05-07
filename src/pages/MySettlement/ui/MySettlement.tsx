@@ -28,6 +28,7 @@ export default function LandLord() {
   const [inputPrice, setInputPrice] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -93,15 +94,6 @@ export default function LandLord() {
 
     fetchRole();
     fetchData();
-
-    if (searchQuery) {
-      const searchResults = data.filter((item: any) =>
-        item.location.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setSearchResult(searchResults);
-    } else {
-      setSearchResult([]);
-    }
   }, [numberOfRooms, maxPayment, searchQuery]);
 
   // const filteredData = data.filter((item: any) =>
@@ -111,19 +103,31 @@ export default function LandLord() {
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = searchResult.length
+  const recordsToDisplay = searchQuery
     ? searchResult.slice(firstIndex, lastIndex)
     : data.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(searchResult.length / recordsPerPage);
-  const numbers = Array.from({ length: npage }).map((_, i) => i + 1);
+
+  const pageNumbers = Array.from({ length: totalPages }).map((_, i) => i + 1);
+
+  useEffect(() => {
+    if (searchQuery) {
+      const searchResults = data.filter((item: any) =>
+        item.location.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+      setSearchResult(searchResults);
+      setTotalPages(Math.ceil(searchResults.length / recordsPerPage));
+    } else {
+      setSearchResult([]);
+      setTotalPages(Math.ceil(data.length / recordsPerPage));
+    }
+    setCurrent(1);
+  }, [searchQuery, data]);
 
   //   const filteredProducts = records.filter((product: any) => {
   //     return (
   //       product.author.toString() == localStorage.getItem("userId")?.toString()
   //     );
   //   });
-
-  console.log("records include: ", records);
 
   const changeCurrentPage = (page: number) => {
     setCurrent(page);
@@ -236,10 +240,10 @@ export default function LandLord() {
         </div>
       </div>
       <div className="container grid grid-cols-2 gap-[92px] mb-12">
-        <SettlementList records={records} />
+        <SettlementList records={recordsToDisplay} />
       </div>
       <div className="container flex gap-4 items-center justify-center">
-        {numbers.map((n, i) => (
+        {pageNumbers.map((n, i) => (
           <div
             className={`py-2 px-4 cursor-pointer text-md rounded-[6px] ${
               current === n ? "bg-blue text-white" : "bg-white text-black"

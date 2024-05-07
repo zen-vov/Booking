@@ -11,6 +11,7 @@ import axios from "axios";
 
 export type ProductProps = {
   id: number;
+  author: number;
   title?: string;
   description?: string;
   location?: string;
@@ -24,9 +25,19 @@ export type ProductProps = {
   };
 };
 
+interface Author {
+  full_name: string;
+  user_info: {
+    contacts: string;
+  };
+  login: string;
+  id: number;
+}
+
 export default function SettlementCard(props: ProductProps) {
   const {
     id,
+    author,
     title,
     price,
     description,
@@ -47,11 +58,23 @@ export default function SettlementCard(props: ProductProps) {
   const decodedToken = jwt.decode(accessToken);
   const full_name = decodedToken?.full_name;
 
-  // const [currentSlide, setCurrentSlide] = useState(0);
-
-  // const handleSlideChange = (newSlide: number) => {
-  //   setCurrentSlide(newSlide);
+  // const fetchUserData = async (userId: number) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `http://studhouse.kz/api/v1/auth/user/${userId}/`
+  //     );
+  //     setAuthorData(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching user data:", error);
+  //   }
   // };
+
+  // useEffect(() => {
+  //   const authorId = author;
+  //   if (authorId !== undefined) {
+  //     fetchUserData(authorId);
+  //   }
+  // }, []);
 
   const copyLinkToClipboard = () => {
     const url = `http://localhost:3000/routs/settlement/${id}`;
