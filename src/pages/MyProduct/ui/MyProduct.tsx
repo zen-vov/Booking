@@ -104,7 +104,7 @@ export default function MyProduct() {
     fetchData();
 
     if (searchQuery) {
-      const searchResults = data.filter((item) =>
+      const searchResults = data.filter((item: any) =>
         item.location.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setSearchResult(searchResults);

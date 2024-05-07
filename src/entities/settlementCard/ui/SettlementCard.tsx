@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import "./styles.scss";
 import { useParams } from "next/navigation";
+import axios from "axios";
 
 export type ProductProps = {
   id: number;
@@ -17,6 +18,10 @@ export type ProductProps = {
   typeOfHouse?: string;
   relocation_images: { image: string | undefined | null }[];
   creationDate: string;
+  owner?: {
+    full_name: string;
+    phone_number: string | null;
+  };
 };
 
 export default function SettlementCard(props: ProductProps) {
@@ -28,6 +33,7 @@ export default function SettlementCard(props: ProductProps) {
     typeOfHouse,
     relocation_images,
     location,
+    owner,
     creationDate,
   } = props;
   const [like, setLike] = useState<boolean>(false);
@@ -35,6 +41,7 @@ export default function SettlementCard(props: ProductProps) {
   const [hasToken, setHasToken] = useState(false);
   const accessToken = localStorage.getItem("accessToken");
   const [name, setName] = useState<string>("");
+  const [ownerName, setOwnerName] = useState("");
   const jwt = require("jsonwebtoken");
 
   const decodedToken = jwt.decode(accessToken);
@@ -85,6 +92,27 @@ export default function SettlementCard(props: ProductProps) {
     fetchRole();
   }, []);
 
+  useEffect(() => {
+    const fetchDataname = async () => {
+      try {
+        const res = await axios.get(
+          `http://studhouse.kz/api/v1/relocation/${id}`,
+          {
+            headers: {
+              Authorization: `JWT ${accessToken}`,
+            },
+          }
+        );
+        setOwnerName(res.data.owner.full_name);
+        console.log(res.data.owner.full_name);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchDataname();
+  }, [owner]);
+
   const addToFavorite = () => {
     setLike(!like);
     alert("Добавлено в избранные!");
@@ -110,7 +138,7 @@ export default function SettlementCard(props: ProductProps) {
       <div className="flex justify-between px-7 pt-6">
         <div className="flex flex-col">
           <h1 className="text-[20px] font-medium mb-5">{typeOfHouse}</h1>
-          <span className="text-[20px] font-medium mb-1">{name}</span>
+          <span className="text-[20px] font-medium mb-1">{ownerName}</span>
           <h1 className="text-md font-medium mb-[14px]">{location}</h1>
           <h3 className="text-md mb-6">{price} т/мес.</h3>
           <h5 className="text-sm">Опубликовано в {creationDate}</h5>

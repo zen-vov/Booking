@@ -6,8 +6,6 @@ import { BASE_URL } from "@/shared/api/BASE";
 import Input from "@/shared/ui/Input/Input";
 import Arrow from "@/shared/ui/Icons/Arrow/Arrow";
 import Button from "@/shared/ui/Button/Button";
-import styles from "./styles.module.scss";
-import Link from "next/link";
 import SettlementList from "@/widgets/SettlementList/ui/Settlement";
 import DropdownFilter from "@/features/DropdownFilter/ui/DropdownFilter";
 
@@ -97,7 +95,7 @@ export default function LandLord() {
     fetchData();
 
     if (searchQuery) {
-      const searchResults = data.filter((item) =>
+      const searchResults = data.filter((item: any) =>
         item.location.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setSearchResult(searchResults);
