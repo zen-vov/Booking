@@ -276,8 +276,8 @@ const Profile = () => {
           {renderField("email")}
           {renderField("birthDate")}
           {/* {renderField("identification")} */}
-          {renderField("additional_user")}
-          {renderStudentFields()}
+          {/* {renderField("additional_user")} */}
+          {/* {renderStudentFields()} */}
         </div>
         <div className="mt-[84px]">
           <p className="text-[18px] font-[400]">Хотите онулировать аккаунт?</p>
