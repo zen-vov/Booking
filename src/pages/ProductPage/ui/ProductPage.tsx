@@ -342,7 +342,7 @@ export default function ProductPage() {
                     width={558}
                     height={376}
                     alt="photo"
-                    className="object-fill w-full h-[376px] rounded-xl cursor-pointer"
+                    className="flex object-contain img relative"
                     onClick={openModal}
                   />
                   <div className="flex gap-4">

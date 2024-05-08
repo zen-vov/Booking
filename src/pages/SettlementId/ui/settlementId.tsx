@@ -374,10 +374,10 @@ export default function SettlementId() {
                 <div className="flex flex-col gap-[22px] mb-12">
                   <Image
                     src={`http://studhouse.kz${advertisement.relocation_images[currentImageIndex]?.image}`}
-                    width={558}
+                    width={618}
                     height={376}
                     alt="photo"
-                    className="object-fill w-full h-[376px] rounded-xl cursor-pointer"
+                    className="flex object-contain img relative"
                     onClick={openModal}
                   />
                   <div className="flex gap-4">
