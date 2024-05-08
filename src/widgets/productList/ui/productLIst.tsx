@@ -40,7 +40,14 @@ export default function ProductList({ records }: ProductListI) {
   return (
     <>
       {records?.map(
-        ({ id, location, price, creationDate, advertisement_images }) => (
+        ({
+          id,
+          location,
+          price,
+          creationDate,
+          advertisement_images,
+          is_favorite,
+        }) => (
           // <Link href={`/routs/product/${id}`} key={id} passHref>
           <div>
             <ProductCard
@@ -50,6 +57,7 @@ export default function ProductList({ records }: ProductListI) {
               price={price}
               creationDate={creationDate}
               advertisement_images={advertisement_images}
+              is_favorite={is_favorite}
             />
           </div>
 

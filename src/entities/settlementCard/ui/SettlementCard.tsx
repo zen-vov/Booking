@@ -48,6 +48,7 @@ export default function SettlementCard(props: ProductProps) {
     location,
     owner,
     creationDate,
+    is_favorite,
   } = props;
   const [like, setLike] = useState<boolean>(false);
   const params = useParams() as { id: string | number };
@@ -59,7 +60,7 @@ export default function SettlementCard(props: ProductProps) {
   const [profession, setProfession] = useState("");
   const [ownerName, setOwnerName] = useState("");
   const jwt = require("jsonwebtoken");
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(is_favorite);
 
   const decodedToken = jwt.decode(accessToken);
   const full_name = decodedToken?.full_name;

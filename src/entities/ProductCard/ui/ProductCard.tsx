@@ -19,6 +19,7 @@ export type ProductProps = {
   advertisement_images: { image: string | any | null }[];
   creationDate: string;
   userRole: "Student" | "Landlord" | null;
+  is_favorite: boolean;
 };
 
 export default function ProductCard(props: ProductProps) {
@@ -31,10 +32,11 @@ export default function ProductCard(props: ProductProps) {
     location,
     creationDate,
     userRole,
+    is_favorite,
   } = props;
   const [like, setLike] = useState<boolean>(false);
   const router = useRouter();
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(is_favorite);
   const params = useParams() as { id: number | string };
 
   const copyLinkToClipboard = () => {
