@@ -61,6 +61,9 @@ export interface FormData {
   nearbySchool: boolean; // Рядом есть школа
   nearbyGym: boolean; // Рядом есть тренажерный зал
   isSold: boolean; // Жилье продано
+  university: string;
+  course: number;
+  profession: string;
   isArchived: boolean; // Жилье в архиве
 }
 
@@ -156,6 +159,9 @@ export default function StudentCreate() {
     nearbyTradeCenter: false,
     nearbyHospital: false,
     nearbySchool: false,
+    profession: "",
+    course: 0,
+    university: "",
     nearbyGym: false,
     isSold: false,
     isArchived: false,
@@ -622,13 +628,30 @@ export default function StudentCreate() {
                   Университет
                 </h3>
                 <div className="py-[0.3rem] px-4 bg-[#F1F1F1] rounded-[10px]">
-                  <Input className="text-[0.7rem]" />
+                  <Input
+                    name="university"
+                    value={formData.university}
+                    onChange={(e) =>
+                      setFormData({ ...formData, university: e.target.value })
+                    }
+                    className="text-[0.7rem]"
+                  />
                 </div>
               </div>
               <div>
                 <h3 className="text-[#767272] text-[0.8rem] mb-[6px]">Курс</h3>
                 <div className="py-[0.3rem] px-4 bg-[#F1F1F1] rounded-[10px]">
-                  <Input className="text-[0.7rem]" />
+                  <Input
+                    name="course"
+                    value={formData.course}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        course: Number(e.target.value),
+                      })
+                    }
+                    className="text-[0.7rem]"
+                  />
                 </div>
               </div>
               <div>
@@ -636,7 +659,14 @@ export default function StudentCreate() {
                   Профессия
                 </h3>
                 <div className="py-[0.3rem] px-4 bg-[#F1F1F1] rounded-[10px]">
-                  <Input className="text-[0.7rem]" />
+                  <Input
+                    name="profession"
+                    value={formData.profession}
+                    onChange={(e) =>
+                      setFormData({ ...formData, profession: e.target.value })
+                    }
+                    className="text-[0.7rem]"
+                  />
                 </div>
               </div>
             </div>

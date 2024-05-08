@@ -102,6 +102,7 @@ export default function SettlementId() {
         }
       );
       // setAuthor(response.data.author);
+      // setIsFavorite(response.data.is_favorite);
       localStorage.setItem("productId", String(response.data.id));
       return response.data;
     } catch (error) {
@@ -280,7 +281,7 @@ export default function SettlementId() {
       const res = await axios.post(
         `${BASE_URL}/relocation/add_to_favorite/`,
         {
-          advertisement: params.id,
+          relocation: params.id,
         },
         {
           headers: {
@@ -304,8 +305,8 @@ export default function SettlementId() {
           return;
         }
 
-        const res = await axios.get(
-          `${BASE_URL}/advertisement/get_favorite_advertisements`,
+        const res = await axios.post(
+          `http://studhouse.kz/api/v1/relocation/add_to_favorite/`,
           {
             headers: {
               Authorization: `JWT ${accessToken}`,
@@ -516,7 +517,7 @@ export default function SettlementId() {
                             </svg>
                           </span>
 
-                          {role == "Student" && author !== userId ? (
+                          {author === userId ? (
                             <Link href={"/routs/student/edit"}>
                               <Edit />
                             </Link>

@@ -20,9 +20,11 @@ export default function SettlementList({ records }: ProductListI) {
           creationDate,
           typeOfHouse,
           relocation_images,
+          is_favorite,
         }) => (
           <Link href={`/routs/settlement/${id}`} key={id} passHref>
             <SettlementCard
+              is_favorite={is_favorite}
               id={id}
               author={author}
               typeOfHouse={typeOfHouse}

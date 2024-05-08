@@ -208,7 +208,7 @@ export default function ProductPage() {
       console.error("Error deleting advertisement:", error);
     }
   };
-
+// 
   const addToFavorites = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");

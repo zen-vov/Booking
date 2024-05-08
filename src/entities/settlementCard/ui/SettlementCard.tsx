@@ -17,6 +17,7 @@ export type ProductProps = {
   location?: string;
   price: string;
   typeOfHouse?: string;
+  is_favorite: boolean;
   relocation_images: { image: string | undefined | null }[];
   creationDate: string;
   owner?: {
@@ -52,6 +53,9 @@ export default function SettlementCard(props: ProductProps) {
   const [hasToken, setHasToken] = useState(false);
   const accessToken = localStorage.getItem("accessToken");
   const [name, setName] = useState<string>("");
+  const [university, setUniversity] = useState("");
+  const [course, setCourse] = useState(0);
+  const [profession, setProfession] = useState("");
   const [ownerName, setOwnerName] = useState("");
   const jwt = require("jsonwebtoken");
 
@@ -126,6 +130,9 @@ export default function SettlementCard(props: ProductProps) {
             },
           }
         );
+        setUniversity(res.data.university);
+        setCourse(res.data.course);
+        setProfession(res.data.profession);
         setOwnerName(res.data.owner.full_name);
         console.log(res.data.owner.full_name);
       } catch (error) {
@@ -162,6 +169,9 @@ export default function SettlementCard(props: ProductProps) {
         <div className="flex flex-col">
           <h1 className="text-[20px] font-medium mb-5">{typeOfHouse}</h1>
           <span className="text-[20px] font-medium mb-1">{ownerName}</span>
+          <p className="text-[16px] text-[#767272] mb-3">
+            {university}, {course} курс, {profession}
+          </p>
           <h1 className="text-md font-medium mb-[14px]">{location}</h1>
           <h3 className="text-md mb-6">{price} т/мес.</h3>
           <h5 className="text-sm">Опубликовано в {creationDate}</h5>
