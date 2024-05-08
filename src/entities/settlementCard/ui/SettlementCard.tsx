@@ -8,6 +8,7 @@ import Link from "next/link";
 import "./styles.scss";
 import { useParams } from "next/navigation";
 import axios from "axios";
+import { BASE_URL } from "@/shared/api/BASE";
 
 export type ProductProps = {
   id: number;
@@ -58,6 +59,7 @@ export default function SettlementCard(props: ProductProps) {
   const [profession, setProfession] = useState("");
   const [ownerName, setOwnerName] = useState("");
   const jwt = require("jsonwebtoken");
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   const decodedToken = jwt.decode(accessToken);
   const full_name = decodedToken?.full_name;
@@ -91,7 +93,7 @@ export default function SettlementCard(props: ProductProps) {
         console.error("Ошибка при копировании ссылки:", error);
       });
   };
-// 
+  //
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
@@ -143,9 +145,29 @@ export default function SettlementCard(props: ProductProps) {
     fetchDataname();
   }, [owner]);
 
-  const addToFavorite = () => {
-    setLike(!like);
-    alert("Добавлено в избранные!");
+  const addToFavorites = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.error("Access token not found.");
+        return;
+      }
+      const res = await axios.post(
+        `${BASE_URL}/relocation/add_to_favorite/`,
+        {
+          relocation: id,
+        },
+        {
+          headers: {
+            Authorization: `JWT ${accessToken}`,
+          },
+        }
+      );
+      console.log("Added to favorites:", res.data);
+      setIsFavorite(true);
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
+    }
   };
 
   return (
@@ -167,8 +189,8 @@ export default function SettlementCard(props: ProductProps) {
 
       <div className="flex justify-between px-7 pt-6">
         <div className="flex flex-col">
-          <h1 className="text-[20px] font-medium mb-5">{typeOfHouse}</h1>
-          <span className="text-[20px] font-medium mb-1">{ownerName}</span>
+          <h1 className="text-[16px] font-medium mb-2">{typeOfHouse}</h1>
+          {/* <span className="text-[20px] font-medium mb-1">{ownerName}</span> */}
           <p className="text-[16px] text-[#767272] mb-3">
             {university}, {course} курс, {profession}
           </p>
@@ -180,9 +202,20 @@ export default function SettlementCard(props: ProductProps) {
           <button onClick={copyLinkToClipboard}>
             <Share />
           </button>
-          <button onClick={() => addToFavorite()}>
-            <Like className={like ? "like" : ""} />
-          </button>
+          <svg
+            className="cursor-pointer"
+            onClick={addToFavorites}
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M10.0002 3.66405L9.1039 2.68139C7.00008 0.37473 3.14246 1.17073 1.74992 4.07072C1.09615 5.43471 0.948648 7.40404 2.14243 9.91737C3.29247 12.3374 5.68504 15.236 10.0002 18.3933C14.3153 15.236 16.7066 12.3374 17.8579 9.91737C19.0517 7.40271 18.9054 5.43471 18.2504 4.07072C16.8579 1.17073 13.0003 0.373397 10.8965 2.68006L10.0002 3.66405ZM10.0002 20C-9.16666 6.49071 4.09874 -4.05326 9.78017 1.52406C9.85517 1.59784 9.9285 1.67384 10.0002 1.75206C10.0706 1.67334 10.144 1.59773 10.2202 1.52539C15.9004 -4.05592 29.167 6.48938 10.0002 20Z"
+              fill={`${isFavorite ? "red" : "black"}`}
+            />
+          </svg>
         </div>
       </div>
     </div>

@@ -22,7 +22,8 @@ export default function SettlementList({ records }: ProductListI) {
           relocation_images,
           is_favorite,
         }) => (
-          <Link href={`/routs/settlement/${id}`} key={id} passHref>
+          // <Link href={`/routs/settlement/${id}`} key={id} passHref>
+          <div>
             <SettlementCard
               is_favorite={is_favorite}
               id={id}
@@ -33,7 +34,9 @@ export default function SettlementList({ records }: ProductListI) {
               creationDate={creationDate}
               relocation_images={relocation_images}
             />
-          </Link>
+          </div>
+
+          // </Link>
         )
       )}
     </>
