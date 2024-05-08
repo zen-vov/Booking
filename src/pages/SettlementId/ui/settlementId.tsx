@@ -543,7 +543,9 @@ export default function SettlementId() {
                 </div>
                 <div className="">
                   <h1 className="mb-3 text-lg">Описание</h1>
-                  <p className="text-[14px]">{advertisement?.description}</p>
+                  <p className="text-[14px] max-w-[1800px]">
+                    {advertisement?.description}
+                  </p>
                 </div>
                 <div className="">
                   <h1 className="text-lg mt-10 mb-[18px]">Удобство</h1>
