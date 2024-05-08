@@ -452,7 +452,7 @@ export default function SettlementId() {
                 )}
               </div>
               <div>
-                <div className="flex gap-[362px] mb-10">
+                <div className="flex justify-between mb-10">
                   <div className="">
                     <h1 className="text-lg mb-[0.5rem] whitespace-nowrap">
                       О квартире
