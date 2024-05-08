@@ -9,6 +9,7 @@ import Image from "next/image";
 import Edit from "@/shared/ui/Icons/Edit/Edit";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import Modal from "@/shared/ui/Modal/ui/Modal";
 
 interface Advertisement {
   id: number;
@@ -80,6 +81,15 @@ export default function ProductPage() {
   const decodedToken = jwt.decode(accessToken);
   const userId = decodedToken?.user_id;
   const [message, setMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const fetchData = async () => {
     try {
@@ -332,7 +342,8 @@ export default function ProductPage() {
                     width={558}
                     height={376}
                     alt="photo"
-                    className="object-fill w-full h-[376px] rounded-xl"
+                    className="object-fill w-full h-[376px] rounded-xl cursor-pointer"
+                    onClick={openModal}
                   />
                   <div className="flex gap-4">
                     {advertisement.advertisement_images.map((image, index) => (
@@ -350,6 +361,16 @@ export default function ProductPage() {
                     ))}
                   </div>
                 </div>
+                <Modal isOpen={isModalOpen} onClose={closeModal}>
+                  <div style={{ textAlign: "center" }}>
+                    <Image
+                      src={`http://studhouse.kz${advertisement.advertisement_images[currentImageIndex]?.image}`}
+                      width={800}
+                      height={600}
+                      alt="photo"
+                    />
+                  </div>
+                </Modal>
                 {author?.id == Number(localStorage.getItem("userId")) ? (
                   <div className="flex flex-col gap-7">
                     <Button

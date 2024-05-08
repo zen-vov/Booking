@@ -377,7 +377,7 @@ export default function SettlementId() {
                     width={558}
                     height={376}
                     alt="photo"
-                    className="object-fill w-full h-[376px] rounded-xl"
+                    className="object-fill w-full h-[376px] rounded-xl cursor-pointer"
                     onClick={openModal}
                   />
                   <div className="flex gap-4">
