@@ -460,6 +460,7 @@ export default function SettlementId() {
                       <span className="text-[16px]">Этаж</span>
                       <span className="text-[16px]">Площадь</span>
                       <span className="text-[16px]">Кол.людей</span>
+                      <span className="text-[16px]">Кв. для</span>
                     </div>
                   </div>
                   <div className="">
@@ -511,6 +512,9 @@ export default function SettlementId() {
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
                           {people}/{advertisement.max_people_count}
+                        </span>
+                        <span className="text-[16px] whitespace-nowrap">
+                          {advertisement.typeOfHouse}
                         </span>
                       </div>
                     </div>
