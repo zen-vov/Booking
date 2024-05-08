@@ -502,6 +502,7 @@ export default function SettlementId() {
                       <span className="text-[16px]">Адрес</span>
                       <span className="text-[16px]">Этаж</span>
                       <span className="text-[16px]">Площадь</span>
+                      <span className="text-[16px]">Кол. комнат</span>
                       <span className="text-[16px]">Кол.людей</span>
                       <span className="text-[16px]">Кв. для</span>
                       <span className="text-[16px]">Университет</span>
@@ -558,6 +559,9 @@ export default function SettlementId() {
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
                           {advertisement.square} м²
+                        </span>
+                        <span className="text-[16px] whitespace-nowrap">
+                          {advertisement.numberOfRooms}
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
                           {people}/{advertisement.max_people_count}

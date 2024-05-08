@@ -143,7 +143,7 @@ export default function StudentCreate() {
     description: "",
     typeOfHouse: "",
     price: 0,
-    numberOfRooms: 1,
+    numberOfRooms: 0,
     paymentTime: "daily",
     floor: 0,
     square: 0,
@@ -375,6 +375,11 @@ export default function StudentCreate() {
         ...updatedCounters[index],
         count: updatedCounters[index].count + 1,
       };
+      setFormData({
+        ...formData,
+        numberOfRooms: updatedCounters[index].count + 1,
+      });
+      console.log(counterState);
       return updatedCounters;
     });
   };
@@ -398,6 +403,10 @@ export default function StudentCreate() {
         ...updatedCounters[index],
         count: Math.max(0, updatedCounters[index].count - 1),
       };
+      setFormData({
+        ...formData,
+        numberOfRooms: updatedCounters[index].count - 1,
+      });
       return updatedCounters;
     });
   };

@@ -15,7 +15,7 @@ const roomsData = [
   { label: "1 -комнатная" },
   { label: "2 -комнатная" },
   { label: "3 -комнатная" },
-  { label: "4 и более комнат" },
+  { label: "4 -комнатная" },
 ];
 
 export default function LandLord() {
@@ -145,6 +145,7 @@ export default function LandLord() {
       "1 -комнатная": 1,
       "2 -комнатная": 2,
       "3 -комнатная": 3,
+      "4 -комнатная": 4,
     };
 
     setNumberOfRooms(roomMapping[selectedOption]);

@@ -87,7 +87,6 @@ const options = [
 
 export default function PostSettlementPage() {
   const [counterState, setCounterState] = useState<Counter[]>([
-    { name: "Максимальное количество жителей", count: 0 },
     { name: "Количество комнат", count: 0 },
     { name: "Спальни", count: 0 },
     { name: "Ванные, душ", count: 0 },
