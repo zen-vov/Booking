@@ -19,6 +19,7 @@ const roomsData = [
 export default function LandLord() {
   const [data, setData] = useState([]);
   const [current, setCurrent] = useState(1);
+  const [relocation, setRelocation] = useState([]);
   const [active, setActive] = useState(false);
   const [role, setRole] = useState<1 | 2 | null>(null);
   const [hasAuth, setHasAuth] = useState(false);
@@ -31,7 +32,11 @@ export default function LandLord() {
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
+
+    const decodedToken = jwt.decode(accessToken);
+    const userId = decodedToken?.user_id;
 
     const fetchData = async () => {
       try {
@@ -40,15 +45,19 @@ export default function LandLord() {
           setHasAuth(true);
         }
 
-        const { data: res } = await axios.get(`${BASE_URL}/relocation/`, {
-          params: {
-            numberOfRooms: numberOfRooms,
-            price: maxPayment,
-          },
-          headers: {
-            Authorization: `JWT ${token}`,
-          },
-        });
+        const { data: res } = await axios.get(
+          `${BASE_URL}/advertisement/get_my_advertisements/`,
+          {
+            params: {
+              author: userId,
+              numberOfRooms: numberOfRooms,
+              price: maxPayment,
+            },
+            headers: {
+              Authorization: `JWT ${token}`,
+            },
+          }
+        );
 
         let filteredData = res;
         if (maxPayment) {
@@ -92,13 +101,29 @@ export default function LandLord() {
       }
     };
 
+    const fetchRelocation = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const relRes = await axios.get(
+          "http://studhouse.kz/api/v1/relocation/get_my_relocations/",
+          {
+            headers: {
+              Authorization: `JWT ${token}`,
+            },
+          }
+        );
+        // return relRes.data;
+        setRelocation(relRes.data);
+        console.log(relRes.data)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     fetchRole();
     fetchData();
+    fetchRelocation();
   }, [numberOfRooms, maxPayment, searchQuery]);
-
-  // const filteredData = data.filter((item: any) =>
-  //   item.address?.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
 
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
@@ -241,6 +266,9 @@ export default function LandLord() {
       </div>
       <div className="container grid grid-cols-2 gap-[92px] mb-12">
         <SettlementList records={recordsToDisplay} />
+      </div>
+      <div className="container grid grid-cols-2 gap-[92px] mb-12">
+        <SettlementList records={relocation} />
       </div>
       <div className="container flex gap-4 items-center justify-center">
         {pageNumbers.map((n, i) => (

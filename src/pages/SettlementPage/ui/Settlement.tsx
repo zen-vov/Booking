@@ -70,13 +70,13 @@ export default function LandLord() {
           });
         }
 
-        filteredData.sort((a: any, b: any) => {
-          if (sortBy === "asc") {
-            return a.price - b.price;
-          } else {
-            return b.price - a.price;
-          }
-        });
+        // filteredData.sort((a: any, b: any) => {
+        //   if (sortBy === "asc") {
+        //     return a.price - b.price;
+        //   } else {
+        //     return b.price - a.price;
+        //   }
+        // });
 
         setData(filteredData);
       } catch (err) {
@@ -105,7 +105,7 @@ export default function LandLord() {
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const recordsToDisplay = searchQuery
-    ? searchResult.slice(firstIndex, lastIndex).sort()
+    ? searchResult.slice(firstIndex, lastIndex)
     : data.slice(firstIndex, lastIndex);
 
   const pageNumbers = Array.from({ length: totalPages }).map((_, i) => i + 1);

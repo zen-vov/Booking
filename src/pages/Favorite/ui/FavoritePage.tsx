@@ -100,9 +100,9 @@ export default function FavoritePage() {
         </div>
       ) : (
         <>
-          <div className="container grid grid-cols-2 gap-[92px] mb-12">
+          {/* <div className="container grid grid-cols-2 gap-[92px] mb-12">
             <ProductList records={records} />
-          </div>
+          </div> */}
           <div className="container grid grid-cols-2 gap-[92px] mb-12">
             <SettlementList records={relocation} />
           </div>
