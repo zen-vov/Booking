@@ -464,9 +464,7 @@ export default function SettlementId() {
                     </h1>
                     <div className="flex flex-col gap-2">
                       <span className="text-[16px]">Адрес</span>
-                      <span className="text-[16px]">Год постройки</span>
                       <span className="text-[16px]">Этаж</span>
-                      <span className="text-[16px]">Состояние</span>
                       <span className="text-[16px]">Площадь</span>
                       <span className="text-[16px]">Кол.людей</span>
                     </div>
@@ -513,13 +511,7 @@ export default function SettlementId() {
                           {advertisement.location}
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
-                          2015 год
-                        </span>
-                        <span className="text-[16px] whitespace-nowrap">
-                          {advertisement.floor} из {advertisement.floor * 3}
-                        </span>
-                        <span className="text-[16px] whitespace-nowrap">
-                          свободная планировка
+                          {advertisement.floor}
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
                           {advertisement.square} м²

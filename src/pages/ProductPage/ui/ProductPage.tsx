@@ -434,9 +434,7 @@ export default function ProductPage() {
                     </h1>
                     <div className="flex flex-col gap-2">
                       <span className="text-[16px]">Адрес</span>
-                      <span className="text-[16px]">Год постройки</span>
                       <span className="text-[16px]">Этаж</span>
-                      <span className="text-[16px]">Состояние</span>
                       <span className="text-[16px]">Площадь</span>
                     </div>
                   </div>
@@ -482,13 +480,7 @@ export default function ProductPage() {
                           {advertisement.location}
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
-                          2015 год
-                        </span>
-                        <span className="text-[16px] whitespace-nowrap">
-                          {advertisement.floor} из {advertisement.floor * 3}
-                        </span>
-                        <span className="text-[16px] whitespace-nowrap">
-                          свободная планировка
+                          {advertisement.floor}
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
                           {advertisement.square} м²
@@ -539,19 +531,19 @@ export default function ProductPage() {
                   </div>
                   <span className="text-blue text-[14px] mt-[5px]">Еще</span>
                 </div>
-                {/* <div className="mt-10">
-                  <iframe
+                <div className="mt-[100px]">
+                  {/* <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2908.034149153324!2d76.6670930764335!3d43.20877307112663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x388345a35db0962d%3A0xd9437541092dd062!2sSDU!5e0!3m2!1sen!2skz!4v1712296819450!5m2!1sen!2skz"
                     width="668"
                     height="202"
                     style={{ border: "0", borderRadius: "5px" }}
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe>
-                </div> */}
+                  ></iframe> */}
+                </div>
               </div>
             </div>
-            <h1 className="text-md font-medium mt-[111px] mb-6">
+            <h1 className="text-md font-medium mt-[111px] mb-6 mt-[100px]">
               Похожие запросы
             </h1>
             <div className="grid grid-cols-2 gap-10">

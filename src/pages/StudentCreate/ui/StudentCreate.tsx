@@ -117,8 +117,8 @@ export default function StudentCreate() {
     price: 0,
     numberOfRooms: 1,
     paymentTime: "daily",
-    floor: 5,
-    square: 5,
+    floor: 0,
+    square: 0,
     haveWifi: false,
     max_people_count: 5,
     current_people_count: 1,
@@ -136,7 +136,21 @@ export default function StudentCreate() {
     isArchived: false,
   });
   const [priceCounter, setPriceCounter] = useState<number>(formData.price);
-// 
+  const [floor, setFloor] = useState<number>(formData.floor);
+  const [square, setSquare] = useState<number>(formData.square);
+
+  const handleFloorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newFloor = parseInt(e.target.value, 10);
+    setFloor(isNaN(newFloor) ? formData.floor : newFloor);
+    setFormData({ ...formData, floor: newFloor });
+  };
+
+  const handleSquareChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSquare = parseInt(e.target.value, 10);
+    setSquare(isNaN(newSquare) ? formData.square : newSquare);
+    setFormData({ ...formData, square: newSquare });
+  };
+
   const [selectedIcons, setSelectedIcons] = useState<boolean[]>(
     icons.map(() => false)
   );
@@ -507,6 +521,28 @@ export default function StudentCreate() {
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
+            />
+          </div>
+          <div className="mb-[16px] mt-[1rem]">
+            <p className="text-[16px] text-black font-[500]">
+              Площадь вашей квартиры
+            </p>
+            <input
+              className="w-[190px] h-[50px] py-[10px] px-[20px] border-none bg-[#F1F1F1] rounded-[12px] focus:outline-none"
+              value={formData.square}
+              type="number"
+              onChange={handleSquareChange}
+            />
+          </div>
+          <div className="mb-[16px] mt-[1rem]">
+            <p className="text-[16px] text-black font-[500]">
+              На каком этаже находится ваша квартира
+            </p>
+            <input
+              className="w-[190px] h-[50px] py-[10px] px-[20px] border-none bg-[#F1F1F1] rounded-[12px] focus:outline-none"
+              value={formData.floor}
+              type="number"
+              onChange={handleFloorChange}
             />
           </div>
           <div className="mb-[16px]">

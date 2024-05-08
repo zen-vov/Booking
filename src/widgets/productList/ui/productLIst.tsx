@@ -9,7 +9,6 @@ interface ProductListI {
 }
 
 export default function ProductList({ records }: ProductListI) {
-
   return (
     <>
       {records?.map(
