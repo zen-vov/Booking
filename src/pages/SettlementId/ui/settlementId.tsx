@@ -595,7 +595,6 @@ export default function SettlementId() {
                       </ul>
                     </div>
                   </div>
-                  <span className="text-blue text-[14px] mt-[5px]">Еще</span>
                 </div>
                 <div className="flex flex-col mt-10">
                   {/* <h1 className="text-md">О Подселении</h1>
