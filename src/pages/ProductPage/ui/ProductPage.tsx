@@ -524,7 +524,7 @@ export default function ProductPage() {
                         <li className="text-[15px]">Wi-Fi</li>
                         <li className="text-[15px]">Телевизор</li>
                         <li className="text-[15px]">Стиральная машина</li>
-                        <li className="text-[15px]">Паркова</li>
+                        <li className="text-[15px]">Парковка</li>
                         <li className="text-[15px]">Кондиционер</li>
                         <li className="text-[15px]">Торговые центры</li>
                         <li className="text-[15px]">Больница</li>
