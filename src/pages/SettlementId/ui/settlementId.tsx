@@ -294,7 +294,6 @@ export default function SettlementId() {
           return;
         }
 
-        // const currentAdId = currentAdId();
 
         const res = await axios.get(
           `${BASE_URL}/advertisement/get_favorite_advertisements`,
@@ -307,10 +306,6 @@ export default function SettlementId() {
 
         const favoriteAdvertisements = res.data;
 
-        // const isCurrentAdFavorite = favoriteAdvertisements.some(
-        //   (ad: any) => ad.id === currentAdId
-        // );
-        // setIsFavorite(isCurrentAdFavorite);
       } catch (error) {
         console.error("Error checking favorite status:", error);
       }
@@ -488,7 +483,7 @@ export default function SettlementId() {
                               fill="black"
                             />
                           </svg>
-                          {role == "Student" && author === userId ? (
+                          {role == "Student" && author !== userId ? (
                             <Link href={"/routs/student/edit"}>
                               <Edit />
                             </Link>
