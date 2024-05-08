@@ -91,7 +91,7 @@ export default function SettlementCard(props: ProductProps) {
         console.error("Ошибка при копировании ссылки:", error);
       });
   };
-
+// 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     const jwt = require("jsonwebtoken");
