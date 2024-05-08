@@ -226,7 +226,7 @@ function Message({
       <p className="text-sm overflow-hidden overflow-ellipsis break-words">
         {text}
       </p>
-      <p className="text-xs text-[#837777]">
+      <p className="text-xs text-[#ddd]">
         {fullName} - {new Date(creationDate).toLocaleString()}
       </p>
       <svg width="9" height="20" className="svg-appendix">
