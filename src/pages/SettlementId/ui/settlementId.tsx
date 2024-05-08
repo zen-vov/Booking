@@ -45,6 +45,7 @@ interface Relocation {
   university: string;
   course: number;
   profession: string;
+  is_favorite: boolean;
 }
 
 interface User {
@@ -104,8 +105,6 @@ export default function SettlementId() {
           },
         }
       );
-      // setAuthor(response.data.author);
-      // setIsFavorite(response.data.is_favorite);
       localStorage.setItem("productId", String(response.data.id));
       return response.data;
     } catch (error) {
@@ -190,6 +189,7 @@ export default function SettlementId() {
       fetchData()
         .then((data) => {
           setAdvertisement(data);
+          setIsFavorite(data.is_favorite);
         })
         .catch((error) => {
           console.log("error");

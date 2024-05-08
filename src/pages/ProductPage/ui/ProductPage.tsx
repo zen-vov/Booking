@@ -41,6 +41,7 @@ interface Advertisement {
   nearbyHospital: boolean;
   nearbySchool: boolean;
   nearbyGym: boolean;
+  is_favorite: boolean;
 }
 
 interface User {
@@ -167,6 +168,7 @@ export default function ProductPage() {
       fetchData()
         .then((data) => {
           setAdvertisement(data);
+          setIsFavorite(data.is_favorite);
         })
         .catch((error) => {
           console.log("error");
@@ -208,7 +210,7 @@ export default function ProductPage() {
       console.error("Error deleting advertisement:", error);
     }
   };
-// 
+  //
   const addToFavorites = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
