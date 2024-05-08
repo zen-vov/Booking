@@ -150,8 +150,8 @@ export default function SettlementCard(props: ProductProps) {
               key={index}
               src={`http://studhouse.kz${image.image}`}
               width={618}
-              height={476}
-              className="bg-no-repeat bg-contain img flex relative"
+              height={380}
+              className="flex object-contain img relative"
               alt="photo"
             />
           ))}
