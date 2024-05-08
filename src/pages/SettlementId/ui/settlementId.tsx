@@ -8,6 +8,7 @@ import Edit from "@/shared/ui/Icons/Edit/Edit";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import SettlementList from "@/widgets/SettlementList/ui/Settlement";
+import Modal from "@/shared/ui/Modal/ui/Modal";
 
 interface Relocation {
   id: number;
@@ -75,6 +76,15 @@ export default function SettlementId() {
   const params = useParams() as { id: number | string };
   const accessToken = localStorage.getItem("accessToken");
   const jwt = require("jsonwebtoken");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const decodedToken = jwt.decode(accessToken);
   const userId = decodedToken?.user_id;
@@ -368,6 +378,7 @@ export default function SettlementId() {
                     height={376}
                     alt="photo"
                     className="object-fill w-full h-[376px] rounded-xl"
+                    onClick={openModal}
                   />
                   <div className="flex gap-4">
                     {advertisement?.relocation_images?.map((image, index) => (
@@ -385,6 +396,16 @@ export default function SettlementId() {
                     ))}
                   </div>
                 </div>
+                <Modal isOpen={isModalOpen} onClose={closeModal}>
+                  <div style={{ textAlign: "center" }}>
+                    <Image
+                      src={`http://studhouse.kz${advertisement.relocation_images[currentImageIndex]?.image}`}
+                      width={800}
+                      height={600}
+                      alt="photo"
+                    />
+                  </div>
+                </Modal>
                 {author?.id == Number(localStorage.getItem("userId")) ? (
                   <div className="flex flex-col gap-7">
                     <Button
