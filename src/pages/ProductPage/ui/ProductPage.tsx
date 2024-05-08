@@ -524,14 +524,12 @@ export default function ProductPage() {
                         <li className="text-[15px]">Wi-Fi</li>
                         <li className="text-[15px]">Телевизор</li>
                         <li className="text-[15px]">Стиральная машина</li>
+                        <li className="text-[15px]">Паркова</li>
                         <li className="text-[15px]">Кондиционер</li>
-                        <li className="text-[15px]">Спортивный зал</li>
-                        <li className="text-[15px]">Школа</li>
-                        <li className="text-[15px]">Детский сад</li>
                         <li className="text-[15px]">Торговые центры</li>
                         <li className="text-[15px]">Больница</li>
-                        <li className="text-[15px]">Паркинг</li>
-                        <li className="text-[15px]">Детская площадка</li>
+                        <li className="text-[15px]">Школа</li>
+                        <li className="text-[15px]">Спортивный зал</li>
                       </ul>
                     </div>
                     <div>
@@ -546,13 +544,10 @@ export default function ProductPage() {
                           {advertisement.haveWashingMachine ? "Есть" : "Нету"}
                         </li>
                         <li className="text-[15px]">
+                          {advertisement.haveParking ? "Есть" : "Нету"}
+                        </li>
+                        <li className="text-[15px]">
                           {advertisement.haveConditioner ? "Есть" : "Нету"}
-                        </li>
-                        <li className="text-[15px]">
-                          {advertisement.nearbyGym ? "Есть" : "Нету"}
-                        </li>
-                        <li className="text-[15px]">
-                          {advertisement.nearbySchool ? "Есть" : "Нету"}
                         </li>
                         <li className="text-[15px]">
                           {advertisement.nearbyTradeCenter ? "Есть" : "Нету"}
@@ -561,13 +556,10 @@ export default function ProductPage() {
                           {advertisement.nearbyHospital ? "Есть" : "Нету"}
                         </li>
                         <li className="text-[15px]">
+                          {advertisement.nearbySchool ? "Есть" : "Нету"}
+                        </li>
+                        <li className="text-[15px]">
                           {advertisement.nearbyGym ? "Есть" : "Нету"}
-                        </li>
-                        <li className="text-[15px]">
-                          {advertisement.haveParking ? "Есть" : "Нету"}
-                        </li>
-                        <li className="text-[15px]">
-                          {advertisement.haveConditioner ? "Есть" : "Нету"}
                         </li>
                       </ul>
                     </div>
