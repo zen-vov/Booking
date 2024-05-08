@@ -42,6 +42,9 @@ interface Relocation {
   nearbyHospital: boolean;
   nearbySchool: boolean;
   nearbyGym: boolean;
+  university: string;
+  course: number;
+  profession: string;
 }
 
 interface User {
@@ -489,12 +492,21 @@ export default function SettlementId() {
                     <h1 className="text-lg mb-[0.5rem] whitespace-nowrap">
                       О подселении
                     </h1>
+                    {/* <div>
+                      <p className="text-[16px] text-[#767272] mb-3">
+                        {advertisement.university}, {advertisement.course} курс,{" "}
+                        {advertisement.profession}
+                      </p>
+                    </div> */}
                     <div className="flex flex-col gap-2">
                       <span className="text-[16px]">Адрес</span>
                       <span className="text-[16px]">Этаж</span>
                       <span className="text-[16px]">Площадь</span>
                       <span className="text-[16px]">Кол.людей</span>
                       <span className="text-[16px]">Кв. для</span>
+                      <span className="text-[16px]">Университет</span>
+                      <span className="text-[16px]">Курс</span>
+                      <span className="text-[16px]">Профессия</span>
                     </div>
                   </div>
                   <div className="">
@@ -552,6 +564,15 @@ export default function SettlementId() {
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
                           {advertisement.typeOfHouse}
+                        </span>{" "}
+                        <span className="text-[16px] whitespace-nowrap">
+                          {advertisement.university}
+                        </span>{" "}
+                        <span className="text-[16px] whitespace-nowrap">
+                          {advertisement.course}
+                        </span>{" "}
+                        <span className="text-[16px] whitespace-nowrap">
+                          {advertisement.profession}
                         </span>
                       </div>
                     </div>
