@@ -512,13 +512,20 @@ export default function ProductPage() {
                 </div>
                 <div className="">
                   <h1 className="mb-3 text-lg">Описание</h1>
-                  <p className="text-[14px]">{advertisement?.description}</p>
+                  <p className="text-[14px] max-w-[1800px]">
+                    {advertisement?.description}
+                  </p>
                 </div>
                 <div className="">
                   <h1 className="text-lg mt-10 mb-[18px]">Удобство</h1>
                   <div className="flex gap-[489px]">
                     <div>
                       <ul className="flex flex-col gap-2.5">
+                        <li className="text-[15px]">Wi-Fi</li>
+                        <li className="text-[15px]">Телевизор</li>
+                        <li className="text-[15px]">Стиральная машина</li>
+                        <li className="text-[15px]">Кондиционер</li>
+                        <li className="text-[15px]">Спортивный зал</li>
                         <li className="text-[15px]">Школа</li>
                         <li className="text-[15px]">Детский сад</li>
                         <li className="text-[15px]">Торговые центры</li>
@@ -529,6 +536,21 @@ export default function ProductPage() {
                     </div>
                     <div>
                       <ul className="flex flex-col gap-2.5">
+                        <li className="text-[15px]">
+                          {advertisement.haveWifi ? "Есть" : "Нету"}
+                        </li>
+                        <li className="text-[15px]">
+                          {advertisement.haveTV ? "Есть" : "Нету"}
+                        </li>
+                        <li className="text-[15px]">
+                          {advertisement.haveWashingMachine ? "Есть" : "Нету"}
+                        </li>
+                        <li className="text-[15px]">
+                          {advertisement.haveConditioner ? "Есть" : "Нету"}
+                        </li>
+                        <li className="text-[15px]">
+                          {advertisement.nearbyGym ? "Есть" : "Нету"}
+                        </li>
                         <li className="text-[15px]">
                           {advertisement.nearbySchool ? "Есть" : "Нету"}
                         </li>
@@ -550,7 +572,6 @@ export default function ProductPage() {
                       </ul>
                     </div>
                   </div>
-                  <span className="text-blue text-[14px] mt-[5px]">Еще</span>
                 </div>
                 <div className="mt-[100px]">
                   {/* <iframe
