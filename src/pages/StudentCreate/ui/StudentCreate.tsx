@@ -103,9 +103,34 @@ export default function StudentCreate() {
   const router = useRouter();
   const accessToken = localStorage.getItem("accessToken");
   const jwt = require("jsonwebtoken");
+  const [role, setRole] = React.useState<"Student" | "Landlord" | null>(null);
 
   const decodedToken = jwt.decode(accessToken);
   const userId = decodedToken?.user_id;
+
+  React.useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    const jwt = require("jsonwebtoken");
+
+    const decodedToken = jwt.decode(accessToken);
+    console.log("decoded token: ", decodedToken);
+    const userId = decodedToken?.user_id;
+
+    const fetchRole = async () => {
+      try {
+        const userResponse = await fetch(
+          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+        );
+        const user = await userResponse.json();
+        console.log("user role: ", user.role.id);
+        setRole(user.role.role_name);
+      } catch (error) {
+        console.error("Error fetching user role: ", error);
+      }
+    };
+
+    fetchRole();
+  }, []);
 
   const [formData, setFormData] = useState<FormData>({
     location: "",
@@ -549,9 +574,15 @@ export default function StudentCreate() {
             <p className="text-[16px] text-black font-[500]">
               Составьте описание
             </p>
-            <p className="text-[12px] mb-[6px]">
-              Расскажите, что делает ваше жилье особенным.
-            </p>
+            {role == "Student" ? (
+              <p className="text-[12px] mb-[6px]">
+                Расскажите, чем вы увлекаетесь.
+              </p>
+            ) : (
+              <p className="text-[12px] mb-[6px]">
+                Расскажите, что делает ваше жилье особенным.
+              </p>
+            )}
             <textarea
               className="w-[380px] h-[100px] py-[10px] px-[20px] border-none bg-[#F1F1F1] rounded-[12px] focus:outline-none"
               value={formData.description}
