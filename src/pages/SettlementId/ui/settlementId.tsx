@@ -294,7 +294,6 @@ export default function SettlementId() {
           return;
         }
 
-
         const res = await axios.get(
           `${BASE_URL}/advertisement/get_favorite_advertisements`,
           {
@@ -305,7 +304,6 @@ export default function SettlementId() {
         );
 
         const favoriteAdvertisements = res.data;
-
       } catch (error) {
         console.error("Error checking favorite status:", error);
       }
@@ -561,12 +559,12 @@ export default function SettlementId() {
                   <span className="text-blue text-[14px] mt-[5px]">Еще</span>
                 </div>
                 <div className="flex flex-col mt-10">
-                  <h1 className="text-md">О Подселении</h1>
+                  {/* <h1 className="text-md">О Подселении</h1>
                   <p className="text-[14px] mt-3">
                     Учусь в 4 курсе. В университете SDU University. Ищем 2
                     девушек на подселение. Без вредных привычек, чистоплотная,
                     ответственная.
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>
