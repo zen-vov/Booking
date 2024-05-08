@@ -23,6 +23,8 @@ interface Advertisement {
   creationDate: string;
   floor: number;
   typeOfHouse: string;
+  count_bedrooms: number;
+  count_bathrooms: number;
   numberOfRooms: number;
   square: number;
   isSold: boolean;
@@ -472,6 +474,8 @@ export default function ProductPage() {
                       <span className="text-[16px]">Этаж</span>
                       <span className="text-[16px]">Площадь</span>
                       <span className="text-[16px]">Кол. комнат</span>
+                      <span className="text-[16px]">Кол. спальни</span>
+                      <span className="text-[16px]">Кол. ванных комнат</span>
                     </div>
                   </div>
                   <div className="">
@@ -525,6 +529,12 @@ export default function ProductPage() {
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
                           {advertisement.numberOfRooms}
+                        </span>
+                        <span className="text-[16px] whitespace-nowrap">
+                          {advertisement.count_bedrooms}
+                        </span>
+                        <span className="text-[16px] whitespace-nowrap">
+                          {advertisement.count_bathrooms}
                         </span>
                       </div>
                     </div>

@@ -24,6 +24,8 @@ interface Relocation {
   max_people_count: number | any;
   current_people_count: number | any;
   typeOfHouse: string;
+  count_bedrooms: number;
+  count_bathrooms: number;
   numberOfRooms: number;
   square: number;
   isSold: boolean;
@@ -503,7 +505,9 @@ export default function SettlementId() {
                       <span className="text-[16px]">Этаж</span>
                       <span className="text-[16px]">Площадь</span>
                       <span className="text-[16px]">Кол. комнат</span>
-                      <span className="text-[16px]">Кол.людей</span>
+                      <span className="text-[16px]">Кол. спальни</span>
+                      <span className="text-[16px]">Кол. ванных комнат</span>
+                      <span className="text-[16px]">Кол. людей</span>
                       <span className="text-[16px]">Кв. для</span>
                       <span className="text-[16px]">Университет</span>
                       <span className="text-[16px]">Курс</span>
@@ -562,6 +566,12 @@ export default function SettlementId() {
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
                           {advertisement.numberOfRooms}
+                        </span>
+                        <span className="text-[16px] whitespace-nowrap">
+                          {advertisement.count_bedrooms}
+                        </span>
+                        <span className="text-[16px] whitespace-nowrap">
+                          {advertisement.count_bathrooms}
                         </span>
                         <span className="text-[16px] whitespace-nowrap">
                           {people}/{advertisement.max_people_count}
