@@ -474,7 +474,7 @@ export default function SettlementId() {
                 <div className="flex justify-between mb-10">
                   <div className="">
                     <h1 className="text-lg mb-[0.5rem] whitespace-nowrap">
-                      О квартире
+                      О подселении
                     </h1>
                     <div className="flex flex-col gap-2">
                       <span className="text-[16px]">Адрес</span>
