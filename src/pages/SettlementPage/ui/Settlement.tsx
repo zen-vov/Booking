@@ -31,6 +31,7 @@ export default function LandLord() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [sortBy, setSortBy] = useState<"asc" | "desc">("asc");
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -69,6 +70,14 @@ export default function LandLord() {
           });
         }
 
+        filteredData.sort((a: any, b: any) => {
+          if (sortBy === "asc") {
+            return a.price - b.price;
+          } else {
+            return b.price - a.price;
+          }
+        });
+
         setData(filteredData);
       } catch (err) {
         console.log(err);
@@ -90,17 +99,13 @@ export default function LandLord() {
 
     fetchRole();
     fetchData();
-  }, [numberOfRooms, maxPayment, searchQuery]);
-
-  // const filteredData = data.filter((item: any) =>
-  //   item.address?.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
+  }, [numberOfRooms, maxPayment, searchQuery, sortBy]);
 
   const recordsPerPage = 6;
   const lastIndex = current * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const recordsToDisplay = searchQuery
-    ? searchResult.slice(firstIndex, lastIndex)
+    ? searchResult.slice(firstIndex, lastIndex).sort()
     : data.slice(firstIndex, lastIndex);
 
   const pageNumbers = Array.from({ length: totalPages }).map((_, i) => i + 1);
