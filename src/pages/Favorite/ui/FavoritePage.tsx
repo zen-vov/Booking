@@ -16,6 +16,7 @@ export default function FavoritePage() {
   const [current, setCurrent] = useState(1);
   const [active, setActive] = useState(false);
   const [activeModal, setActiveModal] = useState<boolean>(false);
+  const [check, setCheck] = useState<boolean>();
 
   useEffect(() => {
     const pageNumber = new URLSearchParams(window.location.search).get("page");
@@ -82,10 +83,22 @@ export default function FavoritePage() {
     fetchRelocation();
   }, []);
 
+  const handleCheck = () => {
+    setCheck(!check);
+  };
+
   return (
     <section className="pb-[45px]">
       <div className="container mt-[32px] flex flex-col gap-[56px] mb-[60px]">
         <h1 className="text-xl font-[500] ">Мои избранные</h1>
+      </div>
+      <div className="container mt-[32px] flex tems-center gap-[56px] mb-[60px]">
+        <button
+          className="text-[24px] font-[500] border py-[4px] px-[6px]"
+          onClick={() => handleCheck()}
+        >
+          {check ? "Подселения" : "Квартиры"}
+        </button>
       </div>
       {data.length === 0 && relocation.length === 0 ? (
         <div className="container pb-20 flex flex-col justify-center items-center mt-8 text-lg">
@@ -100,12 +113,21 @@ export default function FavoritePage() {
         </div>
       ) : (
         <>
+          {check ? (
+            <div className="container grid grid-cols-2 gap-[92px] mb-12">
+              <ProductList records={records} />
+            </div>
+          ) : (
+            <div className="container grid grid-cols-2 gap-[92px] mb-12">
+              <SettlementList records={relocation} />
+            </div>
+          )}
           {/* <div className="container grid grid-cols-2 gap-[92px] mb-12">
             <ProductList records={records} />
           </div> */}
-          <div className="container grid grid-cols-2 gap-[92px] mb-12">
+          {/* <div className="container grid grid-cols-2 gap-[92px] mb-12">
             <SettlementList records={relocation} />
-          </div>
+          </div> */}
         </>
       )}
       {/* <div className="container flex gap-4 items-center justify-center">
