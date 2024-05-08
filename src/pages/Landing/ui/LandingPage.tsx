@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Card from "@/entities/Card/ui/Card";
 import styles from "./styles.module.scss";
 import Slider from "react-slick";
@@ -9,11 +9,13 @@ import Image from "next/image";
 import Link from "next/link";
 import ReviewSlider from "@/widgets/reviewsSlider/ui/reviewsSlider";
 import { Modal } from "@/shared/ui/Modal/Modal";
+import { useSearchParams } from "next/navigation";
 
 export default function LandingPage() {
   const [modal, setModal] = React.useState(false);
   const [modalActive, setModalActive] = React.useState(false);
   const [role, setRole] = React.useState<"Student" | "Landlord" | null>(null);
+  const [userId, setUserId] = useState<string | null>();
 
   React.useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -25,6 +27,7 @@ export default function LandingPage() {
 
     if (userId) {
       localStorage.setItem("userId", userId);
+      setUserId(localStorage.getItem("userId"));
     }
 
     const fetchRole = async () => {
@@ -79,6 +82,7 @@ export default function LandingPage() {
     className: "mb-[63px]",
     infinite: true,
   };
+
   return (
     <>
       <div>
@@ -133,7 +137,7 @@ export default function LandingPage() {
                 интегрированы функции обмена сообщениями и проверки арендаторов,
                 которые помогут вам быстро находить и проверять кандидатов.
               </p>
-              {localStorage.getItem("userId") && (
+              {userId && (
                 <Link href={"/routs/posthouse"}>
                   <Button
                     className="bg-blue w-[130px] rounded-[5px] py-[10px] text-white text-[20px] font-[500]"
@@ -142,7 +146,7 @@ export default function LandingPage() {
                   />
                 </Link>
               )}
-              {!localStorage.getItem("userId") && (
+              {!userId && (
                 <Link href={"/"}>
                   <Button
                     className="bg-blue w-[130px] rounded-[5px] py-[10px] text-white text-[20px] font-[500]"
