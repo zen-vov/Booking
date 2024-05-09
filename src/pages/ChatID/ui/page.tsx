@@ -116,10 +116,9 @@ export default function ChatIdPage() {
                       <div className="flex items-center gap-[16px]">
                         {interlocutor}:
                         <p className="text-md font-light">
-                          Здравствуйте! Хотели бы снять эту квартиру
+                          У вас новое сообщение.
                         </p>
                       </div>
-                      <p className="text-md">это чат {id}</p>
                       <p>{creationDate}</p>
                     </div>
                   </Link>
@@ -152,7 +151,7 @@ export default function ChatIdPage() {
                       <div className="flex items-center gap-[16px]">
                         {author}:
                         <p className="text-md font-light">
-                          У вас новое сообщение .
+                          У вас новое сообщение.
                         </p>
                       </div>
                       <p>{creationDate}</p>
