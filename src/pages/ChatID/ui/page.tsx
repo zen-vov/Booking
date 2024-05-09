@@ -14,6 +14,7 @@ export default function ChatIdPage() {
   const [incomingChats, setIncomingChats] = useState([]);
   const [authorName, setAuthorName] = useState("");
   const [interlocutor, setInterlocutor] = useState("");
+  const [interlocutorId, setInterlocutorId] = useState();
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -61,6 +62,18 @@ export default function ChatIdPage() {
         console.log(err);
       }
     };
+
+    // const fetchInterlocutor = async () => {
+    //   try {
+    //     const userRes = await fetch(
+    //       `http://studhouse.kz/api/v1/auth/user/${interlocutor}/`
+    //     );
+    //     const user = await userRes.json();
+    //     setUserId(user.id);
+    //   } catch (error) {
+    //     console.error("Error fetching user: ", error);
+    //   }
+    // };
 
     fetchUser();
     fetchChat();
@@ -139,10 +152,9 @@ export default function ChatIdPage() {
                       <div className="flex items-center gap-[16px]">
                         {author}:
                         <p className="text-md font-light">
-                          Здравствуйте! Хотели бы снять эту квартиру
+                          У вас новое сообщение .
                         </p>
                       </div>
-                      <p className="text-md">это чат {id}</p>
                       <p>{creationDate}</p>
                     </div>
                   </Link>
@@ -154,43 +166,4 @@ export default function ChatIdPage() {
       </div>
     </section>
   );
-
-  // return (
-  //   <section className="pt-12 pb-[120px]">
-  //     <Link href={"/"} className="flex items-center gap-[6px] mb-12">
-  //       <Arrow />
-  //       <span className="text-lg">Вернуться на Главную страницу</span>
-  //     </Link>
-  //     <h1 className="text-lg font-semibold mb-12">Все сообщения</h1>
-  //     <div className="flex flex-col gap-10">
-  //       {data.length === 0 ? (
-  //         <p className="text-center text-lg font-medium">У вас нет сообщений</p>
-  //       ) : (
-  //         data.map(({ id, creationDate, interlocutor }) => (
-  //           <Link href={`/routs/chat/${id}`} className="flex gap-9" key={id}>
-  //             <Image
-  //               src={"/"}
-  //               className="rounded-[12px]"
-  //               width={247}
-  //               height={123}
-  //               alt="chat"
-  //             />
-  //             <div className="flex flex-col gap-8">
-  //               <h1 className="text-lg font-medium white-space">
-  //                 г. Алматы, Бостандыкский район · 3-х комнатная квартира
-  //               </h1>
-  //               <div className="flex items-center gap-[16px]">
-  //                 {interlocutor}:
-  //                 <p className="text-md font-light">
-  //                   Здравствуйте! Хотели бы снять эту квартиру
-  //                 </p>
-  //               </div>
-  //               <p>{creationDate}</p>
-  //             </div>
-  //           </Link>
-  //         ))
-  //       )}
-  //     </div>
-  //   </section>
-  // );
 }
