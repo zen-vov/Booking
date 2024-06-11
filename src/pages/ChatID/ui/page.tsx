@@ -23,7 +23,7 @@ export default function ChatIdPage() {
     const fetchUser = async () => {
       try {
         const userRes = await fetch(
-          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+          `https://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userRes.json();
         setUserId(user.id);
@@ -35,7 +35,7 @@ export default function ChatIdPage() {
     const fetchChat = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        const res = await axios.get("http://studhouse.kz/api/v1/chat/chats/", {
+        const res = await axios.get("https://studhouse.kz/api/v1/chat/chats/", {
           headers: {
             Authorization: `JWT ${token}`,
           },

@@ -31,7 +31,7 @@ export default function RateUs() {
 
   const submitReview = async () => {
     try {
-      const response = await fetch("http://studhouse.kz/api/v1/review/", {
+      const response = await fetch("https://studhouse.kz/api/v1/review/", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

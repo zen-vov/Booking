@@ -130,7 +130,7 @@ export default function EditPage() {
       try {
         const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(
-          `http://studhouse.kz/api/v1/advertisement/${id}/`,
+          `https://studhouse.kz/api/v1/advertisement/${id}/`,
           {
             headers: {
               Authorization: `JWT ${accessToken}`,
@@ -166,7 +166,7 @@ export default function EditPage() {
     try {
       const accessToken = localStorage.getItem("accessToken");
       const response = await fetch(
-        `http://studhouse.kz/api/v1/advertisement/${id}/`,
+        `https://studhouse.kz/api/v1/advertisement/${id}/`,
         {
           method: "PUT",
           headers: {

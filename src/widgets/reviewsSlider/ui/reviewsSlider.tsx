@@ -16,7 +16,7 @@ const AuthorName: React.FC<AuthorNameProps> = ({ userId }) => {
     const fetchName = async () => {
       try {
         const userResponse = await fetch(
-          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+          `https://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
         console.log("full name memem", user.full_name);
@@ -39,7 +39,7 @@ const ReviewSlider: React.FC = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch("http://studhouse.kz/api/v1/review/");
+        const response = await fetch("https://studhouse.kz/api/v1/review/");
         if (response.ok) {
           const data = await response.json();
           setReviews(data);

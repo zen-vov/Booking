@@ -44,7 +44,7 @@ const Profile = () => {
       const userId = decodedToken?.user_id;
       try {
         const userResponse = await fetch(
-          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+          `https://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
 
@@ -89,7 +89,7 @@ const Profile = () => {
     const userId = decodedToken?.user_id;
     try {
       const response = await fetch(
-        `http://studhouse.kz/api/v1/auth/user/${userId}/`,
+        `https://studhouse.kz/api/v1/auth/user/${userId}/`,
         {
           method: "PATCH",
           headers: {
@@ -118,7 +118,7 @@ const Profile = () => {
     const userId = decodedToken?.user_id;
     try {
       const response = await fetch(
-        `http://studhouse.kz/api/v1/auth/user/${userId}/`,
+        `https://studhouse.kz/api/v1/auth/user/${userId}/`,
         {
           method: "PATCH",
           headers: {
@@ -235,7 +235,7 @@ const Profile = () => {
 
     try {
       const response = await fetch(
-        `http://studhouse.kz/api/v1/auth/user/${userId}/`,
+        `https://studhouse.kz/api/v1/auth/user/${userId}/`,
         {
           method: "DELETE",
           headers: {

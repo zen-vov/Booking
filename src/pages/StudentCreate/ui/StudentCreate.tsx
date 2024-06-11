@@ -122,7 +122,7 @@ export default function StudentCreate() {
     const fetchRole = async () => {
       try {
         const userResponse = await fetch(
-          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+          `https://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
         console.log("user role: ", user.role.id);
@@ -307,7 +307,7 @@ export default function StudentCreate() {
         throw new Error("Цена не может быть меньше 0");
       }
       const response = await axios.post(
-        `http://studhouse.kz/api/v1/relocation/`,
+        `https://studhouse.kz/api/v1/relocation/`,
         apartmentData,
         {
           headers: {
@@ -352,7 +352,7 @@ export default function StudentCreate() {
 
       const token = localStorage.getItem("accessToken");
       const response = await axios.post(
-        "http://studhouse.kz/api/v1/relocation/",
+        "https://studhouse.kz/api/v1/relocation/",
         formDataToSend,
         {
           headers: {
