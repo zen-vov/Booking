@@ -87,7 +87,7 @@ export default function ProductCard(props: ProductProps) {
           {advertisement_images?.map((image, index) => (
             <Image
               key={index}
-              src={`http://studhouse.kz${image.image}`}
+              src={`https://studhouse.kz${image.image}`}
               width={611}
               height={380}
               alt="photo"

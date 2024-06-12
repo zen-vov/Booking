@@ -36,7 +36,7 @@ export default function HeaderStudent() {
     const fetchName = async () => {
       try {
         const userResponse = await fetch(
-          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+          `https://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
         setName(user.full_name);

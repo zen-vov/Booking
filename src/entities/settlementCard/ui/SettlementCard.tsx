@@ -68,7 +68,7 @@ export default function SettlementCard(props: ProductProps) {
   // const fetchUserData = async (userId: number) => {
   //   try {
   //     const response = await axios.get(
-  //       `http://studhouse.kz/api/v1/auth/user/${userId}/`
+  //       `https://studhouse.kz/api/v1/auth/user/${userId}/`
   //     );
   //     setAuthorData(response.data);
   //   } catch (error) {
@@ -110,7 +110,7 @@ export default function SettlementCard(props: ProductProps) {
     const fetchRole = async () => {
       try {
         const userResponse = await fetch(
-          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+          `https://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
         setName(user.full_name);
@@ -126,7 +126,7 @@ export default function SettlementCard(props: ProductProps) {
     const fetchDataname = async () => {
       try {
         const res = await axios.get(
-          `http://studhouse.kz/api/v1/relocation/${id}`,
+          `https://studhouse.kz/api/v1/relocation/${id}`,
           {
             headers: {
               Authorization: `JWT ${accessToken}`,
@@ -178,7 +178,7 @@ export default function SettlementCard(props: ProductProps) {
           {relocation_images?.map((image, index) => (
             <Image
               key={index}
-              src={`http://studhouse.kz${image.image}`}
+              src={`https://studhouse.kz${image.image}`}
               width={618}
               height={380}
               className="flex object-contain img relative"

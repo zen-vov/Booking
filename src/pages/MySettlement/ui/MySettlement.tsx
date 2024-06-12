@@ -91,7 +91,7 @@ export default function LandLord() {
     const fetchRole = async () => {
       try {
         const userResponse = await fetch(
-          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+          `https://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
         setRole(user.role.id);
@@ -105,7 +105,7 @@ export default function LandLord() {
       try {
         const token = localStorage.getItem("accessToken");
         const relRes = await axios.get(
-          "http://studhouse.kz/api/v1/relocation/get_my_relocations/",
+          "https://studhouse.kz/api/v1/relocation/get_my_relocations/",
           {
             headers: {
               Authorization: `JWT ${token}`,

@@ -90,7 +90,7 @@ export default function MyProduct() {
     const fetchRole = async () => {
       try {
         const userResponse = await fetch(
-          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+          `https://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
         setRole(user.role.role_name);

@@ -264,7 +264,7 @@ export default function EditRelocation() {
       }
       const accessToken = localStorage.getItem("accessToken");
       const response = await fetch(
-        `http://studhouse.kz/api/v1/relocation/${id}/`,
+        `https://studhouse.kz/api/v1/relocation/${id}/`,
         {
           headers: {
             Authorization: `JWT ${accessToken}`,
@@ -300,7 +300,7 @@ export default function EditRelocation() {
       try {
         const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(
-          `http://studhouse.kz/api/v1/relocation/${id}/`,
+          `https://studhouse.kz/api/v1/relocation/${id}/`,
           {
             headers: {
               Authorization: `JWT ${accessToken}`,
@@ -326,7 +326,7 @@ export default function EditRelocation() {
     try {
       const accessToken = localStorage.getItem("accessToken");
       const response = await fetch(
-        `http://studhouse.kz/api/v1/relocation/${id}/`,
+        `https://studhouse.kz/api/v1/relocation/${id}/`,
         {
           method: "PUT",
           headers: {
@@ -363,7 +363,7 @@ export default function EditRelocation() {
 
       const token = localStorage.getItem("accessToken");
       const response = await axios.put(
-        `http://studhouse.kz/api/v1/relocation/${id}`,
+        `https://studhouse.kz/api/v1/relocation/${id}`,
         formDataToSend,
         {
           headers: {

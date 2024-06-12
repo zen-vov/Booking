@@ -116,7 +116,7 @@ export default function ProductPage() {
   const fetchUserData = async (userId: number) => {
     try {
       const response = await axios.get(
-        `http://studhouse.kz/api/v1/auth/user/${userId}/`
+        `https://studhouse.kz/api/v1/auth/user/${userId}/`
       );
       setAuthor(response.data);
       setPhone(response.data.user_info.contacts);
@@ -151,7 +151,7 @@ export default function ProductPage() {
     const fetchRole = async () => {
       try {
         const userResponse = await fetch(
-          `http://studhouse.kz/api/v1/auth/user/${userId}/`
+          `https://studhouse.kz/api/v1/auth/user/${userId}/`
         );
         const user = await userResponse.json();
         console.log("owner: ", advertisement?.owner);
@@ -307,7 +307,7 @@ export default function ProductPage() {
       };
 
       const res = await axios.post(
-        "http://studhouse.kz/api/v1/chat/chats/",
+        "https://studhouse.kz/api/v1/chat/chats/",
         chatData,
         {
           headers: {
@@ -354,7 +354,7 @@ export default function ProductPage() {
               <div className="w-[110%] h-[376px]">
                 <div className="flex flex-col gap-[22px] mb-12">
                   <Image
-                    src={`http://studhouse.kz${advertisement.advertisement_images[currentImageIndex]?.image}`}
+                    src={`https://studhouse.kz${advertisement.advertisement_images[currentImageIndex]?.image}`}
                     width={558}
                     height={376}
                     alt="photo"
@@ -366,7 +366,7 @@ export default function ProductPage() {
                       <div key={index} onClick={() => handleImageClick(index)}>
                         {image.image && (
                           <Image
-                            src={`http://studhouse.kz${image.image}`}
+                            src={`https://studhouse.kz${image.image}`}
                             width={122}
                             height={93}
                             alt={`photo-${index}`}
@@ -380,7 +380,7 @@ export default function ProductPage() {
                 <Modal isOpen={isModalOpen} onClose={closeModal}>
                   <div style={{ textAlign: "center" }}>
                     <Image
-                      src={`http://studhouse.kz${advertisement.advertisement_images[currentImageIndex]?.image}`}
+                      src={`https://studhouse.kz${advertisement.advertisement_images[currentImageIndex]?.image}`}
                       width={800}
                       height={600}
                       alt="photo"

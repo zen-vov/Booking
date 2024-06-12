@@ -40,7 +40,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
     try {
       if (isRegistering) {
         const registerResponse = await fetch(
-          "http://studhouse.kz/api/v1/auth/user/",
+          "https://studhouse.kz/api/v1/auth/user/",
           {
             method: "POST",
             headers: {
@@ -65,7 +65,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
           console.log("Registration error data:", errorData);
 
           // const activeCheck = await fetch(
-          //   "http://studhouse.kz/api/v1/auth/user/activate_user/",
+          //   "https://studhouse.kz/api/v1/auth/user/activate_user/",
           //   {
           //     method: "POST",
           //     headers: {
@@ -99,7 +99,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
       }
 
       const loginResponse = await fetch(
-        "http://studhouse.kz/api/v1/jwt/create/",
+        "https://studhouse.kz/api/v1/jwt/create/",
         {
           method: "POST",
           headers: {
@@ -163,7 +163,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
 
     try {
       const activateResponse = await fetch(
-        "http://studhouse.kz/api/v1/auth/user/activate_user/",
+        "https://studhouse.kz/api/v1/auth/user/activate_user/",
         {
           method: "POST",
           headers: {
@@ -180,7 +180,7 @@ const AuthModal = ({ onClose, active }: ModalI) => {
 
       if (activateResponse.ok) {
         const loginResponse = await fetch(
-          "http://studhouse.kz/api/v1/jwt/create/",
+          "https://studhouse.kz/api/v1/jwt/create/",
           {
             method: "POST",
             headers: {

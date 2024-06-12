@@ -262,7 +262,7 @@ export default function PostSettlementPage() {
         throw new Error("Цена не может быть меньше 0");
       }
       const response = await axios.post(
-        `http://studhouse.kz/api/v1/advertisement/`,
+        `https://studhouse.kz/api/v1/advertisement/`,
         apartmentData,
         {
           headers: {
@@ -308,7 +308,7 @@ export default function PostSettlementPage() {
 
       const token = localStorage.getItem("accessToken");
       const response = await axios.post(
-        "http://studhouse.kz/api/v1/advertisement/",
+        "https://studhouse.kz/api/v1/advertisement/",
         formDataToSend,
         {
           headers: {
