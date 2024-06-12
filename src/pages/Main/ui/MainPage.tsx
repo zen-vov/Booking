@@ -169,16 +169,16 @@ export default function LandLord() {
               <span className="text-2xl mb-[1rem] font-semibold text-primary">
                 Создай себе идеальное <br /> окружение
               </span>
-              <Link href={"/routs/student/create"} className="">
-                <Button
-                  className="border-[1px] flex items-center px-[10rem] justify-center border-black rounded-[10px] text-center bg-white text-[20px]"
-                  label="Добавить объявление"
-                >
-                  <span className="text-[45px] mr-[1rem] font-semibold text-center">
-                    +
-                  </span>
-                </Button>
-              </Link>
+              {/*<Link href={"/routs/student/create"} className="">*/}
+              {/*  <Button*/}
+              {/*    className="border-[1px] flex items-center px-[10rem] justify-center border-black rounded-[10px] text-center bg-white text-[20px]"*/}
+              {/*    label="Добавить объявление"*/}
+              {/*  >*/}
+              {/*    <span className="text-[45px] mr-[1rem] font-semibold text-center">*/}
+              {/*      +*/}
+              {/*    </span>*/}
+              {/*  </Button>*/}
+              {/*</Link>*/}
             </div>
           </div>
         </div>
