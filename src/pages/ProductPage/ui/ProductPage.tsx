@@ -87,7 +87,7 @@ export default function ProductPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
-    setIsModalOpen(true);
+    // setIsModalOpen(false);
   };
 
   const closeModal = () => {
@@ -359,7 +359,7 @@ export default function ProductPage() {
                     height={376}
                     alt="photo"
                     className="flex object-contain img relative"
-                    onClick={openModal}
+                    // onClick={openModal}
                   />
                   <div className="flex gap-4">
                     {advertisement.advertisement_images.map((image, index) => (
@@ -377,16 +377,16 @@ export default function ProductPage() {
                     ))}
                   </div>
                 </div>
-                <Modal isOpen={isModalOpen} onClose={closeModal}>
-                  <div style={{ textAlign: "center" }}>
-                    <Image
-                      src={`https://studhouse.kz${advertisement.advertisement_images[currentImageIndex]?.image}`}
-                      width={800}
-                      height={600}
-                      alt="photo"
-                    />
-                  </div>
-                </Modal>
+                {/*<Modal isOpen={isModalOpen} onClose={closeModal}>*/}
+                {/*  <div style={{ textAlign: "center" }}>*/}
+                {/*    <Image*/}
+                {/*      src={`https://studhouse.kz${advertisement.advertisement_images[currentImageIndex]?.image}`}*/}
+                {/*      width={800}*/}
+                {/*      height={600}*/}
+                {/*      alt="photo"*/}
+                {/*    />*/}
+                {/*  </div>*/}
+                {/*</Modal>*/}
                 {author?.id == Number(localStorage.getItem("userId")) ? (
                   <div className="flex flex-col gap-7">
                     <Button

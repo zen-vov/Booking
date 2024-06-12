@@ -414,16 +414,16 @@ export default function SettlementId() {
                     ))}
                   </div>
                 </div>
-                <Modal isOpen={isModalOpen} onClose={closeModal}>
-                  <div style={{ textAlign: "center" }}>
-                    <Image
-                      src={`https://studhouse.kz${advertisement.relocation_images[currentImageIndex]?.image}`}
-                      width={800}
-                      height={600}
-                      alt="photo"
-                    />
-                  </div>
-                </Modal>
+                {/*<Modal isOpen={isModalOpen} onClose={closeModal}>*/}
+                {/*  <div style={{ textAlign: "center" }}>*/}
+                {/*    <Image*/}
+                {/*      src={`https://studhouse.kz${advertisement.relocation_images[currentImageIndex]?.image}`}*/}
+                {/*      width={800}*/}
+                {/*      height={600}*/}
+                {/*      alt="photo"*/}
+                {/*    />*/}
+                {/*  </div>*/}
+                {/*</Modal>*/}
                 {author?.id == Number(localStorage.getItem("userId")) ? (
                   <div className="flex flex-col gap-7">
                     <Button
