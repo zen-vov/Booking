@@ -380,6 +380,35 @@ export default function StudentCreate() {
         numberOfRooms: updatedCounters[index].count + 1,
       });
       console.log(counterState);
+
+      switch (index) {
+        case 0:
+          setFormData({
+            ...formData,
+            numberOfRooms: updatedCounters[index].count,
+          });
+          break;
+        case 1:
+          setFormData({
+            ...formData,
+            count_bedrooms: updatedCounters[index].count,
+          });
+          break;
+        case 2:
+          setFormData({
+            ...formData,
+            count_bathrooms: updatedCounters[index].count,
+          });
+        case 3:
+          setFormData({
+            ...formData,
+            max_people_count: updatedCounters[index].count,
+          });
+          break;
+        default:
+          break;
+      }
+
       return updatedCounters;
     });
   };
@@ -407,6 +436,35 @@ export default function StudentCreate() {
         ...formData,
         numberOfRooms: updatedCounters[index].count - 1,
       });
+
+      switch (index) {
+        case 0:
+          setFormData({
+            ...formData,
+            numberOfRooms: updatedCounters[index].count,
+          });
+          break;
+        case 1:
+          setFormData({
+            ...formData,
+            count_bedrooms: updatedCounters[index].count,
+          });
+          break;
+        case 2:
+          setFormData({
+            ...formData,
+            count_bathrooms: updatedCounters[index].count,
+          });
+        case 3:
+          setFormData({
+            ...formData,
+            max_people_count: updatedCounters[index].count,
+          });
+          break;
+        default:
+          break;
+      }
+
       return updatedCounters;
     });
   };
