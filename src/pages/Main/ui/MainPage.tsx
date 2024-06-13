@@ -162,27 +162,27 @@ export default function LandLord() {
   return (
     <section className="pb-[45px]">
       {/*-----*/}
-      {/* {role === "Landlord" && hasAuth && (
+      {role === "Landlord" && hasAuth && (
         <div className={`${styles.imgbg} flex`}>
           <div className=" py-[128px] flex flex-col items-start w-full">
             <div className="container flex flex-col">
               <span className="text-2xl mb-[1rem] font-semibold text-primary">
                 Создай себе идеальное <br /> окружение
               </span>
-              <Link href={"/routs/student/create"} className="">
-                <Button
-                  className="border-[1px] flex items-center px-[10rem] justify-center border-black rounded-[10px] text-center bg-white text-[20px]"
-                  label="Добавить объявление"
-                >
-                  <span className="text-[45px] mr-[1rem] font-semibold text-center">
-                    +
-                  </span>
-                </Button>
-              </Link>
+              {/*<Link href={"/routs/student/create"} className="">*/}
+              {/*  <Button*/}
+              {/*    className="border-[1px] flex items-center px-[10rem] justify-center border-black rounded-[10px] text-center bg-white text-[20px]"*/}
+              {/*    label="Добавить объявление"*/}
+              {/*  >*/}
+              {/*    <span className="text-[45px] mr-[1rem] font-semibold text-center">*/}
+              {/*      +*/}
+              {/*    </span>*/}
+              {/*  </Button>*/}
+              {/*</Link>*/}
             </div>
           </div>
         </div>
-      )} */}
+      )}
 
       {/*-----*/}
       <div className="container mt-[50px] flex items-center  gap-[100px] mb-[60px]">
