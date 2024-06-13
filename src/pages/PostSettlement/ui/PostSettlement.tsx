@@ -111,13 +111,13 @@ export default function PostSettlementPage() {
     description: "",
     typeOfHouse: "Flat",
     price: 0,
-    numberOfRooms: 1,
+    numberOfRooms: 0,
     paymentTime: "daily",
     floor: 0,
     square: 0,
     haveWifi: false,
-    count_bedrooms: 2,
-    count_bathrooms: 2,
+    count_bedrooms: 0,
+    count_bathrooms: 0,
     haveTV: false,
     haveWashingMachine: true,
     haveParking: false,
@@ -335,6 +335,30 @@ export default function PostSettlementPage() {
         ...updatedCounters[index],
         count: updatedCounters[index].count + 1,
       };
+
+      switch (index) {
+        case 0:
+          setFormData({
+            ...formData,
+            numberOfRooms: updatedCounters[index].count,
+          });
+          break;
+        case 1:
+          setFormData({
+            ...formData,
+            count_bedrooms: updatedCounters[index].count,
+          });
+          break;
+        case 2:
+          setFormData({
+            ...formData,
+            count_bathrooms: updatedCounters[index].count,
+          });
+          break;
+        default:
+          break;
+      }
+
       return updatedCounters;
     });
   };
@@ -358,6 +382,30 @@ export default function PostSettlementPage() {
         ...updatedCounters[index],
         count: Math.max(0, updatedCounters[index].count - 1),
       };
+
+      switch (index) {
+        case 0:
+          setFormData({
+            ...formData,
+            numberOfRooms: updatedCounters[index].count,
+          });
+          break;
+        case 1:
+          setFormData({
+            ...formData,
+            count_bedrooms: updatedCounters[index].count,
+          });
+          break;
+        case 2:
+          setFormData({
+            ...formData,
+            count_bathrooms: updatedCounters[index].count,
+          });
+          break;
+        default:
+          break;
+      }
+
       return updatedCounters;
     });
   };

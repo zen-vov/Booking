@@ -162,7 +162,7 @@ export default function LandLord() {
   return (
     <section className="pb-[45px]">
       {/*-----*/}
-      {role === "Landlord" && hasAuth && (
+      {/* {role === "Landlord" && hasAuth && (
         <div className={`${styles.imgbg} flex`}>
           <div className=" py-[128px] flex flex-col items-start w-full">
             <div className="container flex flex-col">
@@ -182,7 +182,7 @@ export default function LandLord() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/*-----*/}
       <div className="container mt-[50px] flex items-center  gap-[100px] mb-[60px]">
